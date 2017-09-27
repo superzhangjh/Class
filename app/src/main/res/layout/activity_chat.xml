@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_swipelayout" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--滑动布局尾部-->
+    <GridLayout
+        android:orientation="horizontal"
+        android:id="@+id/chat_swipelayout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:rowCount="1"
+        android:columnCount="4"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/chat_btn_fn_1"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="相册" />
+        <Button
+            android:id="@+id/chat_btn_fn_2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="拍照" />
+        <Button
+            android:id="@+id/chat_btn_fn_3"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="文件" />
+        <Button
+            android:id="@+id/chat_btn_fn_4"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="更多" />
+    </GridLayout>
+
+    <!--滑动布局的主界面-->
+
+    <LinearLayout
+        android:id="@+id/chat_swipelayout_surcface"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/chat_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#0af">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/chat_tv_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="对方昵称"
+                    android:textSize="26dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent" />
+                <ImageButton
+                    android:id="@+id/chat_ib_info"
+                    android:src="@mipmap/ic_launcher"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:background="#0af"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:background="@drawable/chat_sound"
+                android:id="@+id/chat_ib_sound"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:id="@+id/chat_edt_fn"
+                android:hint="输入内容"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#ddd"/>
+
+            <ImageButton
+                android:background="@drawable/chat_fn"
+                android:id="@+id/chat_ib_fn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+    
+</com.daimajia.swipe.SwipeLayout>
