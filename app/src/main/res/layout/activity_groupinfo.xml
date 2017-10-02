@@ -1,6 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        //toolbar显示头像、圈名、圈ID
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/groupinfo_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+            <ImageView
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:text="15软件技术2班"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp" />
+                <TextView
+                    android:text="班ID：15131572"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#666"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+
+        //二维码
+        <LinearLayout
+            android:id="@+id/groupinfo_tv_qrcode"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+            <TextView
+                android:text="二维码"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+
+        //我的昵称
+        <LinearLayout
+            android:id="@+id/groupinfo_ll_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+            <TextView
+                android:text="我的昵称"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent" />
+            <TextView
+                android:text="麻辣鸡"
+                android:gravity="center_vertical|right"
+                android:layout_marginRight="20dp"
+                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+
+        //成员
+        <LinearLayout
+            android:id="@+id/groupinfo_ll_memberlist"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/groupinfo_recycle_headlist"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/groupinfo_tv_membercount"
+                android:text="40名成员"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical|right"
+                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+
+        //功能杂项:暂定
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:text="通知"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="文件"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="相册"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="小视频"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="投票"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="课程表"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:text="考勤表"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:text="圈介绍"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:id="@+id/groupinfo_tv_recommend"
+                android:text="本圈创建于1949年月1日"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ddd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#fff"/>
+    </LinearLayout>
+</ScrollView>

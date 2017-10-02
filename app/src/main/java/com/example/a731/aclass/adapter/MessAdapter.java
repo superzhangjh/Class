@@ -35,7 +35,6 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_mess_item,parent,false);
-        //final ViewHolder holder = new ViewHolder(view);
         return new ViewHolder(view);
     }
 
@@ -48,6 +47,7 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("source",messes.get(position).getName());
                 intent.putExtra("name",messes.get(position).getName());
                 context.startActivity(intent);
             }

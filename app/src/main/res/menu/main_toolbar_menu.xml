@@ -16,14 +16,4 @@
         android:icon="@mipmap/ic_launcher"
         android:title="加入班圈"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/main_toolbar_share"
-        android:icon="@mipmap/ic_launcher"
-        android:title="分享该圈"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/main_toolbar_quit"
-        android:icon="@mipmap/ic_launcher"
-        android:title="退出该圈"
-        app:showAsAction="never"/>
 </menu>

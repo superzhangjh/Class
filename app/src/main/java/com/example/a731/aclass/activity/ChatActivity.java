@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +35,8 @@ public class ChatActivity extends BaseActivity{
     private RecyclerView recyclerView;
     private List<Mess> messes;
     private EditText edtInput;
-    private ImageView imgFn;
+    private ImageButton imgFn;//功能按钮
+    private ImageButton imgInfo;//详情按钮
     private SwipeLayout swipeLayout;
 
     @Override
@@ -55,8 +57,8 @@ public class ChatActivity extends BaseActivity{
 
     private void initEditText() {
         edtInput = (EditText) findViewById(R.id.chat_edt_fn);
-        imgFn = (ImageView) findViewById(R.id.chat_ib_fn);
-
+        imgFn = (ImageButton) findViewById(R.id.chat_ib_fn);
+        imgInfo = (ImageButton) findViewById(R.id.chat_ib_info);
 
         imgFn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +71,14 @@ public class ChatActivity extends BaseActivity{
                     //弹出滑动框
                     swipeLayout.open(SwipeLayout.DragEdge.Bottom);
                 }
+            }
+        });
+
+        imgInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),GroupInfoActivity.class);
+                startActivity(intent);
             }
         });
     }

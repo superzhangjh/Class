@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:id="@+id/groupinfo_item_share"
+        android:title="分享圈"/>
+    <item
+        android:id="@+id/groupinfo_item_exit"
+        android:title="退出圈"/>
 </menu>
