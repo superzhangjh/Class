@@ -1,15 +1,21 @@
 package com.example.a731.aclass.activity;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -18,9 +24,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.presenter.CreateGroupPresenter;
+import com.example.a731.aclass.presenter.impl.CreateGroupPresenterImpl;
+import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.view.CreateGroupView;
 
 import java.io.File;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by 郑选辉 on 2017/9/20.
@@ -33,18 +45,11 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
     private Button create;
 
     private File gHeadImgFile;
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
 
+    private CreateGroupPresenter createGroupPresenter;
 
     private static final int CAPTURE_PIICTURE_RESULT_CODE = 1001;
     private static final int CAPTURE_PHOTO_RESULT_CODE = 1002;
-    private static final int REQUIRE_PERMISSION_REQUEST_CODE = 2001;
-
 
 
     @Override
@@ -52,11 +57,15 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
         return R.layout.activity_create_group;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void initView() {
         gHeadImg = (ImageView) findViewById(R.id.create_group_img_head);
         gName = (EditText) findViewById(R.id.create_group_edt_name);
         create = (Button) findViewById(R.id.create_group_btn_create);
+
+        createGroupPresenter = new CreateGroupPresenterImpl(this);
+        getPermission();
     }
 
     @Override
@@ -100,8 +109,8 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
                     Toast.makeText(CreateGroupActivity.this,"圈头像还未选择",Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
+                Users users = BmobUser.getCurrentUser(Users.class);
+                createGroupPresenter.createGroup(name, users,gHeadImgFile);
             }
         });
     }
@@ -140,5 +149,25 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             file = new File(path);
         }
         return file;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void getPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+        }
+    }
+
+    @Override
+    public void onCreateSuccess() {
+        showToast("创建成功");
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onCreateFail(String msg) {
+        showToast("创建失败"+msg);
     }
 }

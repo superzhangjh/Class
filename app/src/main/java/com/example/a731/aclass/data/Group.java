@@ -11,15 +11,15 @@ import cn.bmob.v3.datatype.BmobRelation;
  */
 
 public class Group extends BmobObject {
-    private String name;
-    private Users creator;
-    private BmobRelation member;
-    private BmobRelation administrator;
-    private int number;
-    private File headImg;
-    private String notification;
-    private BmobFile images;
-    private String vote;
+    private String name;//圈名
+    private Users creator;//创建者
+    private BmobRelation member;//成员
+    private BmobRelation administrator;//管理员
+    private int number;//成员数
+    private File headImg;//头像
+    private String notification;//通知
+    private BmobFile images;//上传图片
+    private String vote;//投票
 
     public String getName() {
         return name;

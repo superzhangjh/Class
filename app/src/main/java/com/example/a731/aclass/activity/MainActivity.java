@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
+import static com.example.a731.aclass.R.id.start;
 
 public class MainActivity extends BaseActivity implements MainView{
 
@@ -162,7 +163,9 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.main_toolbar_btn1:
+            case R.id.main_toolbar_create_group:
+                Intent intent = new Intent(MainActivity.this,CreateGroupActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;
