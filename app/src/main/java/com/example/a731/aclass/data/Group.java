@@ -17,9 +17,9 @@ public class Group extends BmobObject {
     private BmobRelation administrator;//管理员
     private int number;//成员数
     private File headImg;//头像
-    private String notification;//通知
-    private BmobFile images;//上传图片
-    private String vote;//投票
+    //private String notification;//通知
+    //private BmobFile images;//上传图片
+    //private String vote;//投票
 
     public String getName() {
         return name;
@@ -67,29 +67,5 @@ public class Group extends BmobObject {
 
     public void setHeadImg(File headImg) {
         this.headImg = headImg;
-    }
-
-    public String getNotification() {
-        return notification;
-    }
-
-    public void setNotification(String notification) {
-        this.notification = notification;
-    }
-
-    public BmobFile getImages() {
-        return images;
-    }
-
-    public void setImages(BmobFile images) {
-        this.images = images;
-    }
-
-    public String getVote() {
-        return vote;
-    }
-
-    public void setVote(String vote) {
-        this.vote = vote;
     }
 }

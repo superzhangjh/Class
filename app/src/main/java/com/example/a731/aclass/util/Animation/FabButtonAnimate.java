@@ -9,11 +9,10 @@ import com.azhon.suspensionfab.ExpandOrientation;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.azhon.suspensionfab.manager.AnimationManager;
 
-
 /**
  * 项目名:     SuspensionFAB
  * 包名:       com.azhon.fab
- * 文件名:     FabAlphaAnimate
+ * 文件名:     FabButtonAnimate
  * 创建者:     阿钟
  * 创建时间:   2017/6/29 23:12
  * 描述:       TODO 这里可以实现自己想要的动画
@@ -21,10 +20,9 @@ import com.azhon.suspensionfab.manager.AnimationManager;
  * @see AnimationManager
  */
 
-public class FabAlphaAnimate extends AnimationManager {
+public class FabButtonAnimate extends AnimationManager {
 
-
-    public FabAlphaAnimate(SuspensionFab fabView) {
+    public FabButtonAnimate(SuspensionFab fabView) {
         super(fabView);
     }
 
@@ -74,8 +72,7 @@ public class FabAlphaAnimate extends AnimationManager {
     }
 
     @Override
-    public void defaultFabAnimation(FloatingActionButton fab, ExpandOrientation orientation,
-                                    boolean currentState) {
+    public void defaultFabAnimation(FloatingActionButton fab, ExpandOrientation orientation,boolean currentState) {
         if (currentState) {
             ObjectAnimator animator = ObjectAnimator.ofFloat(fab, "rotation", 0, 45);
             animator.setDuration(fabView.getAnimateDuration());
@@ -86,5 +83,4 @@ public class FabAlphaAnimate extends AnimationManager {
             animator.start();
         }
     }
-
 }

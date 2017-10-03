@@ -50,8 +50,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/chat_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#0af">
+            android:layout_height="50dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -66,7 +65,7 @@
                     android:layout_height="match_parent" />
                 <ImageButton
                     android:id="@+id/chat_ib_info"
-                    android:src="@mipmap/ic_launcher"
+                    android:background="@drawable/chat_info"
                     android:layout_width="50dp"
                     android:layout_height="50dp" />
             </LinearLayout>
@@ -80,7 +79,6 @@
         </android.support.v7.widget.RecyclerView>
 
         <LinearLayout
-            android:background="#0af"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal">
@@ -101,8 +99,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="#ddd"/>
+                android:layout_marginRight="10dp"/>
 
             <ImageButton
                 android:background="@drawable/chat_fn"
@@ -113,5 +110,5 @@
                 android:layout_marginRight="10dp" />
         </LinearLayout>
     </LinearLayout>
-    
+
 </com.daimajia.swipe.SwipeLayout>

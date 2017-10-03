@@ -11,7 +11,7 @@ import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
-import com.example.a731.aclass.util.Animation.FabAlphaAnimate;
+import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,7 @@ public class CircleFragment extends BaseFragment{
         initSuspensionFab();
     }
 
+    //悬浮按钮
     private void initSuspensionFab() {
         susFab = (SuspensionFab) mRootView.findViewById(R.id.circle_suspensionfab);
         //构建展开按钮属性
@@ -77,7 +78,7 @@ public class CircleFragment extends BaseFragment{
                 .build();
         //添加菜单
         susFab.addFab(collection,email,news);
-        susFab.setAnimationManager(new FabAlphaAnimate(susFab));
+        susFab.setAnimationManager(new FabButtonAnimate(susFab));
         susFab.setFabClickListener(new OnFabClickListener() {
             @Override
             public void onFabClick(FloatingActionButton fab, Object tag) {
