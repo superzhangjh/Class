@@ -13,6 +13,16 @@ public class Mess {
     private String name;//
     private String message;//消息内容
     private String date;//日期
+
+    public Boolean getGroupMess() {
+        return isGroupMess;
+    }
+
+    public void setGroupMess(Boolean groupMess) {
+        isGroupMess = groupMess;
+    }
+
+    private Boolean isGroupMess;
     private int orientation;//0或1，0代表己方，1代表对方
 
     public String getOrigin() {

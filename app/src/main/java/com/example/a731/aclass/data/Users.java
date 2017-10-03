@@ -15,7 +15,7 @@ public class Users extends BmobUser{
 //    private String mobilePhoneNumber; 手机号码
     private String name;//姓名
     private int id;//学号
-    private int sex;//性别
+    private int sex;//性别(1代表男，2代表女)
     private String project;//专业
     private String homeLand;//籍贯
     private String intro;//简介

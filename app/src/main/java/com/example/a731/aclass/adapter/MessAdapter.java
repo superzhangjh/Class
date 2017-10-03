@@ -40,7 +40,7 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Mess mess = messes.get(position);
+        final Mess mess = messes.get(position);
         holder.name.setText(mess.getName());
         holder.message.setText(mess.getMessage());
         holder.content.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +49,9 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("source",messes.get(position).getName());
                 intent.putExtra("name",messes.get(position).getName());
+                //判断是否为圈消息
+                Boolean isGroupMess = mess.getGroupMess();
+                intent.putExtra("isGroupMess",isGroupMess);
                 context.startActivity(intent);
             }
         });

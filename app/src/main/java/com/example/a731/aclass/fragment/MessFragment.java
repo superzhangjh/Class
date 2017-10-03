@@ -23,12 +23,20 @@ public class MessFragment extends BaseFragment{
     @Override
     protected int getLayoutRes() {
         messes = new ArrayList<>();
+        Mess mess = new Mess();
+        mess.setName("老王");
+        mess.setMessage("我是乐于助人的好邻居!");
+        mess.setGroupMess(false);
+        messes.add(mess);
+
         for(int i=0;i<10;i++){
-            Mess mess = new Mess();
-            mess.setName("群"+i);
-            mess.setMessage("你已被移出群聊！");
-            messes.add(mess);
+            Mess mess1 = new Mess();
+            mess1.setName("群"+i);
+            mess1.setMessage("你已被移出群聊！");
+            mess1.setGroupMess(true);
+            messes.add(mess1);
         }
+
         return R.layout.fragment_mess;
     }
 

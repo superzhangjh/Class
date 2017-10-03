@@ -12,14 +12,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.ChatAdapter;
-import com.example.a731.aclass.adapter.MessAdapter;
 import com.example.a731.aclass.data.Mess;
 
 import java.util.ArrayList;
@@ -77,8 +74,17 @@ public class ChatActivity extends BaseActivity{
         imgInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),GroupInfoActivity.class);
-                startActivity(intent);
+                //根据接收的布尔值判断是否为圈消息，如果是则跳转到圈详情页面，如果不是则跳转到个人详情页面
+                boolean isGroupMess = getIntent().getBooleanExtra("isGroupMess",false);
+                if (!isGroupMess){
+                    //个人详情页面
+                    Intent intent = new Intent(getApplicationContext(),UserInfoActivity.class);
+                    startActivity(intent);
+                }else{
+                    //圈详情页面
+                    Intent intent = new Intent(getApplicationContext(),GroupInfoActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

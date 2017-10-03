@@ -46,6 +46,9 @@
         <activity android:name=".activity.GroupInfoActivity"
             android:theme="@style/NoActionBar"/>
 
+        <activity android:name=".activity.UserInfoActivity"
+            android:theme="@style/NoActionBar"/>
+
     </application>
 
 </manifest>
