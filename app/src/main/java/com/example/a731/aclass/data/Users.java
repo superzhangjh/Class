@@ -19,7 +19,7 @@ public class Users extends BmobUser{
     private String project;//专业
     private String homeLand;//籍贯
     private String intro;//简介
-    private File headImg;//头像
+    private String headImg;//头像
 
     public String getName() {
         return name;
@@ -37,11 +37,11 @@ public class Users extends BmobUser{
         this.id = id;
     }
 
-    public File getHeadImg() {
+    public String getHeadImg() {
         return headImg;
     }
 
-    public void setHeadImg(File headImg) {
+    public void setHeadImg(String headImg) {
         this.headImg = headImg;
     }
 

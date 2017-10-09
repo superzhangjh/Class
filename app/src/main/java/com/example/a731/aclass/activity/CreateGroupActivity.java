@@ -28,6 +28,7 @@ import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.presenter.impl.CreateGroupPresenterImpl;
 import com.example.a731.aclass.util.BmobUtil;
+import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.view.CreateGroupView;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
     private EditText gName;
     private Button create;
 
-    private File gHeadImgFile;
+    private String gHeadImgPath;
 
     private CreateGroupPresenter createGroupPresenter;
 
@@ -101,16 +102,9 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             @Override
             public void onClick(View v) {
                 String name = gName.getText().toString();
-                if (name.equals("")){
-                    Toast.makeText(CreateGroupActivity.this,"圈名不能为空",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (gHeadImgFile == null){
-                    Toast.makeText(CreateGroupActivity.this,"圈头像还未选择",Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Users users = BmobUser.getCurrentUser(Users.class);
-                createGroupPresenter.createGroup(name, users,gHeadImgFile);
+
+                createGroupPresenter.checkGroup(name, users,gHeadImgPath);
             }
         });
     }
@@ -124,31 +118,17 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
         if(requestCode == CAPTURE_PIICTURE_RESULT_CODE){
             Uri uri = data.getData();
             gHeadImg.setImageURI(uri);
-            gHeadImgFile = getRealPathFromFile(uri);
+            gHeadImgPath = ImageLoderUtil.getRealPathFromUri(this,uri);
         }else if(requestCode == CAPTURE_PHOTO_RESULT_CODE){
             Uri uri = data.getData();
             gHeadImg.setImageURI(uri);
-            gHeadImgFile = new File(uri.toString());
+            gHeadImgPath = uri.toString();
         }
 
     }
 
     @Override
     public void initData() {
-    }
-
-    public File getRealPathFromFile(Uri uri){
-        ContentResolver resolver = this.getContentResolver();
-        String[] pojo = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, pojo, null,null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(pojo[0]));
-        File file = null;
-        if (path!=null && path.length()>0){
-            file = new File(path);
-        }
-        return file;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

@@ -22,6 +22,8 @@ import com.example.a731.aclass.fragment.MessFragment;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
 import com.example.a731.aclass.view.MainView;
+import com.hyphenate.EMError;
+import com.hyphenate.util.NetUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,9 +89,6 @@ public class MainActivity extends BaseActivity implements MainView{
                 switch (item.getItemId()){
                     case R.id.main_nav_menu_logOut:
                         mainPresenter.logOut();
-                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                        startActivity(intent);
-                        finish();
                         break;
                     case R.id.main_nav_menu_setting:
 
@@ -169,5 +168,37 @@ public class MainActivity extends BaseActivity implements MainView{
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onLogoutFail(String error) {
+        showToast("退出失败:"+error);
+    }
+
+    @Override
+    public void onLogoutSuccess() {
+        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onDisconnected(int errorCode) {
+        if(errorCode == EMError.USER_REMOVED){
+            showToast("帐号已经被移除");
+            // 显示帐号已经被移除
+        }else if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+            showToast("帐号在其他设备登录");
+            // 显示帐号在其他设备登录
+        } else {
+            if (NetUtils.hasNetwork(MainActivity.this)){
+                showToast("连接不到聊天服务器");
+            }
+            //连接不到聊天服务器
+            else{
+                showToast("当前网络不可用，请检查网络设置");
+            }
+            //当前网络不可用，请检查网络设置
+        }
     }
 }

@@ -8,4 +8,8 @@ public interface SignUpView {
     void onRegisterSuccess();
 
     void onRegisterFail(String msg);
+
+    void onRequestSMSCodeSuccess();
+
+    void onRequestSMSCodeFail(String msg);
 }

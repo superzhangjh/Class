@@ -1,9 +1,6 @@
 package com.example.a731.aclass.data;
 
-import java.io.File;
-
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
@@ -16,7 +13,7 @@ public class Group extends BmobObject {
     private BmobRelation member;//成员
     private BmobRelation administrator;//管理员
     private int number;//成员数
-    private File headImg;//头像
+    private String headImg;//头像
     //private String notification;//通知
     //private BmobFile images;//上传图片
     //private String vote;//投票
@@ -61,11 +58,11 @@ public class Group extends BmobObject {
         this.number = number;
     }
 
-    public File getHeadImg() {
+    public String getHeadImg() {
         return headImg;
     }
 
-    public void setHeadImg(File headImg) {
+    public void setHeadImg(String headImg) {
         this.headImg = headImg;
     }
 }

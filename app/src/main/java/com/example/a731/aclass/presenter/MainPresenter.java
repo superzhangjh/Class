@@ -6,4 +6,6 @@ package com.example.a731.aclass.presenter;
 
 public interface MainPresenter {
     void logOut();
+
+    void checkConnectionState();
 }

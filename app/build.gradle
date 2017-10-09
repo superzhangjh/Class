@@ -45,4 +45,8 @@ dependencies {
     compile 'cn.bmob.android:bmob-sdk:3.5.5'
     //bmob-push：Bmob的推送包
     compile 'cn.bmob.android:bmob-push:0.8'
+
+    //环信即时通讯SDK
+    compile 'com.google.android.gms:play-services-gcm:11.0.4'
+    compile 'com.hyphenate:hyphenate-sdk:3.3.4'
 }

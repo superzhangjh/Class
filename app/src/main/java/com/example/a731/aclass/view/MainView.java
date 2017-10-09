@@ -5,4 +5,9 @@ package com.example.a731.aclass.view;
  */
 
 public interface MainView {
+    void onLogoutFail(String error);
+
+    void onDisconnected(int errorCode);
+
+    void onLogoutSuccess();
 }

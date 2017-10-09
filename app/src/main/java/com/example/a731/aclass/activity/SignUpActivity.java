@@ -97,4 +97,14 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
     public void onRegisterFail(String msg) {
         showToast("注册失败，"+msg);
     }
+
+    @Override
+    public void onRequestSMSCodeSuccess() {
+        showToast("验证短信发送成功");
+    }
+
+    @Override
+    public void onRequestSMSCodeFail(String msg) {
+        showToast("验证短信发送失败:"+msg);
+    }
 }

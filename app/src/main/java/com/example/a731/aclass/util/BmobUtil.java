@@ -8,11 +8,13 @@ import java.io.File;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by 郑选辉 on 2017/9/27.
@@ -47,12 +49,19 @@ public class BmobUtil {
     }
 
     //创建班圈
-    public static void createGroup(String groupName, Users creator, File headImg, SaveListener<String> listener){
+    public static void createGroup(String groupName, Users creator, String headImg, SaveListener<String> listener){
+
         Group group = new Group();
         group.setName(groupName);
         group.setHeadImg(headImg);
         group.setCreator(creator);
         group.save(listener);
+    }
+
+    public static BmobFile uploadBlock(String filePath, UploadFileListener listener){
+        BmobFile bmobFile = new BmobFile(new File(filePath));
+        bmobFile.uploadblock(listener);
+        return bmobFile;
     }
 
     public static void logOut() {

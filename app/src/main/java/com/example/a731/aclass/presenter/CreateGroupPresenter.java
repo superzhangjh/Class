@@ -9,5 +9,5 @@ import java.io.File;
  */
 
 public interface CreateGroupPresenter {
-    void createGroup(String name, Users creator, File headImg);
+    void checkGroup(String name, Users creator, String headImg);
 }
