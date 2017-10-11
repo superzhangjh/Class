@@ -1,18 +1,16 @@
 package com.example.a731.aclass.data;
 
-import android.media.Image;
-
-import java.util.Date;
-
 /**
  * Created by Administrator on 2017/9/16/016.
  */
 
 public class Mess {
-    private String origin;//消息发出者
+    private String creatorID;//消息发出者
     private String name;//
     private String message;//消息内容
     private String date;//日期
+    private Boolean isGroupMess;
+    private int orientation;//0或1，0代表己方，1代表对方
 
     public Boolean getGroupMess() {
         return isGroupMess;
@@ -22,15 +20,12 @@ public class Mess {
         isGroupMess = groupMess;
     }
 
-    private Boolean isGroupMess;
-    private int orientation;//0或1，0代表己方，1代表对方
-
-    public String getOrigin() {
-        return origin;
+    public String getCreatorID() {
+        return creatorID;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
     }
 
     public int getOrientation() {

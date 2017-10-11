@@ -93,7 +93,7 @@ public class UserInfoActivity extends BaseActivity{
     private void initToolbar() {
         //设置toolbar
         setSupportActionBar(toolbar);
-        toolbar.setAlpha(0);
+        toolbar.setAlpha(0.8f);
         // 显示标题栏左上角的返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //点击toolbar后导航栏 左上角的图标后，退出当前界面

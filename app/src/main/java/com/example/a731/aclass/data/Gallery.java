@@ -8,7 +8,16 @@ public class Gallery {
     //照片集
     private String[] srcList;//链接
     private String date;//创建日期
+    private String intro;//相片描述
     private String createrID;//创建者
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
 
     public String[] getSrcList() {
         return srcList;
