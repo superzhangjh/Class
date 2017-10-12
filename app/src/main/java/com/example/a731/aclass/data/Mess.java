@@ -10,7 +10,6 @@ public class Mess {
     private String message;//消息内容
     private String date;//日期
     private Boolean isGroupMess;
-    private int orientation;//0或1，0代表己方，1代表对方
 
     public Boolean getGroupMess() {
         return isGroupMess;
@@ -26,14 +25,6 @@ public class Mess {
 
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
-    }
-
-    public int getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(int orientation) {
-        this.orientation = orientation;
     }
 
     public String getName() {

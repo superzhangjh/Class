@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.example.a731.aclass.util.ToastUtil;
+
 /**
  * Activity基类
  */
@@ -31,14 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     /** 初始化数据 */
     public abstract void initData();
 
-    private Toast mToast;
-
     public void showToast(String msg) {
-        if (mToast == null) {
-            mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        }
-        mToast.setText(msg);
-        mToast.show();
+        ToastUtil.showToast(getApplicationContext(),msg);
     }
 
 }

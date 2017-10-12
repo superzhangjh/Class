@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,6 +19,13 @@ import com.daimajia.swipe.SwipeLayout;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.ChatAdapter;
 import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.presenter.ChatPresenter;
+import com.example.a731.aclass.presenter.impl.ChatPresenterImpl;
+import com.example.a731.aclass.view.ChatView;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +34,20 @@ import java.util.List;
  * Created by Administrator on 2017/9/18/018.
  */
 
-public class ChatActivity extends BaseActivity{
+public class ChatActivity extends BaseActivity implements ChatView {
     private Toolbar toolbar;
     private TextView chatName;
     private RecyclerView recyclerView;
-    private List<Mess> messes;
+    private List<Mess> messes = new ArrayList<>();
     private EditText edtInput;
     private ImageButton imgFn;//功能按钮
     private ImageButton imgInfo;//详情按钮
     private SwipeLayout swipeLayout;
+
+    private ChatAdapter adapter;
+    private int msgNum = -1;
+    private ChatPresenter chatPresenter = new ChatPresenterImpl(this);
+    private String username;
 
     @Override
     protected int getLayoutRes() {
@@ -43,10 +56,11 @@ public class ChatActivity extends BaseActivity{
 
     @Override
     public void initView() {
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
         initToolbar();
 
         //测试内容
-        initTestData();
         initSwipeLayout();
         initRecyclerview();
         initEditText();
@@ -67,7 +81,9 @@ public class ChatActivity extends BaseActivity{
                     imm.hideSoftInputFromWindow(edtInput.getWindowToken(), 0) ;
                     //弹出滑动框
                     swipeLayout.open(SwipeLayout.DragEdge.Bottom);
+                    return;
                 }
+                sendMessage();
             }
         });
 
@@ -89,11 +105,25 @@ public class ChatActivity extends BaseActivity{
         });
     }
 
+    private void sendMessage() {
+        //发送文本消息
+        String edtContent = edtInput.getText().toString();
+        chatPresenter.senMessage(username,edtContent);
+        Mess mess = new Mess();
+        mess.setMessage(edtContent);
+        mess.setCreatorID("myself");
+        adapter.add(mess);
+        edtInput.setText("");
+        recyclerView.smoothScrollToPosition(messes.size());
+    }
 
+    //消息内容呈现的recyclerview
     private void initRecyclerview() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycle_view);
-        ChatAdapter adapter = new ChatAdapter(this,messes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ChatAdapter(this,messes,username);
+        LinearLayoutManager manager=new LinearLayoutManager(this);
+        manager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
     }
 
@@ -124,11 +154,79 @@ public class ChatActivity extends BaseActivity{
                 }
             }
         });
+
+
+        EMMessageListener msgListener = new EMMessageListener() {
+
+            @Override
+            public void onMessageReceived(List<EMMessage> messages) {
+                //收到消息
+                for (int i=0;i<messages.size();i++){
+                    EMMessage msg = messages.get(i);
+                    Mess mess = new Mess();
+                    mess.setCreatorID(msg.getFrom());
+                    mess.setDate(msg.getMsgTime()+"");
+                    switch(msg.getType()){
+                        //文本信息
+                        case TXT:
+                            EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
+                            mess.setMessage(body.getMessage());
+                            showToast("收到信息"+body.getMessage()+":"+msgNum);
+                            messes.add(mess);
+                            adapter.notifyDataSetChanged();
+                            //recyclerView.smoothScrollToPosition();
+                            break;
+                        //图片信息
+                        case IMAGE:
+                            break;
+                        //视频
+                        case VIDEO:
+                            break;
+                        //位置
+                        case LOCATION:
+                            break;
+                        //声音
+                        case VOICE:
+                            break;
+                        //文件
+                        case FILE:
+                            break;
+                    }
+                }
+                recyclerView.smoothScrollToPosition(msgNum++);
+
+            }
+
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> messages) {
+                //收到透传消息
+            }
+
+            @Override
+            public void onMessageRead(List<EMMessage> messages) {
+                //收到已读回执
+            }
+
+            @Override
+            public void onMessageDelivered(List<EMMessage> message) {
+                //收到已送达回执
+            }
+            @Override
+            public void onMessageRecalled(List<EMMessage> messages) {
+                //消息被撤回
+            }
+
+            @Override
+            public void onMessageChanged(EMMessage message, Object change) {
+                //消息状态变动
+            }
+        };
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
     @Override
     public void initData() {
-
+        chatPresenter.getConversationRecord(username);
     }
 
     private void initToolbar() {
@@ -159,18 +257,60 @@ public class ChatActivity extends BaseActivity{
         swipeLayout.addDrag(SwipeLayout.DragEdge.Bottom,this.findViewById(R.id.chat_swipelayout_bottom));
     }
 
-    private void initTestData() {
-        messes = new ArrayList<>();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-        String message = "我是消息！";
-        for (int i=0;i<10;i++){
-            Mess mess = new Mess();
-            mess.setMessage("我是第"+(i+1)+"条消息," + message);
-            message = message + message;
-            mess.setDate("2017-09-20 10:20");
-            messes.add(mess);
-        }
+    }
+
+    @Override
+    public void onSendMessageSuccess() {
+
+    }
+
+    @Override
+    public void onSendMessageFail() {
+
     }
 
 
+    //获取会话记录
+    @Override
+    public void onGetRecordSuccess(List<EMMessage> emMessages) {
+        if (emMessages == null)return;
+        for (int i=0;i<emMessages.size();i++){
+            EMMessage msg = emMessages.get(i);
+            Mess mess = new Mess();
+            mess.setCreatorID(msg.getFrom());
+            Log.i("ChatActivity",msg.getFrom());
+            mess.setDate(msg.getMsgTime()+"");
+            switch(msg.getType()){
+                //文本信息
+                case TXT:
+                    EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
+                    mess.setMessage(body.getMessage());
+                    messes.add(mess);
+                    adapter.notifyDataSetChanged();
+                    showToast("获取记录成功:"+emMessages.size());
+                    break;
+                //图片信息
+                case IMAGE:
+                    break;
+                //视频
+                case VIDEO:
+                    break;
+                //位置
+                case LOCATION:
+                    break;
+                //声音
+                case VOICE:
+                    break;
+                //文件
+                case FILE:
+                    break;
+            }
+            msgNum++;
+        }
+
+    }
 }

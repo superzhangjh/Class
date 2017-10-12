@@ -18,11 +18,16 @@ import android.widget.RadioGroup;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.fragment.CircleFragment;
+import com.example.a731.aclass.fragment.FriendFragment;
 import com.example.a731.aclass.fragment.MessFragment;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
+import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.view.MainView;
+import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.NetUtils;
 
 import java.util.ArrayList;
@@ -66,6 +71,7 @@ public class MainActivity extends BaseActivity implements MainView{
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new CircleFragment());
         fragmentList.add(new MessFragment());
+        fragmentList.add(new FriendFragment());
 
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()){
             @Override
@@ -144,7 +150,43 @@ public class MainActivity extends BaseActivity implements MainView{
                     case R.id.main_rb_mess:
                         mViewPager.setCurrentItem(1);
                         break;
+                    case R.id.main_rb_friend:
+                        mViewPager.setCurrentItem(2);
+                        break;
                 }
+            }
+        });
+
+        EMClient.getInstance().contactManager().setContactListener(new EMContactListener() {
+            @Override
+            public void onContactAdded(String username) {
+                //好友请求被同意
+            }
+
+            @Override
+            public void onContactDeleted(String username) {
+                //好友请求被拒绝
+            }
+
+            @Override
+            public void onContactInvited(String username, String reason) {
+                //收到好友邀请
+                try {
+                    EaseMobUtil.acceptFriendRequest(username);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFriendRequestAccepted(String username) {
+                //同意邀请时回调此方法
+
+            }
+
+            @Override
+            public void onFriendRequestDeclined(String username) {
+                //被拒绝时回调此方法
             }
         });
     }
@@ -161,9 +203,14 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         switch (item.getItemId()){
             case R.id.main_toolbar_create_group:
-                Intent intent = new Intent(MainActivity.this,CreateGroupActivity.class);
+                intent.setClass(MainActivity.this,CreateGroupActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.main_toolbar_search:
+                intent.setClass(MainActivity.this,SearchUserActivity.class);
                 startActivity(intent);
                 break;
         }

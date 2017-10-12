@@ -31,7 +31,6 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        //Bmob.initialize(this, "220e091cec75d58301d05e224f0c3af0");
 
         new Handler().postDelayed(new Runnable() {
             @Override
