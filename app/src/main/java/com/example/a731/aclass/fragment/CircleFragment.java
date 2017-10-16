@@ -70,7 +70,7 @@ public class CircleFragment extends BaseFragment{
         list_fragment.add(new Fragment());
         list_fragment.add(new Fragment());
         list_fragment.add(new Fragment());
-        list_fragment.add(new Fragment());
+        list_fragment.add(new CircleGalleryFragment());
 
         list_title = new ArrayList<>();
         list_title.add("动态");
@@ -184,6 +184,7 @@ public class CircleFragment extends BaseFragment{
         adapter = new CircleFragmentPagerAdapter(getActivity().getSupportFragmentManager(),list_fragment,list_title);
         viewpager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewpager);
+        tablayout.setSmoothScrollingEnabled(false);
     }
 
     @Override

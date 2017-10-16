@@ -68,7 +68,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         LinearLayout content;
         public ViewHolder(View itemView) {
             super(itemView);
-            username = (TextView) itemView.findViewById(R.id.fragment_friend_tv_item);
+            username = (TextView) itemView.findViewById(R.id.fragment_friend_tv_name);
             headImg = (ImageView) itemView.findViewById(R.id.fragment_friend_iv_headImg);
             content = (LinearLayout) itemView.findViewById(R.id.fragment_friend_ll_content);
         }

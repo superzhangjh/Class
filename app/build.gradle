@@ -27,7 +27,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     //材料设计
@@ -49,4 +49,14 @@ dependencies {
     //环信即时通讯SDK
     compile 'com.google.android.gms:play-services-gcm:11.0.4'
     compile 'com.hyphenate:hyphenate-sdk:3.3.4'
+
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.1'
+    //Glide
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+    //CardView
+    compile 'com.android.support:cardview-v7:25.0.1'
+
+    //CircleImageView
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 }

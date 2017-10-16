@@ -1,6 +1,7 @@
 package com.example.a731.aclass.activity;
 
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,7 +18,7 @@ public class UserInfoActivity extends BaseActivity{
 
     private Toolbar toolbar;
     private ImageView imgHead;//头像
-    private RelativeLayout rlHeadBackground;//头像背景的点击事件(本地功能)
+    private ImageView imgHeadBG;//头像背景的点击事件(本地功能)
     private Users user;//用户数据从网络获取，便于修改资料的更新
 
     private ImageView ivSex;//性别图标
@@ -39,7 +40,7 @@ public class UserInfoActivity extends BaseActivity{
     public void initView() {
         toolbar = (Toolbar) findViewById(R.id.userinfo_toolbar);
         imgHead = (ImageView) findViewById(R.id.userinfo_iv_head);
-        rlHeadBackground = (RelativeLayout) findViewById(R.id.userinfo_headbackground);
+        imgHeadBG = (ImageView) findViewById(R.id.userinfo_headbackground);
 
         ivSex = (ImageView) findViewById(R.id.userinfo_iv_sex);
         itQRCode = (ImageView) findViewById(R.id.userinfo_iv_qr_droid);
@@ -103,6 +104,12 @@ public class UserInfoActivity extends BaseActivity{
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.groupinfo_toolbar_menu,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

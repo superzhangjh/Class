@@ -9,7 +9,33 @@ public class Gallery {
     private String[] srcList;//链接
     private String date;//创建日期
     private String intro;//相片描述
-    private String createrID;//创建者
+    private String creatorID;//创建者
+    private String creatorName;//创建者名称
+    private int like;//点赞
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
 
     public String getIntro() {
         return intro;
@@ -35,11 +61,4 @@ public class Gallery {
         this.date = date;
     }
 
-    public String getCreaterID() {
-        return createrID;
-    }
-
-    public void setCreaterID(String createrID) {
-        this.createrID = createrID;
-    }
 }

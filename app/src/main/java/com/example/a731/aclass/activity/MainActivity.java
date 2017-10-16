@@ -14,9 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.adapter.FriendAdapter;
+import com.example.a731.aclass.adapter.FriendAdapter1;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
 import com.example.a731.aclass.fragment.FriendFragment;
 import com.example.a731.aclass.fragment.MessFragment;
@@ -46,8 +52,9 @@ public class MainActivity extends BaseActivity implements MainView{
 
     private MainPresenter mainPresenter;
 
-
-
+    private ListView friend_list_view;
+    private List<Users> friendList;
+    private TextView tvFriendCount;
 
     @Override
     protected int getLayoutRes() {
@@ -64,6 +71,35 @@ public class MainActivity extends BaseActivity implements MainView{
         initNavigationView();
         initToolBar();
         initActionBarDrawerLayout();
+        initFriendListView();
+    }
+
+    private void initFriendListView() {
+        friend_list_view = (ListView) findViewById(R.id.main_nav_right_listview);
+        tvFriendCount = (TextView) findViewById(R.id.main_nav_right_count);
+
+        friendList = new ArrayList<>();
+        for (int i=0;i<5;i++){
+            Users user1= new Users();
+            user1.setName("我是"+i);
+            friendList.add(user1);
+        }
+
+        int friendCount = friendList.size();
+        tvFriendCount.setText("通讯录("+ friendCount +")");
+
+        FriendAdapter1 adapter = new FriendAdapter1(getApplicationContext(),R.layout.fragment_friend_item,friendList);
+        friend_list_view.setAdapter(adapter);
+        friend_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Users user = friendList.get(position);
+                Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
+                intent.putExtra("name",user.getName());
+                intent.putExtra("isGroupMess",false);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initViewPager() {

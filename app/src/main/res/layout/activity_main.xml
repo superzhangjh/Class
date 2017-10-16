@@ -30,6 +30,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
+        <View
+            android:background="#ccc"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
         <RadioGroup
             android:id="@+id/main_radiogroup"
             android:layout_width="match_parent"
@@ -64,6 +69,7 @@
 
     </LinearLayout>
 
+    //个人信息
     <android.support.design.widget.NavigationView
         android:id="@+id/main_nav_view"
         android:layout_width="300dp"
@@ -72,5 +78,79 @@
         app:menu="@menu/main_nav_menu"
         app:headerLayout="@layout/activity_main_nav_header">
     </android.support.design.widget.NavigationView>
+
+    //好友列表
+    <android.support.design.widget.NavigationView
+        android:id="@+id/main_nav_right"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/main_nav_right_count"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical|left"
+                    android:textSize="20dp"
+                    android:textColor="#000"
+                    android:text="通讯录(11)"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp" />
+                <ImageView
+                    android:id="@+id/main_nav_right_search"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/search"
+                    android:layout_gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+                <ImageView
+                    android:id="@+id/main_nav_right_addfriend"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/addfriend"
+                    android:layout_gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ListView
+                    android:id="@+id/main_nav_right_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:id="@+id/main_nav_right_dialog"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:textSize="40sp"
+                    android:visibility="invisible" />
+
+                <!-- 自定义字母导航栏 -->
+                <!--<cn.manchester.app.contactsnav.view.SideBar
+                    android:id="@+id/main_nav_right_sidebar"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical" />-->
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
+
 
 </android.support.v4.widget.DrawerLayout>
