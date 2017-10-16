@@ -49,6 +49,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
                 String phoneNum = edt_phoneNum.getText().toString();
                 String password = edt_password.getText().toString();
                 mPresenter.onCheckLogin(phoneNum,password);
+                showProgress("正在登陆");
             }
         });
 
@@ -70,10 +71,12 @@ public class LoginActivity extends BaseActivity implements LoginView{
         showToast("登录成功");
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
+        hideProgress();
         finish();
     }
     @Override
     public void onLoginFail(String msg) {
+        hideProgress();
         showToast("登录失败"+msg);
     }
 }

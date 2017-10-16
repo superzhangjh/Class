@@ -5,38 +5,40 @@ import android.support.v7.widget.RecyclerView;
 
 
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.adapter.EMMessageListenerAdapter;
 import com.example.a731.aclass.adapter.MessAdapter;
+import com.example.a731.aclass.data.Conversation;
 import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.presenter.MessPresenter;
+import com.example.a731.aclass.presenter.impl.MessPresenterImpl;
+import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.view.MessView;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/9/15/015.
  */
 
-public class MessFragment extends BaseFragment{
+public class MessFragment extends BaseFragment implements MessView{
 
     private RecyclerView recyclerView;
-    private List<Mess> messes = new ArrayList<>();
+
+    private MessAdapter adapter;
+
+    private MessPresenter messPresenter = new MessPresenterImpl(this);
+
+    private EMMessageListener msgListener;
 
     @Override
     protected int getLayoutRes() {
-        messes = new ArrayList<>();
-        Mess mess = new Mess();
-        mess.setName("老王");
-        mess.setMessage("我是乐于助人的好邻居!");
-        mess.setGroupMess(false);
-        messes.add(mess);
-
-        for(int i=0;i<10;i++){
-            Mess mess1 = new Mess();
-            mess1.setName("群"+i);
-            mess1.setMessage("你已被移出群聊！");
-            mess1.setGroupMess(true);
-            messes.add(mess1);
-        }
-
         return R.layout.fragment_mess;
     }
 
@@ -47,18 +49,48 @@ public class MessFragment extends BaseFragment{
 
     @Override
     public void initListener() {
-
+        msgListener = new EMMessageListenerAdapter() {
+            @Override
+            public void onMessageReceived(List<EMMessage> messages) {
+                //收到消息
+                messPresenter.getConversations();
+            }
+        };
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
     @Override
     public void initData() {
-
+        messPresenter.getConversations();
     }
 
     private void initRecyclerview() {
         recyclerView = (RecyclerView) mRootView.findViewById(R.id.mess_recycle_view);
-        MessAdapter adapter = new MessAdapter(getContext(),messes);
+        adapter = new MessAdapter(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onGetConversationSuccess(List<Conversation> conversations) {
+        showToast("数据更新成功");
+        adapter.onDataChanged(conversations);
+    }
+
+    @Override
+    public void onGetConversationFail() {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        messPresenter.getConversations();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 }

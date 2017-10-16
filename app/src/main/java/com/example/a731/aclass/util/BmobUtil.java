@@ -4,6 +4,8 @@ import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
@@ -14,6 +16,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -37,15 +40,15 @@ public class BmobUtil {
         user.signOrLogin(smsCode,listener);
     }
     //查询用户
-    public static void queryUser(String phoneNumber, FindListener<Users> listener){
+    public static void queryUser(String userName, FindListener<Users> listener){
         BmobQuery<Users> query = new BmobQuery<>();
-        query.addWhereEqualTo("mobilePhoneNumber",phoneNumber);
+        query.addWhereEqualTo("username",userName);
         query.findObjects(listener);
     }
 
     //获取验证码
-    public static void requestSMSCode(String phoneNumber, QueryListener<Integer> listener){
-        BmobSMS.requestSMSCode(phoneNumber,SMS_MODEL_NAME,listener);
+    public static void requestSMSCode(String userName, QueryListener<Integer> listener){
+        BmobSMS.requestSMSCode(userName,SMS_MODEL_NAME,listener);
     }
 
     //创建班圈
@@ -58,9 +61,22 @@ public class BmobUtil {
         group.save(listener);
     }
 
+    public static void updateGroup(String groupId, Group group, UpdateListener listener){
+        group.update(groupId,listener);
+    }
+
+    public static void getGroupIdByName(String groupName,FindListener<Group> listener){
+        BmobQuery<Group> query = new BmobQuery<>();
+        query.addWhereEqualTo("name",groupName);
+        query.findObjects(listener);
+
+    }
+
+    //上传文件
     public static BmobFile uploadBlock(String filePath, UploadFileListener listener){
         BmobFile bmobFile = new BmobFile(new File(filePath));
         bmobFile.uploadblock(listener);
+        bmobFile.getFileUrl();
         return bmobFile;
     }
 

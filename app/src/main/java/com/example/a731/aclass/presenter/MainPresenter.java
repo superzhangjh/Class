@@ -8,4 +8,6 @@ public interface MainPresenter {
     void logOut();
 
     void checkConnectionState();
+
+    void getFriendList();
 }

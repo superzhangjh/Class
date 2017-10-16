@@ -103,7 +103,6 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             public void onClick(View v) {
                 String name = gName.getText().toString();
                 Users users = BmobUser.getCurrentUser(Users.class);
-
                 createGroupPresenter.checkGroup(name, users,gHeadImgPath);
             }
         });

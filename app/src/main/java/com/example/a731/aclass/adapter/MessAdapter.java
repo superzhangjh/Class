@@ -3,17 +3,16 @@ package com.example.a731.aclass.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ChatActivity;
-import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.data.Conversation;
+import com.hyphenate.chat.EMConversation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,11 @@ import java.util.List;
 public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
 
     private Context context;
-    private List<Mess> messes;
+    private List<Conversation> conversations;
 
-    public MessAdapter(Context context,List<Mess> messes){
+    public MessAdapter(Context context){
         this.context = context;
-        this.messes = messes;
+        conversations = new ArrayList<>();
     }
 
     @Override
@@ -40,18 +39,17 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final Mess mess = messes.get(position);
-        holder.name.setText(mess.getName());
-        holder.message.setText(mess.getMessage());
+        final Conversation con = conversations.get(position);
+        holder.name.setText(con.getName());
+        holder.message.setText(con.getLastMess());
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("source",messes.get(position).getName());
-                intent.putExtra("name",messes.get(position).getName());
-                //判断是否为圈消息
-                Boolean isGroupMess = mess.getGroupMess();
-                intent.putExtra("isGroupMess",isGroupMess);
+                Intent intent = new Intent();
+                intent.putExtra("username",con.getName());
+                if (con.getChatType() == EMConversation.EMConversationType.Chat){
+                    intent.setClass(context,ChatActivity.class);
+                }
                 context.startActivity(intent);
             }
         });
@@ -59,7 +57,12 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return messes.size();
+        return conversations==null?0:conversations.size();
+    }
+
+    public void onDataChanged(List<Conversation> conversations) {
+        this.conversations = conversations;
+        notifyDataSetChanged();
     }
 
 

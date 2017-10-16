@@ -54,8 +54,9 @@ public class EaseMobUtil {
     /*---------------聊天信息功能------------------*/
 
     //获取所有会话
-    public static void getAllConversations(){
+    public static Map<String, EMConversation> getAllConversations(){
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
+        return conversations;
 
     }
 

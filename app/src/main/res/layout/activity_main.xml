@@ -16,6 +16,11 @@
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/main_classhead"
+                android:background="@mipmap/ic_launcher"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
             <!--<TextView
                 android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
@@ -52,14 +57,6 @@
             <RadioButton
                 android:id="@+id/main_rb_mess"
                 android:text="消息"
-                android:button="@null"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="center"/>
-            <RadioButton
-                android:id="@+id/main_rb_friend"
-                android:text="好友"
                 android:button="@null"
                 android:layout_width="0dp"
                 android:layout_weight="1"

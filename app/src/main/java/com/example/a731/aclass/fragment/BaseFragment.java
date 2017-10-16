@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.a731.aclass.util.ToastUtil;
+
 /**
  * Created by yls on 2017/6/27.
  */
@@ -55,13 +57,8 @@ public abstract class BaseFragment extends Fragment {
     /** 初始化数据 */
     public abstract void initData();
 
-    private Toast mToast;
 
     public void showToast(String msg) {
-        if (mToast == null) {
-            mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
-        }
-        mToast.setText(msg);
-        mToast.show();
+        ToastUtil.showToast(getContext().getApplicationContext(),msg);
     }
 }
