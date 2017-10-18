@@ -7,8 +7,17 @@ import java.io.File;
  */
 
 public class Notice{
-    private int creatorID;//创建者
+    private Users creator;//创建者
     private String title;//标题
+
+    public Users getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Users creator) {
+        this.creator = creator;
+    }
+
     private String content;//内容
     private String date;//创建日期
     private String[] photoList;//图片链接
@@ -21,14 +30,6 @@ public class Notice{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getCreatorID() {
-        return creatorID;
-    }
-
-    public void setCreatorID(int creatorID) {
-        this.creatorID = creatorID;
     }
 
     public String[] getRespond() {
