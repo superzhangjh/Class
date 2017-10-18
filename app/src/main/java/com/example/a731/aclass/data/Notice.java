@@ -8,11 +8,20 @@ import java.io.File;
 
 public class Notice{
     private int creatorID;//创建者
+    private String title;//标题
     private String content;//内容
     private String date;//创建日期
     private String[] photoList;//图片链接
     private String[] respond;//回应
     private Commend commend;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public int getCreatorID() {
         return creatorID;

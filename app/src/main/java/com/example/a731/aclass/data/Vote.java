@@ -6,7 +6,9 @@ package com.example.a731.aclass.data;
 
 public class Vote {
     private String creatorID;//创建者
-    private String content;
+    private String title;//标题
+    private String content;//内容
     private String date;//创建日期
-    private Gallery gallery;//通知可添加图片
+    private String[] photoList;//图片链接
+    private String[] voteItems;//投票选项
 }

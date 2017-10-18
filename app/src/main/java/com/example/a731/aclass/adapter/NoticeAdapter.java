@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Notice;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -60,6 +62,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         int size = getItemCount();
         Notice notice = noticeList.get(size-position-1);
+        holder.tvTitle.setText(notice.getTitle());
         holder.tvContent.setText(notice.getContent());
         holder.tvDate.setText(notice.getDate());
 
@@ -77,6 +80,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
 
         //type_item
         ImageView imgNotice;
+        TextView tvTitle;
         TextView tvContent;
         TextView tvDate;
         ImageView imgImage;
@@ -86,6 +90,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
                 imgNotice = (ImageView) itemView.findViewById(R.id.item_circle_notice_imgNotice);
+                tvTitle = (TextView) itemView.findViewById(R.id.item_circle_notice_tvTitle);
                 tvContent = (TextView) itemView.findViewById(R.id.item_circle_notice_tvContent);
                 tvDate = (TextView) itemView.findViewById(R.id.item_circle_notice_tvDate);
                 imgImage = (ImageView) itemView.findViewById(R.id.item_circle_notice_imgImage);

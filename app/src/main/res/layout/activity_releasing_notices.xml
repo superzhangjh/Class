@@ -30,15 +30,25 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <EditText
-                android:id="@+id/releasing_notices_edt"
+                android:id="@+id/releasing_notices_edtTitle"
                 android:gravity="left|start"
-                android:hint="输入内容"
+                android:hint="请输入标题"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
                 android:background="#ddd"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <EditText
+                android:id="@+id/releasing_notices_edt"
+                android:gravity="left|start"
+                android:hint="请输入内容..."
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#eee"
                 android:layout_width="match_parent"
                 android:layout_height="150dp" />
 

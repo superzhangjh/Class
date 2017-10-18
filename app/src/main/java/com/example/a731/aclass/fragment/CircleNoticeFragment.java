@@ -70,10 +70,12 @@ public class CircleNoticeFragment extends BaseFragment{
         switch (requestCode){
             case REQUEST_RELEASING_NOTICE :
                 if (resultCode==RESULT_OK){
+                    String title = data.getStringExtra("title");
                     String content = data.getStringExtra("content");
                     String date = data.getStringExtra("date");
 
                     Notice notice = new Notice();
+                    notice.setTitle(title);
                     notice.setContent(content);
                     notice.setDate(date);
                     noticeList.add(notice);

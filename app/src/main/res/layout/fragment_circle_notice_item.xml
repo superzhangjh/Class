@@ -19,17 +19,35 @@
             android:layout_width="33dp"
             android:layout_height="33dp" />
 
-        <TextView
-            android:id="@+id/item_circle_notice_tvContent"
-            android:text="通知内容"
-            android:gravity="center_vertical"
-            android:maxLines="2"
+        <LinearLayout
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:layout_height="50dp" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/item_circle_notice_tvTitle"
+                android:text="标题"
+                android:textSize="20dp"
+                android:textColor="#000"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/item_circle_notice_tvContent"
+                android:text="通知内容"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="80dp"

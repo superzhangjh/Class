@@ -25,6 +25,7 @@ import cn.bmob.v3.BmobUser;
 
 public class ReleasingNoticesActivity extends BaseActivity{
 
+    private EditText edtTitle;
     private EditText edtContent;
     private ImageView imgImage;
     private ImageView imgFile;
@@ -43,6 +44,7 @@ public class ReleasingNoticesActivity extends BaseActivity{
 
     @Override
     public void initView() {
+        edtTitle = (EditText) findViewById(R.id.releasing_notices_edtTitle);
         edtContent = (EditText) findViewById(R.id.releasing_notices_edt);
         imgImage = (ImageView) findViewById(R.id.releasing_notices_imgImage);
         imgFile = (ImageView) findViewById(R.id.releasing_notices_imgFile);
@@ -112,10 +114,12 @@ public class ReleasingNoticesActivity extends BaseActivity{
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                String title = edtTitle.getText().toString().trim();
                                 String content = edtContent.getText().toString();
                                 String date = GetNowDate.getNow();
 
                                 Intent intent = new Intent();
+                                intent.putExtra("title",title);
                                 intent.putExtra("content",content);
                                 intent.putExtra("date",date);
                                 setResult(RESULT_OK,intent);
