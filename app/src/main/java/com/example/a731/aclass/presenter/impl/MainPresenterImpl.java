@@ -1,5 +1,6 @@
 package com.example.a731.aclass.presenter.impl;
 
+import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.util.BmobUtil;
@@ -8,6 +9,7 @@ import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.MainView;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private List<Users> friendList;
     private List<String> usernames;
+    private List<Group> groupList;
     public MainPresenterImpl(MainView mainView){
         mMainView = mainView;
     }
@@ -109,6 +112,18 @@ public class MainPresenterImpl implements MainPresenter {
                 }
             }
         });
+    }
+
+    @Override
+    public void getGroup() {
+        groupList = new ArrayList<>();
+        try {
+            List<EMGroup> emGroupList = EaseMobUtil.getAllGroup();
+            mMainView.onGetGroupSuccess(emGroupList);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+            mMainView.onGetGroupFail(e.getMessage());
+        }
     }
 
 

@@ -10,4 +10,6 @@ public interface MainPresenter {
     void checkConnectionState();
 
     void getFriendList();
+
+    void getGroup();
 }

@@ -33,6 +33,7 @@ import com.example.a731.aclass.view.MainView;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.NetUtils;
 
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private List<Users> friendList;
     private TextView tvFriendCount;
     private ImageView imgClasshead;
+    private List<EMGroup> groupList;
 
     private FriendAdapter adapter;
 
@@ -177,6 +179,7 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
+                intent.putExtra("groupId",groupList.get(0).getGroupId());
                 startActivity(intent);
             }
         });
@@ -239,6 +242,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void initData() {
+        mainPresenter.getGroup();
     }
 
     @Override
@@ -277,12 +281,22 @@ public class MainActivity extends BaseActivity implements MainView{
         adapter.onDataChanged(friendList);
         int friendCount = friendList.size();
         tvFriendCount.setText("通讯录("+ friendCount +")");
-        showToast("获取好友列表成功:"+friendList.size());
+        //showToast("获取好友列表成功:"+friendList.size());
     }
 
     @Override
     public void onGetFriendsFail(String s) {
         showToast("获取好友列表失败："+s);
+    }
+
+    @Override
+    public void onGetGroupFail(String message) {
+        showToast("获取班圈列表失败"+message);
+    }
+
+    @Override
+    public void onGetGroupSuccess(List<EMGroup> groupList) {
+        this.groupList = groupList;
     }
 
     @Override

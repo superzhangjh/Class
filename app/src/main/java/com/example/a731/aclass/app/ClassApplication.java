@@ -30,7 +30,7 @@ public class ClassApplication extends Application {
     }
 
     private void initBmob() {
-        Bmob.initialize(this, "220e091cec75d58301d05e224f0c3af0");
+        Bmob.initialize(this, "2e729391a3a055624f6275df73b7ade5");
     }
 
     private void initEaseMob() {

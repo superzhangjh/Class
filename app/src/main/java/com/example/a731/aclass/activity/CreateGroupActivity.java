@@ -104,6 +104,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
                 String name = gName.getText().toString();
                 Users users = BmobUser.getCurrentUser(Users.class);
                 createGroupPresenter.checkGroup(name, users,gHeadImgPath);
+                showProgress("正在创建班圈");
             }
         });
     }
@@ -139,6 +140,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
 
     @Override
     public void onCreateSuccess() {
+        hideProgress();
         showToast("创建成功");
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);

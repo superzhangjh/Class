@@ -69,6 +69,7 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
 
                 if (!password.equals("") && !userName.equals("")){
                     if (!smsCode.equals("")){
+                        showProgress("正在注册");
                         signUpPresenter.register(userName,phoneNum,password,smsCode);
                     }else{
                         Toast.makeText(SignUpActivity.this,"验证码不能为空",Toast.LENGTH_SHORT).show();
@@ -88,6 +89,7 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
     @Override
     public void onRegisterSuccess() {
         showToast("注册成功，前往主界面");
+        hideProgress();
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
         finish();

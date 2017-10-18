@@ -5,7 +5,10 @@ import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.CreateGroupView;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 import java.util.List;
@@ -31,28 +34,54 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter{
     }
 
 
-    //TODO:修改成先创建班圈，后上传头像图片
     @Override
     public void checkGroup(final String name, final Users creator, final String headImg) {
-        BmobUtil.getGroupIdByName(name, new FindListener<Group>() {
-            @Override
-            public void done(List<Group> list, BmobException e) {
-                if (e == null && list == null){
-                    createGroup(name,creator,headImg);
-                }else{
-                    mCreateGroupView.onCreateFail(e.getMessage());
+
+            ThreadUtils.runOnBackgroundThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        EMGroup group = EaseMobUtil.createGroup(name);
+                        final String groupId = group.getGroupId();
+                        /*if (group!=null){
+                            final String groupId = group.getGroupId();
+                            BmobUtil.getGroupByField("groupName",name, new FindListener<Group>() {
+                                @Override
+                                public void done(List<Group> list, final BmobException e) {
+                                    if (e == null && list == null){
+                                        createGroup(groupId,name,creator,headImg);
+                                    }else if (list.size()>0){
+                                        mCreateGroupView.onCreateFail("班圈名已存在");
+                                    }else{
+                                        ThreadUtils.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mCreateGroupView.onCreateFail("bmob1:"+e.getMessage()+":"+e.getErrorCode());
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }*/
+                        createGroup(groupId,name,creator,headImg);
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                        mCreateGroupView.onCreateFail("easemob:"+e.getMessage()+":"+e.getErrorCode());
+                    }
                 }
-            }
-        });
+            });
+
+
+
     }
 
-    private void createGroup(final String name, Users creator, final String filePath){
-        BmobUtil.createGroup(name, creator, filePath, new SaveListener<String>() {
+    private void createGroup(final String groupId, final String name, Users creator, final String filePath){
+        BmobUtil.createGroup(groupId,name, creator, filePath, new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e==null){
                     upLoadImg(filePath);
-                    BmobUtil.getGroupIdByName(name, new FindListener<Group>() {
+                    BmobUtil.getGroupByField("groupId",groupId, new FindListener<Group>() {
                         @Override
                         public void done(List<Group> list, BmobException e) {
                             Group group = new Group();
@@ -63,14 +92,14 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter{
                                     if (e == null){
                                         mCreateGroupView.onCreateSuccess();
                                     }else{
-                                        mCreateGroupView.onCreateFail(e.getMessage());
+                                        mCreateGroupView.onCreateFail("bmob2:"+e.getMessage()+":"+e.getErrorCode());
                                     }
                                 }
                             });
                         }
                     });
                 }else{
-                    mCreateGroupView.onCreateFail(e.getMessage());
+                    mCreateGroupView.onCreateFail("bmob3:"+e.getMessage()+":"+e.getErrorCode());
                 }
             }
         });

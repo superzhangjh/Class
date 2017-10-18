@@ -1,12 +1,19 @@
 package com.example.a731.aclass.util;
 
+import android.text.TextUtils;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMGroupManager;
+import com.hyphenate.chat.EMGroupOptions;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -128,6 +135,83 @@ public class EaseMobUtil {
     public static void refuseFriendRequest(String username) throws HyphenateException {
         EMClient.getInstance().contactManager().declineInvitation(username);
     }
+
+        /*-----------------群组功能--------------------------------*/
+
+    //创建班圈
+    public static EMGroup createGroup(String groupName) throws HyphenateException {
+        EMGroupOptions option = new EMGroupOptions();
+        option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
+        EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName,null,new String[]{},null,option);
+        return group;
+    }
+
+    //添加管理员权限
+    public static void addGroupAdmin(String groupId,String admin) throws HyphenateException {
+        EMClient.getInstance().groupManager().addGroupAdmin(groupId,admin);
+    }
+
+    //移除管理员权限
+    public static void removeGroupAdmin(String groupId,String admin) throws HyphenateException {
+        EMClient.getInstance().groupManager().removeGroupAdmin(groupId, admin);
+    }
+
+    //群主加人
+    public static void addUserToGroup(String groupId,String[] newmembers) throws HyphenateException {
+        EMClient.getInstance().groupManager().addUsersToGroup(groupId,newmembers);
+    }
+
+    //群员邀请
+    public static void inviteUser(String groupId,String[] newmembers) throws HyphenateException {
+        EMClient.getInstance().groupManager().inviteUser(groupId,newmembers,null);
+    }
+
+    //搜索加入某个班圈
+    public static void applyJoinToGroup(String groupId,String reason) throws HyphenateException {
+        EMClient.getInstance().groupManager().applyJoinToGroup(groupId, reason);
+    }
+
+    //群组踢人
+    public static void removeUserFromGroup(String groupId,String username) throws HyphenateException {
+        EMClient.getInstance().groupManager().removeUserFromGroup(groupId, username);
+    }
+
+    //退出群组
+    public static void leaveGroup(String groupId) throws HyphenateException {
+        EMClient.getInstance().groupManager().leaveGroup(groupId);
+    }
+
+    //解散群组
+    public static void destoryGroup(String groupId) throws HyphenateException {
+        EMClient.getInstance().groupManager().destroyGroup(groupId);
+    }
+
+    //获取群成员列表
+    public static List<String> fetchGroupMembers(String groupId) throws HyphenateException {
+        List<String> memberList = new ArrayList<>();
+        EMCursorResult<String> result = null;
+        final int pageSize = 20;
+        do {
+            result = EMClient.getInstance().groupManager().fetchGroupMembers(groupId,result!=null?result.getCursor():"",pageSize);
+            memberList.addAll(result.getData());
+        }while(!TextUtils.isEmpty(result.getCursor()) && result.getData().size() == pageSize);
+        return memberList;
+    }
+
+    //获取已加入的群组列表
+    public static List<EMGroup> getAllGroup() throws HyphenateException {
+        if (EMClient.getInstance().groupManager().getAllGroups()==null){
+            return EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+        }else{
+            return EMClient.getInstance().groupManager().getAllGroups();
+        }
+    }
+
+    //修改群名称
+    public static void changeGroupName(String groupId,String name) throws HyphenateException {
+        EMClient.getInstance().groupManager().changeGroupName(groupId, name);
+    }
+
 
 
 }
