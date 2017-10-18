@@ -20,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.adapter.FriendAdapter1;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
-import static com.example.a731.aclass.R.id.start;
+import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 public class MainActivity extends BaseActivity implements MainView{
 
@@ -79,14 +78,13 @@ public class MainActivity extends BaseActivity implements MainView{
         tvFriendCount = (TextView) findViewById(R.id.main_nav_right_count);
 
         friendList = new ArrayList<>();
-        for (int i=0;i<5;i++){
-            Users user1= new Users();
-            user1.setName("我是"+i);
-            friendList.add(user1);
-        }
 
         int friendCount = friendList.size();
-        tvFriendCount.setText("通讯录("+ friendCount +")");
+        if (friendList.size()==0){
+            tvFriendCount.setText("通讯录");
+        }else {
+            tvFriendCount.setText("通讯录(" + friendCount + ")");
+        }
 
         FriendAdapter1 adapter = new FriendAdapter1(getApplicationContext(),R.layout.fragment_friend_item,friendList);
         friend_list_view.setAdapter(adapter);
@@ -104,6 +102,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     private void initViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.main_view_pager);
+        mViewPager.setCurrentItem(4);
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new CircleFragment());
         fragmentList.add(new MessFragment());
@@ -122,6 +121,7 @@ public class MainActivity extends BaseActivity implements MainView{
         });
     }
 
+    //个人资料侧滑栏
     private void initNavigationView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         NavigationView navView = (NavigationView) findViewById(main_nav_view);
@@ -133,7 +133,11 @@ public class MainActivity extends BaseActivity implements MainView{
                         mainPresenter.logOut();
                         break;
                     case R.id.main_nav_menu_setting:
-
+                        //TODO:软件设置
+                        break;
+                    case R.id.main_nav_menu_modified:
+                        Intent intent = new Intent(getApplicationContext(),ModifiedUserDataActivity.class);
+                        startActivityForResult(intent,MODIFIED_RESULT);
                         break;
                 }
                 mDrawerLayout.closeDrawers();

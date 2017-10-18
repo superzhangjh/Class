@@ -18,9 +18,12 @@ public class EaseMobUtil {
     public static final int CHATTYPE_PERSONAL = 1001;
     public static final int CHATTYPE_GROUP = 1002;
     public static final int CHATTYPE_GROUP_ROOM = 1003;
+    public static final int TYPE_GET_MESSAGE = 1004;
+    public static final int TYPE_SEND_MESSAGE = 1005;
+    public static final int MODIFIED_RESULT = 1006;
 
-    public static final int TYPE_SEND_MESSAGE = 1011;
-    public static final int TYPE_GET_MESSAGE = 1012;
+    /*public static final int TYPE_SEND_MESSAGE = 1011;
+    public static final int TYPE_GET_MESSAGE = 1012;*/
 
 
     /*------------------基础功能---------------------*/

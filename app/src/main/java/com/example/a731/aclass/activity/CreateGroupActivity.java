@@ -1,17 +1,12 @@
 package com.example.a731.aclass.activity;
 
 import android.Manifest;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -27,11 +22,8 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.presenter.impl.CreateGroupPresenterImpl;
-import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.view.CreateGroupView;
-
-import java.io.File;
 
 import cn.bmob.v3.BmobUser;
 

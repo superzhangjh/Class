@@ -86,6 +86,9 @@
             android:label=""/>
         <activity android:name=".activity.SearchUserActivity"/>
 
+        <activity android:name=".activity.ModifiedUserDataActivity" />
+
+        <activity android:name=".activity.ReleasingNoticesActivity"  />
     </application>
 
 </manifest>

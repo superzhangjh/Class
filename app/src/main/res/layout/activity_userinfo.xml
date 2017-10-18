@@ -276,12 +276,14 @@
                         android:text="简介"
                         android:layout_width="match_parent"
                         android:layout_height="50dp" />
-
                     <TextView
                         android:id="@+id/userinfo_tv_intro"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="帅到没朋友"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="暂无介绍"
                         android:textSize="15sp" />
                 </LinearLayout>
 

@@ -68,7 +68,7 @@ public class CircleFragment extends BaseFragment{
 
         list_fragment = new ArrayList<>();
         list_fragment.add(new Fragment());
-        list_fragment.add(new Fragment());
+        list_fragment.add(new CircleNoticeFragment());
         list_fragment.add(new Fragment());
         list_fragment.add(new CircleGalleryFragment());
 

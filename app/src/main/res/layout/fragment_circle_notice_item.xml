@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="71dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <ImageView
+            android:id="@+id/item_circle_notice_imgNotice"
+            android:layout_marginLeft="10dp"
+            android:alpha="0.8"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/notice"
+            android:layout_width="33dp"
+            android:layout_height="33dp" />
+
+        <TextView
+            android:id="@+id/item_circle_notice_tvContent"
+            android:text="通知内容"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp" />
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/item_circle_notice_tvDate"
+                android:layout_marginTop="10dp"
+                android:textSize="12dp"
+                android:gravity="center_vertical|right"
+                android:text="下午22:10"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+                //图片标识
+                <ImageView
+                    android:id="@+id/item_circle_notice_imgImage"
+                    android:background="@drawable/chart22"
+                    android:layout_gravity="center_vertical|right"
+                    android:visibility="gone"
+                    android:alpha="0.7"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginRight="3dp"/>
+                //文件标识
+                <ImageView
+                    android:id="@+id/item_circle_notice_imgFile"
+                    android:background="@drawable/document161"
+                    android:layout_gravity="center_vertical|right"
+                    android:visibility="gone"
+                    android:alpha="0.7"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginRight="3dp"/>
+                //语音标识
+                <ImageView
+                    android:id="@+id/item_circle_notice_imgSound"
+                    android:background="@drawable/music227"
+                    android:visibility="gone"
+                    android:alpha="0.7"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:background="#ccc"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+</LinearLayout>

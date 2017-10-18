@@ -4,7 +4,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.a731.aclass.R;
@@ -108,7 +107,7 @@ public class UserInfoActivity extends BaseActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.groupinfo_toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.userinfo_toolbar_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 

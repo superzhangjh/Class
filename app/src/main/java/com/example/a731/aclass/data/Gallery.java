@@ -12,6 +12,15 @@ public class Gallery {
     private String creatorID;//创建者
     private String creatorName;//创建者名称
     private int like;//点赞
+    private Commend commend;//评论
+
+    public Commend getCommend() {
+        return commend;
+    }
+
+    public void setCommend(Commend commend) {
+        this.commend = commend;
+    }
 
     public int getLike() {
         return like;

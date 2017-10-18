@@ -1,6 +1,5 @@
 package com.example.a731.aclass.presenter.impl;
 
-import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.FriendPresenter;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ThreadUtils;

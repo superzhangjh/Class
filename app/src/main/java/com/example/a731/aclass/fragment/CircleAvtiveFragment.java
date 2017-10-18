@@ -14,13 +14,13 @@ public class CircleAvtiveFragment extends BaseFragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_circle_active;
+        return R.layout.fragment_circle_base;
     }
 
     @Override
     public void initView() {
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circleactive_recyclerview);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circleactive_swiperefresh);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_base_swiperefresh);
     }
 
     @Override

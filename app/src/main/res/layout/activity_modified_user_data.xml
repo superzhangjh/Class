@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textSize="30dp"
+        android:layout_marginLeft="50dp"
+        android:gravity="center_vertical"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="编辑个人资料"/>
+    
+
+    <GridLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="7">
+
+        //用户名
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="用户名"/>
+        //学号
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="学号"/>
+        //手机号
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="手机号"/>
+        //姓名
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="姓名"/>
+        //专业
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="专业"/>
+        //来自
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="来自"/>
+        //介绍
+        <TextView
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="介绍"/>
+
+        //输入框
+        <TextView
+            android:id="@+id/modified_edt_username"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="用户名不可更改"/>
+        <TextView
+            android:id="@+id/modified_edt_id"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="学号不可更改"/>
+        <TextView
+            android:id="@+id/modified_edt_phonenumber"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="手机号不可更改"/>
+
+        <EditText
+            android:id="@+id/modified_edt_name"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="请输入姓名"/>
+        <EditText
+            android:id="@+id/modified_edt_project"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="请输入专业名称"/>
+        <EditText
+            android:id="@+id/modified_edt_local"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="请输入地址"/>
+        <EditText
+            android:id="@+id/modified_edt_intro"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:hint="请输入简介"/>
+    </GridLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/modified_img_cross"
+            android:background="@drawable/cross86"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/modified_img_check"
+            android:background="@drawable/check49"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

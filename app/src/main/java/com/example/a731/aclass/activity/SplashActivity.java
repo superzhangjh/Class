@@ -6,7 +6,6 @@ import android.os.Handler;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 /**

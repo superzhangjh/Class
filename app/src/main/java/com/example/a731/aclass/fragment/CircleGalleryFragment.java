@@ -22,13 +22,13 @@ public class CircleGalleryFragment extends BaseFragment {
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_circle_gallery;
+        return R.layout.fragment_circle_base;
     }
 
     @Override
     public void initView() {
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circlegallery__recyclerview);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circlegallery_swiperefresh);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_base_swiperefresh);
         testData();
 
         GalleryAdapter adapter = new GalleryAdapter(getContext(),galleryList);

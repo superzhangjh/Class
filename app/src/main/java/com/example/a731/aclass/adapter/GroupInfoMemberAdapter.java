@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.activity.MainActivity;
 import com.example.a731.aclass.activity.UserInfoActivity;
 import com.example.a731.aclass.data.Users;
 

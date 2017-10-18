@@ -17,8 +17,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutRes());
 
         initView();
-        initListener();
         initData();
+        initListener();
     }
 
     /** 返回Activity界面的布局文件 */

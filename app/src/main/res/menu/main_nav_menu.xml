@@ -3,17 +3,39 @@
     <group
         android:id="@+id/section1">
         <item
-            android:id="@+id/main_nav_menu_name"
-            android:title="姓名"/>
+            android:id="@+id/main_nav_menu_username"
+            android:title="用户名"/>
         <item
             android:id="@+id/main_nav_menu_schoolNum"
             android:title="学号"/>
+    </group>
+
+    <group
+        android:id="@+id/section3">
+        <item
+            android:id="@+id/main_nav_menu_name"
+            android:title="姓名"/>
+        <item
+            android:id="@+id/main_nav_menu_phoneNum"
+            android:title="手机号"/>
+        <item
+            android:id="@+id/main_nav_menu_project"
+            android:title="专业"/>
+        <item
+            android:id="@+id/main_nav_menu_local"
+            android:title="来自"/>
+        <item
+            android:id="@+id/main_nav_menu_intro"
+            android:title="简介"/>
     </group>
     <group
         android:id="@+id/section2">
         <item
             android:id="@+id/main_nav_menu_setting"
             android:title="设置"/>
+        <item
+            android:id="@+id/main_nav_menu_modified"
+            android:title="修改资料"/>
         <item
             android:id="@+id/main_nav_menu_logOut"
             android:title="退出登录"/>

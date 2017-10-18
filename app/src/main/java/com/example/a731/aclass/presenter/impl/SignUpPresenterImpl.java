@@ -6,7 +6,6 @@ import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.SignUpView;
-import com.hyphenate.EMCallBack;
 import com.hyphenate.exceptions.HyphenateException;
 
 import cn.bmob.v3.exception.BmobException;

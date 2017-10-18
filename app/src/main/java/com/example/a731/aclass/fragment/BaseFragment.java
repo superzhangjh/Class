@@ -36,8 +36,8 @@ public abstract class BaseFragment extends Fragment {
                     getLayoutRes(),container,false);
 
             initView();
-            initListener();
             initData();
+            initListener();
         }
 
         return mRootView;

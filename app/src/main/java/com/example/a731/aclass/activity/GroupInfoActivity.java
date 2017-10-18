@@ -1,9 +1,6 @@
 package com.example.a731.aclass.activity;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,8 +15,6 @@ import android.widget.TextView;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.GroupInfoMemberAdapter;
 import com.example.a731.aclass.data.Users;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
