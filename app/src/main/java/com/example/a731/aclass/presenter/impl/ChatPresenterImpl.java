@@ -46,11 +46,11 @@ public class ChatPresenterImpl implements ChatPresenter {
                     }
 
                     @Override
-                    public void onError(int code, String error) {
+                    public void onError(final int code, final String error) {
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mChatView.onSendMessageFail();
+                                mChatView.onSendMessageFail(code+":"+error);
                             }
                         });
 
@@ -63,7 +63,6 @@ public class ChatPresenterImpl implements ChatPresenter {
                 });
             }
         });
-
     }
 
     public EMMessage getConversationLastRecord(String username){

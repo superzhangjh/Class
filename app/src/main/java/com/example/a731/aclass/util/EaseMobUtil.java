@@ -212,6 +212,16 @@ public class EaseMobUtil {
         EMClient.getInstance().groupManager().changeGroupName(groupId, name);
     }
 
+    //同意加群申请
+    public static void acceptApplyJoinGroup(String username,String groupId) throws HyphenateException {
+        EMClient.getInstance().groupManager().acceptApplication(username, groupId);
+    }
+
+    //拒绝加群申请
+    public static void refuseApplyJoinGroup(String username,String groupId) throws HyphenateException {
+        EMClient.getInstance().groupManager().declineApplication(username,groupId,null);
+    }
+
 
 
 }

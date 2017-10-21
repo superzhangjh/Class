@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     private FriendAdapter adapter;
 
-    private EMContactListener listener;
+
 
     @Override
     protected int getLayoutRes() {
@@ -106,8 +106,7 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Users user = friendList.get(position);
                 Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-                intent.putExtra("username",user.getName());
-                intent.putExtra("isGroupMess",false);
+                intent.putExtra("username",user.getUsername());
                 startActivity(intent);
             }
         });
@@ -178,9 +177,15 @@ public class MainActivity extends BaseActivity implements MainView{
         imgClasshead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                intent.putExtra("groupId",groupList.get(0).getGroupId());
-                startActivity(intent);
+                //if (groupList.size()>0){
+                    Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
+                    //intent.putExtra("groupId",groupList.get(0).getGroupId());
+                    intent.putExtra("groupId","30298794426369");
+                    startActivity(intent);
+                /*}else{
+                    showToast("你还未加入任何班圈");
+                }*/
+
             }
         });
     }
@@ -208,36 +213,7 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
 
-        listener = new EMContactListener() {
-            @Override
-            public void onContactAdded(String username) {
-                //好友请求被同意
-            }
 
-            @Override
-            public void onContactDeleted(String username) {
-                //好友请求被拒绝
-            }
-
-            @Override
-            public void onContactInvited(String username, String reason) {
-                //收到好友邀请
-                try {
-                    EaseMobUtil.acceptFriendRequest(username);
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFriendRequestAccepted(String username) {
-                //同意邀请时回调此方法
-            }
-            @Override
-            public void onFriendRequestDeclined(String username) {
-                //被拒绝时回调此方法
-            }
-        };
-        EMClient.getInstance().contactManager().setContactListener(listener);
     }
 
     @Override
@@ -257,6 +233,10 @@ public class MainActivity extends BaseActivity implements MainView{
         switch (item.getItemId()){
             case R.id.main_toolbar_create_group:
                 intent.setClass(MainActivity.this,CreateGroupActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.main_toolbar_join_in:
+                intent.setClass(MainActivity.this,JoinGroupActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -296,6 +276,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void onGetGroupSuccess(List<EMGroup> groupList) {
+        showToast("获取班圈列表成功："+groupList.size());
         this.groupList = groupList;
     }
 
@@ -317,11 +298,5 @@ public class MainActivity extends BaseActivity implements MainView{
             }
             //当前网络不可用，请检查网络设置
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EMClient.getInstance().contactManager().removeContactListener(listener);
     }
 }

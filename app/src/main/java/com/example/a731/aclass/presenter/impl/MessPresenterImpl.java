@@ -55,7 +55,7 @@ public class MessPresenterImpl implements MessPresenter {
         if (conversations.size()>0){
             mMessView.onGetConversationSuccess(conversations);
         }else{
-            mMessView.onGetConversationFail();
+            mMessView.onGetConversationFail("获取会话失败");
         }
     }
 }

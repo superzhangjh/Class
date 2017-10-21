@@ -189,7 +189,6 @@ public class ChatActivity extends BaseActivity implements ChatView {
                 smoothScrollToBottom();
             }
         };
-
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
@@ -238,12 +237,14 @@ public class ChatActivity extends BaseActivity implements ChatView {
     }
 
     private void updateList() {
+        showToast("更新会话记录成功");
         adapter.notifyDataSetChanged();
         smoothScrollToBottom();
     }
 
     @Override
-    public void onSendMessageFail() {
+    public void onSendMessageFail(String msg) {
+        showToast("发送消息失败"+msg);
 
     }
 
@@ -251,6 +252,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
     //获取会话记录
     @Override
     public void onGetRecordSuccess() {
+        showToast("获取会话记录成功");
         updateList();
     }
 

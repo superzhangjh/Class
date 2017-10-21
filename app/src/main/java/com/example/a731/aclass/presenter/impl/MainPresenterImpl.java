@@ -28,7 +28,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private List<Users> friendList;
     private List<String> usernames;
-    private List<Group> groupList;
+    private List<EMGroup> groupList;
     public MainPresenterImpl(MainView mainView){
         mMainView = mainView;
     }
@@ -116,15 +116,27 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void getGroup() {
-        groupList = new ArrayList<>();
-        try {
-            List<EMGroup> emGroupList = EaseMobUtil.getAllGroup();
-            mMainView.onGetGroupSuccess(emGroupList);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-            mMainView.onGetGroupFail(e.getMessage());
-        }
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    groupList = EaseMobUtil.getAllGroup();
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainView.onGetGroupSuccess(groupList);
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainView.onGetGroupFail(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
     }
-
-
 }

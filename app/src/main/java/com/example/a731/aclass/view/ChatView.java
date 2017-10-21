@@ -7,7 +7,7 @@ package com.example.a731.aclass.view;
 public interface ChatView {
     void onSendMessageSuccess();
 
-    void onSendMessageFail();
+    void onSendMessageFail(String msg);
 
     void onGetRecordSuccess();
 }
