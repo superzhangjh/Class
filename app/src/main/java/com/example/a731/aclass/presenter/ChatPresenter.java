@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public interface ChatPresenter {
-    void senMessage(String username, String content);
+    void senMessage(String username, String content, int chatType);
 
     void getConversationRecord(String username);
 

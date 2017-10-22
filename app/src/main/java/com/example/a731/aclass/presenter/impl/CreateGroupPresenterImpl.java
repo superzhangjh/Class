@@ -68,9 +68,6 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter{
                     }
                 }
             });
-
-
-
     }
 
     private void createGroup(final String groupId, final String name, Users creator, final String filePath){

@@ -16,11 +16,20 @@ public class SysNotification extends DataSupport{
     public static final int ACCEPTED = 302;
     public static final int REFUSED = 303;
 
+    private int id;
     private String groupId;
     private String username;
     private String message;
     private int type;
     private int statue;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getStatue() {
         return statue;

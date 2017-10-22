@@ -167,7 +167,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     @Override
     public void onGetGroupMemberSuccess(List<Users> list) {
         showToast("获取群成员成功"+list.size());
-        //tvMemberCount.setText(list.size()+"");
+        tvMemberCount.setText(list.size()+"");
         Users user = new Users();
         user.setName("邀请成员");
         user.setId(ADD_MORE_MEMBER);
@@ -185,7 +185,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     @Override
     public void onGetGroupSuccess(List<Group> list) {
         Group group = list.get(0);
-        groupInfoPresenter.getGroupMember(group.getObjectId());
+        groupInfoPresenter.getGroupMember("班圈ID:"+group.getObjectId());
         tvRecommend.setText("本圈创建于"+group.getCreatedAt());
         tvGroupName.setText(group.getName());
         tvGroupId.setText(group.getGroupId());

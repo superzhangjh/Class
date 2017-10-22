@@ -44,7 +44,6 @@ public class MessFragment extends BaseFragment implements MessView{
     private MessPresenter messPresenter = new MessPresenterImpl(this);
 
     private EMMessageListener msgListener;
-    private EMGroupChangeListener groupListener;
 
     @Override
     protected int getLayoutRes() {

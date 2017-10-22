@@ -52,16 +52,13 @@ public class ClassApplication extends LitePalApplication {
             public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
                 //接收到群组加入邀请
                 String message = inviter+" 邀请你加入 "+groupName+" 班圈";
-                List<SysNotification> notificationList = DataSupport.where("message = ?",message).find(SysNotification.class);
-                if (notificationList == null){
+                    Log.i(TAG,"开始储存数据");
                     SysNotification notification = new SysNotification();
                     notification.setMessage(inviter+" 邀请你加入 "+groupName+" 班圈");
                     notification.setStatue(SysNotification.NEED_DEAL);
                     notification.setGroupId(groupId);
                     notification.setType(SysNotification.INVITED_GROUP);
                     notification.save();
-                }
-
                 showNotification(message);
             }
 
@@ -69,8 +66,7 @@ public class ClassApplication extends LitePalApplication {
             public void onRequestToJoinReceived(String groupId, String groupName, String applyer, String reason) {
                 //用户申请加入群
                 String message = applyer+" 申请加入 "+groupName+" 班圈";
-                List<SysNotification> notificationList = DataSupport.where("message = ?",message).find(SysNotification.class);
-                if (notificationList == null){
+                    Log.i(TAG,"开始储存数据");
                     SysNotification notification = new SysNotification();
                     notification.setMessage(applyer+" 申请加入 "+groupName+" 班圈");
                     notification.setGroupId(groupId);
@@ -78,8 +74,6 @@ public class ClassApplication extends LitePalApplication {
                     notification.setStatue(SysNotification.NEED_DEAL);
                     notification.setType(SysNotification.APPLY_JOIN_GROUP);
                     notification.save();
-                }
-
                 showNotification(message);
             }
         };
@@ -91,14 +85,14 @@ public class ClassApplication extends LitePalApplication {
                 //收到好友邀请
                 SysNotification notification = new SysNotification();
                 String message = username+"邀请加你为好友";
-                List<SysNotification> notificationList = DataSupport.where("message = ?",message).find(SysNotification.class);
-                if (notificationList == null){
+
+                    Log.i(TAG,"开始储存数据");
                     notification.setMessage(message);
                     notification.setStatue(SysNotification.NEED_DEAL);
                     notification.setUsername(username);
                     notification.setType(SysNotification.APPLY_FRIEND);
                     notification.save();
-                }
+
                 showNotification(message);
             }
         };
@@ -118,7 +112,6 @@ public class ClassApplication extends LitePalApplication {
 // 如果APP启用了远程的service，此application:onCreate会被调用2次
 // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
 // 默认的APP会在以包名为默认的process name下运行，如果查到的process name不是APP的process name就立即返回
-
         if (processAppName == null ||!processAppName.equalsIgnoreCase(getPackageName())) {
             Log.e(TAG, "enter the service process!");
             // 则此application::onCreate 是被service 调用的，直接返回
@@ -151,8 +144,8 @@ public class ClassApplication extends LitePalApplication {
 
     private void showNotification(String message) {
         String contentText = message;
-        Intent chat = new Intent(this, SystematicNotificationActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, chat, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent notificationActivity = new Intent(this, SystematicNotificationActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, notificationActivity, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new Notification.Builder(this)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))

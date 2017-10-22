@@ -25,8 +25,6 @@ public class SystematicNotificationActivity extends BaseActivity implements Syst
 
     private ListView listOfNotification;
     private List<SysNotification> notifications;
-    private EMGroupChangeListenerAdapter groupListener;
-    private EMContactListener listener;
     private SystematicNotificationAdapter adapter;
     private SystematicNotificationPresenter presenter = new SystematicNotificationPresenterImpl(this);
 

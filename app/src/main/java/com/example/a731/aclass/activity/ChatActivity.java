@@ -20,8 +20,10 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.ChatAdapter;
 import com.example.a731.aclass.adapter.EMMessageListenerAdapter;
 import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ChatPresenter;
 import com.example.a731.aclass.presenter.impl.ChatPresenterImpl;
+import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.view.ChatView;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -30,6 +32,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by Administrator on 2017/9/18/018.
@@ -46,7 +50,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     private ChatAdapter adapter;
     private ChatPresenter chatPresenter = new ChatPresenterImpl(this);
-    private String username;
+    private String chatToId;
+    private int chatType;
+    private String myId;
 
     private EMMessageListenerAdapter msgListener;
 
@@ -58,8 +64,8 @@ public class ChatActivity extends BaseActivity implements ChatView {
     @Override
     public void initView() {
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-
+        chatToId = intent.getStringExtra("chatToId");
+        chatType = intent.getIntExtra("chatType", EaseMobUtil.CHATTYPE_PERSONAL);
         initToolbar();
 
         //测试内容
@@ -94,14 +100,16 @@ public class ChatActivity extends BaseActivity implements ChatView {
             @Override
             public void onClick(View v) {
                 //根据接收的布尔值判断是否为圈消息，如果是则跳转到圈详情页面，如果不是则跳转到个人详情页面
-                boolean isGroupMess = getIntent().getBooleanExtra("isGroupMess",false);
-                if (!isGroupMess){
+
+                if (chatType==EaseMobUtil.CHATTYPE_PERSONAL){
                     //个人详情页面
                     Intent intent = new Intent(getApplicationContext(),UserInfoActivity.class);
+                    intent.putExtra("username",chatToId);
                     startActivity(intent);
                 }else{
                     //圈详情页面
                     Intent intent = new Intent(getApplicationContext(),GroupInfoActivity.class);
+                    intent.putExtra("groupId",chatToId);
                     startActivity(intent);
                 }
             }
@@ -111,14 +119,14 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private void sendMessage() {
         //发送文本消息
         String edtContent = edtInput.getText().toString();
-        chatPresenter.senMessage(username,edtContent);
+        chatPresenter.senMessage(chatToId,edtContent,chatType);
         edtInput.getText().clear();
     }
 
     //消息内容呈现的recyclerview
     private void initRecyclerview() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycle_view);
-        adapter = new ChatAdapter(this,chatPresenter.getMessage(),username);
+        adapter = new ChatAdapter(this,chatPresenter.getMessage());
         LinearLayoutManager manager=new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
@@ -159,34 +167,36 @@ public class ChatActivity extends BaseActivity implements ChatView {
                 //收到消息
                 EMMessage msg = messages.get(0);
                 Mess mess = new Mess();
-                mess.setCreatorID(msg.getFrom());
-                mess.setDate(msg.getMsgTime()+"");
-                switch(msg.getType()){
-                    //文本信息
-                    case TXT:
-                        EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
-                        mess.setMessage(body.getMessage());
-                        showToast("收到信息"+body.getMessage());
-                        adapter.add(mess);
-                        smoothScrollToBottom();
-                        break;
-                    //图片信息
-                    case IMAGE:
-                        break;
-                    //视频
-                    case VIDEO:
-                        break;
-                    //位置
-                    case LOCATION:
-                        break;
-                    //声音
-                    case VOICE:
-                        break;
-                    //文件
-                    case FILE:
-                        break;
-                }
-                smoothScrollToBottom();
+                //if (chatToId.equals(msg.getFrom()) && msg.getChatType()== EMMessage.ChatType.Chat){
+                    mess.setCreatorID(msg.getFrom());
+                    mess.setDate(msg.getMsgTime()+"");
+                    switch(msg.getType()){
+                        //文本信息
+                        case TXT:
+                            EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
+                            mess.setMessage(body.getMessage());
+                            showToast("收到信息"+body.getMessage());
+                            adapter.add(mess);
+                            smoothScrollToBottom();
+                            break;
+                        //图片信息
+                        case IMAGE:
+                            break;
+                        //视频
+                        case VIDEO:
+                            break;
+                        //位置
+                        case LOCATION:
+                            break;
+                        //声音
+                        case VOICE:
+                            break;
+                        //文件
+                        case FILE:
+                            break;
+                    }
+                    smoothScrollToBottom();
+                //}
             }
         };
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
@@ -194,7 +204,8 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     @Override
     public void initData() {
-        chatPresenter.getConversationRecord(username);
+
+        chatPresenter.getConversationRecord(chatToId);
     }
 
     private void initToolbar() {

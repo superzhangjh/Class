@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ChatActivity;
 import com.example.a731.aclass.data.Conversation;
+import com.example.a731.aclass.util.EaseMobUtil;
 import com.hyphenate.chat.EMConversation;
 
 import java.util.ArrayList;
@@ -45,10 +46,15 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("username",con.getName());
+
+                Intent intent = new Intent(context,ChatActivity.class);
+
                 if (con.getChatType() == EMConversation.EMConversationType.Chat){
-                    intent.setClass(context,ChatActivity.class);
+                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatType", EaseMobUtil.CHATTYPE_PERSONAL);
+                }else{
+                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatType", EaseMobUtil.CHATTYPE_GROUP);
                 }
                 context.startActivity(intent);
             }

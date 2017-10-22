@@ -1,12 +1,14 @@
 package com.example.a731.aclass.presenter.impl;
 
 import com.example.a731.aclass.data.Conversation;
+import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.MessPresenter;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.view.MessView;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.ArrayList;
@@ -39,14 +41,23 @@ public class MessPresenterImpl implements MessPresenter {
             EMConversation emConversation = entry.getValue();
             conversation = new Conversation();
             conversation.setName(emConversation.conversationId());
-            BmobUtil.queryUser(emConversation.conversationId(), new FindListener<Users>() {
-                @Override
-                public void done(List<Users> list, BmobException e) {
-                    if(list.size()>0){
+            if (emConversation.getType() == EMConversation.EMConversationType.Chat){
+                BmobUtil.queryUser(emConversation.conversationId(), new FindListener<Users>() {
+                    @Override
+                    public void done(List<Users> list, BmobException e) {
+                        conversation.setImgHead(list.get(0).getHeadImg());
+
+                    }
+                });
+            }else if (emConversation.getType() == EMConversation.EMConversationType.GroupChat){
+                BmobUtil.getGroupByField("groupId", emConversation.conversationId(), new FindListener<Group>() {
+                    @Override
+                    public void done(List<Group> list, BmobException e) {
                         conversation.setImgHead(list.get(0).getHeadImg());
                     }
-                }
-            });
+                });
+            }
+
             EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
             conversation.setLastMess(mess.getMessage());
             conversation.setChatType(emConversation.getType());

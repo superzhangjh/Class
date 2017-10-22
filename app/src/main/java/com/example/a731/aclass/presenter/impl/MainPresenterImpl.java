@@ -28,7 +28,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private List<Users> friendList;
     private List<String> usernames;
-    private List<EMGroup> groupList;
+    private List<Group> groupList;
     public MainPresenterImpl(MainView mainView){
         mMainView = mainView;
     }
@@ -116,11 +116,23 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void getGroup() {
+        groupList = new ArrayList<>();
         ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    groupList = EaseMobUtil.getAllGroup();
+                    List<EMGroup> emGroups= EaseMobUtil.getAllGroup();
+                    int i=0;
+                    for (;i<emGroups.size();i++){
+                        EMGroup emGroup = emGroups.get(i);
+                        BmobUtil.getGroupByField("groupId", emGroup.getGroupId(), new FindListener<Group>() {
+                            @Override
+                            public void done(List<Group> list, BmobException e) {
+                                groupList.add(list.get(0));
+                                mMainView.onGetGroupSuccess(groupList);
+                            }
+                        });
+                    }
                     ThreadUtils.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

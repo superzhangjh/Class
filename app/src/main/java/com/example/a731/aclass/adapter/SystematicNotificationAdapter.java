@@ -1,5 +1,6 @@
 package com.example.a731.aclass.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.SysNotification;
 import com.example.a731.aclass.presenter.SystematicNotificationPresenter;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,6 @@ public class SystematicNotificationAdapter extends BaseAdapter{
             btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    notification.setStatue(SysNotification.ACCEPTED);
                     switch (notification.getType()){
                         case SysNotification.APPLY_FRIEND:
                             Log.i(TAG,"开始同意好友申请");
@@ -89,12 +91,14 @@ public class SystematicNotificationAdapter extends BaseAdapter{
                             presenter.acceptApplyJoinGroup(notification.getUsername(),notification.getGroupId());
                             break;
                     }
+                    ContentValues values = new ContentValues();
+                    values.put("statue",SysNotification.ACCEPTED);
+                    DataSupport.updateAll(SysNotification.class,values,"id = ?",notification.getId()+"");
                 }
             });
             btnRefuse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    notification.setStatue(SysNotification.REFUSED);
                     switch (notification.getType()){
                         case SysNotification.APPLY_FRIEND:
                             Log.i(TAG,"开始拒绝好友申请");
@@ -105,7 +109,9 @@ public class SystematicNotificationAdapter extends BaseAdapter{
                             presenter.refuseApplyJoinGroup(notification.getUsername(),notification.getGroupId());
                             break;
                     }
-                    notification.save();
+                    ContentValues values = new ContentValues();
+                    values.put("statue",SysNotification.REFUSED);
+                    DataSupport.updateAll(SysNotification.class,values,"id = ?",notification.getId()+"");
                 }
             });
         }

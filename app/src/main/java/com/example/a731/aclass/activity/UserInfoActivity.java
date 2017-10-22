@@ -1,5 +1,6 @@
 package com.example.a731.aclass.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -9,17 +10,22 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.presenter.UserInfoPresenter;
+import com.example.a731.aclass.presenter.impl.UserInfoPresenterImpl;
+import com.example.a731.aclass.view.UserInfoView;
 
 /**
  * Created by Administrator on 2017/10/3/003.
  */
 
-public class UserInfoActivity extends BaseActivity{
+public class UserInfoActivity extends BaseActivity implements UserInfoView{
 
     private Toolbar toolbar;
     private ImageView imgHead;//头像
     private ImageView imgHeadBG;//头像背景的点击事件(本地功能)
     private Users user;//用户数据从网络获取，便于修改资料的更新
+
+    private String username;
 
     private ImageView ivSex;//性别图标
     private ImageView itQRCode;//二维码的点击事件
@@ -31,6 +37,8 @@ public class UserInfoActivity extends BaseActivity{
     private TextView tvHomeland;//家乡
     private TextView tvIntro;//简介
 
+    private UserInfoPresenter userInfoPresenter = new UserInfoPresenterImpl(this);
+
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_userinfo;
@@ -38,10 +46,11 @@ public class UserInfoActivity extends BaseActivity{
 
     @Override
     public void initView() {
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
         toolbar = (Toolbar) findViewById(R.id.userinfo_toolbar);
         imgHead = (ImageView) findViewById(R.id.userinfo_iv_head);
         imgHeadBG = (ImageView) findViewById(R.id.userinfo_headbackground);
-
         ivSex = (ImageView) findViewById(R.id.userinfo_iv_sex);
         itQRCode = (ImageView) findViewById(R.id.userinfo_iv_qr_droid);
         tvName = (TextView) findViewById(R.id.userinfo_tv_name);
@@ -52,16 +61,13 @@ public class UserInfoActivity extends BaseActivity{
         tvHomeland = (TextView) findViewById(R.id.userinfo_tv_homeland);
         tvIntro = (TextView) findViewById(R.id.userinfo_tv_intro);
         initToolbar();
-        initBinderData();
+
     }
 
     private void initBinderData() {
         //获取网络数据(待实现)
-        user = new Users();
-        user.setSex(2);
-        user.setName("张三");
-        user.setUsername("zhangsan");
-        user.setMobilePhoneNumber("15625015545");
+
+
 
 
         //读取User的属性
@@ -119,5 +125,17 @@ public class UserInfoActivity extends BaseActivity{
 
     @Override
     public void initData() {
+        userInfoPresenter.getUser(username);
+    }
+
+    @Override
+    public void onGetUserSuccess(Users users) {
+        user = users;
+        initBinderData();
+    }
+
+    @Override
+    public void onGetUserFail(String message) {
+
     }
 }

@@ -24,7 +24,6 @@ import java.util.Map;
 public class EaseMobUtil {
     public static final int CHATTYPE_PERSONAL = 1001;
     public static final int CHATTYPE_GROUP = 1002;
-    public static final int CHATTYPE_GROUP_ROOM = 1003;
 
     public static final int TYPE_SEND_MESSAGE = 1011;
     public static final int TYPE_GET_MESSAGE = 1012;
@@ -72,10 +71,7 @@ public class EaseMobUtil {
         EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
         if (chatType == CHATTYPE_GROUP){
             message.setChatType(EMMessage.ChatType.GroupChat);
-        }else if (chatType == CHATTYPE_GROUP_ROOM){
-            message.setChatType(EMMessage.ChatType.ChatRoom);
         }
-
         message.setMessageStatusCallback(callBack);
 
         EMClient.getInstance().chatManager().sendMessage(message);
@@ -200,7 +196,7 @@ public class EaseMobUtil {
 
     //获取已加入的群组列表
     public static List<EMGroup> getAllGroup() throws HyphenateException {
-        if (EMClient.getInstance().groupManager().getAllGroups()==null){
+        if (EMClient.getInstance().groupManager().getAllGroups()==null || EMClient.getInstance().groupManager().getAllGroups().size()==0){
             return EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
         }else{
             return EMClient.getInstance().groupManager().getAllGroups();

@@ -2,7 +2,6 @@ package com.example.a731.aclass.view;
 
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
-import com.hyphenate.chat.EMGroup;
 
 import java.util.List;
 
@@ -23,5 +22,5 @@ public interface MainView {
 
     void onGetGroupFail(String message);
 
-    void onGetGroupSuccess(List<EMGroup> groupList);
+    void onGetGroupSuccess(List<Group> groupList);
 }
