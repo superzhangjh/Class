@@ -15,3 +15,4 @@ public interface ChatPresenter {
 
     List<Mess> getMessage();
 }
+

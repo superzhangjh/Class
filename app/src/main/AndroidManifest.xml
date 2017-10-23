@@ -85,6 +85,8 @@
             android:theme="@style/NoActionBar"
             android:label=""/>
         <activity android:name=".activity.SearchUserActivity"/>
+        <activity android:name=".activity.JoinGroupActivity"/>
+        <activity android:name=".activity.SystematicNotificationActivity"/>
 
         <activity android:name=".activity.ModifiedUserDataActivity" />
 

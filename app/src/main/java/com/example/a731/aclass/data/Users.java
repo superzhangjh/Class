@@ -1,6 +1,5 @@
 package com.example.a731.aclass.data;
 
-import java.io.File;
 
 import cn.bmob.v3.BmobUser;
 

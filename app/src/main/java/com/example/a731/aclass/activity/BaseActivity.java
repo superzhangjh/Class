@@ -13,6 +13,8 @@ import com.example.a731.aclass.util.ToastUtil;
 public abstract class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
