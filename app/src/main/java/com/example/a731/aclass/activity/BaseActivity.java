@@ -11,7 +11,6 @@ import com.example.a731.aclass.util.ToastUtil;
  * Activity基类
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private ProgressDialog mProgressDialog;
 
     private ProgressDialog mProgressDialog;
 
