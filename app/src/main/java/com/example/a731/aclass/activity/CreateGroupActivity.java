@@ -1,12 +1,17 @@
 package com.example.a731.aclass.activity;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -22,8 +27,11 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.presenter.impl.CreateGroupPresenterImpl;
+import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.view.CreateGroupView;
+
+import java.io.File;
 
 import cn.bmob.v3.BmobUser;
 
@@ -95,8 +103,8 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             public void onClick(View v) {
                 String name = gName.getText().toString();
                 Users users = BmobUser.getCurrentUser(Users.class);
-
                 createGroupPresenter.checkGroup(name, users,gHeadImgPath);
+                showProgress("正在创建班圈");
             }
         });
     }
@@ -132,6 +140,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
 
     @Override
     public void onCreateSuccess() {
+        hideProgress();
         showToast("创建成功");
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
@@ -140,6 +149,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
 
     @Override
     public void onCreateFail(String msg) {
+        hideProgress();
         showToast("创建失败"+msg);
     }
 }

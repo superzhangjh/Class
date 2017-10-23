@@ -1,7 +1,6 @@
 package com.example.a731.aclass.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
@@ -9,14 +8,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.activity.BaseActivity;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
-import com.example.a731.aclass.util.GetNowDate;
-import com.example.a731.aclass.view.NoticeView;
-
-import java.util.Date;
-
+import com.example.a731.aclass.util.DateUtil;
 import cn.bmob.v3.BmobUser;
 
 /**
@@ -116,7 +110,7 @@ public class ReleasingNoticesActivity extends BaseActivity{
                             public void onClick(DialogInterface dialog, int which) {
                                 String title = edtTitle.getText().toString().trim();
                                 String content = edtContent.getText().toString();
-                                String date = GetNowDate.getNow();
+                                String date = DateUtil.MMdd_hhss();
 
                                 Intent intent = new Intent();
                                 intent.putExtra("title",title);

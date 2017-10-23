@@ -89,6 +89,10 @@
         <activity android:name=".activity.ModifiedUserDataActivity" />
 
         <activity android:name=".activity.ReleasingNoticesActivity"  />
+
+        <activity android:name=".activity.VoteInfoActivity"/>
+        
+        <activity android:name=".activity.StartVoteActivity" />
     </application>
 
 </manifest>

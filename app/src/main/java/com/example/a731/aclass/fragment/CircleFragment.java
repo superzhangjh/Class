@@ -61,15 +61,20 @@ public class CircleFragment extends BaseFragment{
         return R.layout.fragment_circle;
     }
 
+
     @Override
     public void initView() {
         tvTakePhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_take);
         tvSelectPhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_album);
 
         list_fragment = new ArrayList<>();
+        //动态
         list_fragment.add(new Fragment());
+        //通知
         list_fragment.add(new CircleNoticeFragment());
-        list_fragment.add(new Fragment());
+        //互动
+        list_fragment.add(new CircleInteractFragment());
+        //相册
         list_fragment.add(new CircleGalleryFragment());
 
         list_title = new ArrayList<>();

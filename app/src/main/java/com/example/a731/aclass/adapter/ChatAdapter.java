@@ -67,7 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
 
     public void add(Mess msg){
         messes.add(msg);
-        notifyItemChanged(messes.size()-2);
+        notifyDataSetChanged();
     }
 
 

@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.activity.MainActivity;
 import com.example.a731.aclass.activity.UserInfoActivity;
 import com.example.a731.aclass.data.Users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,14 +29,9 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
     private List<Users> list;
     private int ADD_MORE_MEMBER = 1001;
 
-    public GroupInfoMemberAdapter(Context context, List<Users> list){
+    public GroupInfoMemberAdapter(Context context,List<Users> memberList){
         this.context = context;
-        Users user = new Users();
-        user.setName("邀请成员");
-        user.setId(ADD_MORE_MEMBER);
-        //user.setHeadImg(R.drawable.chat_fn);
-        list.add(user);
-        this.list = list;
+        this.list = memberList;
     }
 
     @Override
@@ -61,6 +58,11 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
                 }
             }
         });
+    }
+
+    public void onDataChange(List<Users> memberlist ){
+        list = memberlist;
+        notifyDataSetChanged();
     }
 
     @Override

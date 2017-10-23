@@ -15,15 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.adapter.FriendAdapter1;
+import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
-import com.example.a731.aclass.fragment.FriendFragment;
 import com.example.a731.aclass.fragment.MessFragment;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
@@ -32,6 +32,7 @@ import com.example.a731.aclass.view.MainView;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.NetUtils;
 
@@ -48,12 +49,19 @@ public class MainActivity extends BaseActivity implements MainView{
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private RadioGroup mRadioGroup;
+    private ImageView imgSearchFriend;
 
     private MainPresenter mainPresenter;
 
     private ListView friend_list_view;
     private List<Users> friendList;
     private TextView tvFriendCount;
+    private ImageView imgClasshead;
+    private List<EMGroup> groupList;
+
+    private FriendAdapter adapter;
+
+    private EMContactListener listener;
 
     @Override
     protected int getLayoutRes() {
@@ -76,24 +84,30 @@ public class MainActivity extends BaseActivity implements MainView{
     private void initFriendListView() {
         friend_list_view = (ListView) findViewById(R.id.main_nav_right_listview);
         tvFriendCount = (TextView) findViewById(R.id.main_nav_right_count);
+        imgSearchFriend = (ImageView) findViewById(R.id.main_nav_right_search);
+
+        imgSearchFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,SearchUserActivity.class);
+                startActivity(intent);
+            }
+        });
 
         friendList = new ArrayList<>();
+        mainPresenter.getFriendList();
 
-        int friendCount = friendList.size();
-        if (friendList.size()==0){
-            tvFriendCount.setText("通讯录");
-        }else {
-            tvFriendCount.setText("通讯录(" + friendCount + ")");
-        }
 
-        FriendAdapter1 adapter = new FriendAdapter1(getApplicationContext(),R.layout.fragment_friend_item,friendList);
+
+        adapter = new FriendAdapter(getApplicationContext(),R.layout.fragment_friend_item,friendList);
         friend_list_view.setAdapter(adapter);
         friend_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Users user = friendList.get(position);
                 Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-                intent.putExtra("name",user.getName());
+                intent.putExtra("username",user.getUsername());
                 intent.putExtra("isGroupMess",false);
                 startActivity(intent);
             }
@@ -106,7 +120,6 @@ public class MainActivity extends BaseActivity implements MainView{
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new CircleFragment());
         fragmentList.add(new MessFragment());
-        fragmentList.add(new FriendFragment());
 
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()){
             @Override
@@ -154,7 +167,6 @@ public class MainActivity extends BaseActivity implements MainView{
         // 显示标题栏左上角的返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //设置班圈的头像
-        mToolbar.setLogo(R.mipmap.ic_launcher);
         //设置班圈的名称
         mToolbar.setTitle("可改变的名称");
         mToolbar.setTitleTextColor(Color.RED);
@@ -167,6 +179,16 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        imgClasshead = (ImageView) findViewById(R.id.main_classhead);
+        imgClasshead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
+                intent.putExtra("groupId",groupList.get(0).getGroupId());
+                startActivity(intent);
             }
         });
     }
@@ -190,14 +212,11 @@ public class MainActivity extends BaseActivity implements MainView{
                     case R.id.main_rb_mess:
                         mViewPager.setCurrentItem(1);
                         break;
-                    case R.id.main_rb_friend:
-                        mViewPager.setCurrentItem(2);
-                        break;
                 }
             }
         });
 
-        EMClient.getInstance().contactManager().setContactListener(new EMContactListener() {
+        listener = new EMContactListener() {
             @Override
             public void onContactAdded(String username) {
                 //好友请求被同意
@@ -228,11 +247,13 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onFriendRequestDeclined(String username) {
                 //被拒绝时回调此方法
             }
-        });
+        };
+        EMClient.getInstance().contactManager().setContactListener(listener);
     }
 
     @Override
     public void initData() {
+        mainPresenter.getGroup();
     }
 
     @Override
@@ -247,10 +268,6 @@ public class MainActivity extends BaseActivity implements MainView{
         switch (item.getItemId()){
             case R.id.main_toolbar_create_group:
                 intent.setClass(MainActivity.this,CreateGroupActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.main_toolbar_search:
-                intent.setClass(MainActivity.this,SearchUserActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -270,6 +287,32 @@ public class MainActivity extends BaseActivity implements MainView{
     }
 
     @Override
+    public void onGetFriendsSuccess(List<Users> friendList) {
+        this.friendList = friendList;
+        adapter.onDataChanged(friendList);
+        int friendCount = friendList.size();
+        tvFriendCount.setText("通讯录("+ friendCount +")");
+        //showToast("获取好友列表成功:"+friendList.size());
+    }
+
+    @Override
+    public void onGetFriendsFail(String s) {
+        showToast("获取好友列表失败："+s);
+    }
+
+    @Override
+    public void onGetGroupFail(String message) {
+        showToast("获取班圈列表失败"+message);
+    }
+
+    @Override
+    public void onGetGroupSuccess(List<EMGroup> groupList) {
+        this.groupList = groupList;
+    }
+
+
+
+    @Override
     public void onDisconnected(int errorCode) {
         if(errorCode == EMError.USER_REMOVED){
             showToast("帐号已经被移除");
@@ -287,5 +330,11 @@ public class MainActivity extends BaseActivity implements MainView{
             }
             //当前网络不可用，请检查网络设置
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().contactManager().removeContactListener(listener);
     }
 }

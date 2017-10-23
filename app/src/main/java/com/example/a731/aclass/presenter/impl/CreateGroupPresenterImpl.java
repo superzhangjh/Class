@@ -1,15 +1,23 @@
 package com.example.a731.aclass.presenter.impl;
 
+import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.util.BmobUtil;
+import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.CreateGroupView;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
+import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -19,35 +27,90 @@ import cn.bmob.v3.listener.UploadFileListener;
 public class CreateGroupPresenterImpl implements CreateGroupPresenter{
 
     private CreateGroupView mCreateGroupView;
+    private String imgFilPath;
 
     public CreateGroupPresenterImpl (CreateGroupView createGroupView){
         mCreateGroupView = createGroupView;
     }
 
 
-    //TODO:修改成先创建班圈，后上传头像图片
     @Override
-    public void checkGroup(final String name, final Users creator, String headImg) {
-        final BmobFile bmobFile = new BmobFile(new File(headImg));
-        bmobFile.uploadblock(new UploadFileListener() {
+    public void checkGroup(final String name, final Users creator, final String headImg) {
+
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
-            public void done(BmobException e) {
-                String filePath = bmobFile.getFileUrl();
-                createGroup(name,creator,filePath);
+            public void run() {
+                try {
+                    EMGroup group = EaseMobUtil.createGroup(name);
+                    final String groupId = group.getGroupId();
+                        /*if (group!=null){
+                            final String groupId = group.getGroupId();
+                            BmobUtil.getGroupByField("groupName",name, new FindListener<Group>() {
+                                @Override
+                                public void done(List<Group> list, final BmobException e) {
+                                    if (e == null && list == null){
+                                        createGroup(groupId,name,creator,headImg);
+                                    }else if (list.size()>0){
+                                        mCreateGroupView.onCreateFail("班圈名已存在");
+                                    }else{
+                                        ThreadUtils.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mCreateGroupView.onCreateFail("bmob1:"+e.getMessage()+":"+e.getErrorCode());
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }*/
+                    createGroup(groupId,name,creator,headImg);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    mCreateGroupView.onCreateFail("easemob:"+e.getMessage()+":"+e.getErrorCode());
+                }
+            }
+        });
+
+
+
+    }
+
+    private void createGroup(final String groupId, final String name, Users creator, final String filePath){
+        BmobUtil.createGroup(groupId,name, creator, filePath, new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e==null){
+                    upLoadImg(filePath);
+                    BmobUtil.getGroupByField("groupId",groupId, new FindListener<Group>() {
+                        @Override
+                        public void done(List<Group> list, BmobException e) {
+                            Group group = new Group();
+                            group.setHeadImg(imgFilPath);
+                            BmobUtil.updateGroup(list.get(0).getObjectId(), group, new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null){
+                                        mCreateGroupView.onCreateSuccess();
+                                    }else{
+                                        mCreateGroupView.onCreateFail("bmob2:"+e.getMessage()+":"+e.getErrorCode());
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    mCreateGroupView.onCreateFail("bmob3:"+e.getMessage()+":"+e.getErrorCode());
+                }
             }
         });
     }
 
-    private void createGroup(String name,Users creator,String filePath){
-        BmobUtil.createGroup(name, creator, filePath, new SaveListener<String>() {
+    private void upLoadImg(String filePath) {
+        final BmobFile bmobFile = new BmobFile(new File(filePath));
+        bmobFile.uploadblock(new UploadFileListener() {
             @Override
-            public void done(String s, BmobException e) {
-                if (e==null){
-                    mCreateGroupView.onCreateSuccess();
-                }else{
-                    mCreateGroupView.onCreateFail(e.getMessage());
-                }
-
+            public void done(BmobException e) {
+                imgFilPath = bmobFile.getFileUrl();
             }
         });
     }

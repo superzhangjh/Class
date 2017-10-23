@@ -1,17 +1,18 @@
 package com.example.a731.aclass.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.activity.ChatActivity;
+import com.example.a731.aclass.data.Users;
 
 import java.util.List;
 
@@ -19,58 +20,48 @@ import java.util.List;
  * Created by 郑选辉 on 2017/10/9.
  */
 
-public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder>{
+public class FriendAdapter extends ArrayAdapter<Users>{
 
-    private List<String> resource;
-    private Context context;
 
-    public FriendAdapter(List<String> resource, Context context){
-        this.resource = resource;
-        this.context = context;
+    //布局文件ID
+    private int resourceId;
+
+    public FriendAdapter(@NonNull Context context, int resourceId,List<Users> usersList) {
+        super(context,resourceId,usersList);
+        this.resourceId = resourceId;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_friend_item,parent,false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        Users user = getItem(position);
+        View view;
+        ViewHolder holder;
+        if (convertView == null) {
+            view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
+            holder = new ViewHolder();
+            holder.username = (TextView) view.findViewById(R.id.fragment_friend_tv_name);
+            holder.headImg = (ImageView) view.findViewById(R.id.fragment_friend_iv_headImg);
+            view.setTag(holder);
+        } else {
+            view = convertView;
+            holder = (ViewHolder) view.getTag();
+        }
+        holder.username.setText(user.getUsername());
+        if (user.getHeadImg()!=null){
+            Glide.with(getContext()).load(user.getHeadImg()).into(holder.headImg);
+        }
+        return view;
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (resource==null)
-            return;
-        String name = resource.get(position);
-        holder.username.setText(name);
-        holder.content.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("username",resource.get(position));
-                context.startActivity(intent);
-            }
-        });
+    public void onDataChanged(List<Users> usersList) {
+        clear();
+        addAll(usersList);
     }
 
-    @Override
-    public int getItemCount() {
-        return resource==null?0:resource.size();
-    }
-
-    public void onDataChanged(List<String> resource) {
-        this.resource = resource;
-        notifyDataSetChanged();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    private class ViewHolder{
         TextView username;
         ImageView headImg;
-        LinearLayout content;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            username = (TextView) itemView.findViewById(R.id.fragment_friend_tv_name);
-            headImg = (ImageView) itemView.findViewById(R.id.fragment_friend_iv_headImg);
-            content = (LinearLayout) itemView.findViewById(R.id.fragment_friend_ll_content);
-        }
     }
+
 }
+

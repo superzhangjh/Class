@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.ChatAdapter;
+import com.example.a731.aclass.adapter.EMMessageListenerAdapter;
 import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.presenter.ChatPresenter;
 import com.example.a731.aclass.presenter.impl.ChatPresenterImpl;
@@ -38,16 +39,16 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private Toolbar toolbar;
     private TextView chatName;
     private RecyclerView recyclerView;
-    private List<Mess> messes = new ArrayList<>();
     private EditText edtInput;
     private ImageButton imgFn;//功能按钮
     private ImageButton imgInfo;//详情按钮
     private SwipeLayout swipeLayout;
 
     private ChatAdapter adapter;
-    private int msgNum = -1;
     private ChatPresenter chatPresenter = new ChatPresenterImpl(this);
     private String username;
+
+    private EMMessageListenerAdapter msgListener;
 
     @Override
     protected int getLayoutRes() {
@@ -58,6 +59,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
     public void initView() {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
+
         initToolbar();
 
         //测试内容
@@ -81,9 +83,10 @@ public class ChatActivity extends BaseActivity implements ChatView {
                     imm.hideSoftInputFromWindow(edtInput.getWindowToken(), 0) ;
                     //弹出滑动框
                     swipeLayout.open(SwipeLayout.DragEdge.Bottom);
-                    return;
+                }else{
+                    sendMessage();
                 }
-                sendMessage();
+
             }
         });
 
@@ -109,18 +112,13 @@ public class ChatActivity extends BaseActivity implements ChatView {
         //发送文本消息
         String edtContent = edtInput.getText().toString();
         chatPresenter.senMessage(username,edtContent);
-        Mess mess = new Mess();
-        mess.setMessage(edtContent);
-        mess.setCreatorID("myself");
-        adapter.add(mess);
-        edtInput.setText("");
-        recyclerView.smoothScrollToPosition(messes.size());
+        edtInput.getText().clear();
     }
 
     //消息内容呈现的recyclerview
     private void initRecyclerview() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycle_view);
-        adapter = new ChatAdapter(this,messes,username);
+        adapter = new ChatAdapter(this,chatPresenter.getMessage(),username);
         LinearLayoutManager manager=new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
@@ -155,72 +153,43 @@ public class ChatActivity extends BaseActivity implements ChatView {
             }
         });
 
-
-        EMMessageListener msgListener = new EMMessageListener() {
-
+        msgListener = new EMMessageListenerAdapter() {
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
                 //收到消息
-                for (int i=0;i<messages.size();i++){
-                    EMMessage msg = messages.get(i);
-                    Mess mess = new Mess();
-                    mess.setCreatorID(msg.getFrom());
-                    mess.setDate(msg.getMsgTime()+"");
-                    switch(msg.getType()){
-                        //文本信息
-                        case TXT:
-                            EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
-                            mess.setMessage(body.getMessage());
-                            showToast("收到信息"+body.getMessage()+":"+msgNum);
-                            messes.add(mess);
-                            adapter.notifyDataSetChanged();
-                            //recyclerView.smoothScrollToPosition();
-                            break;
-                        //图片信息
-                        case IMAGE:
-                            break;
-                        //视频
-                        case VIDEO:
-                            break;
-                        //位置
-                        case LOCATION:
-                            break;
-                        //声音
-                        case VOICE:
-                            break;
-                        //文件
-                        case FILE:
-                            break;
-                    }
+                EMMessage msg = messages.get(0);
+                Mess mess = new Mess();
+                mess.setCreatorID(msg.getFrom());
+                mess.setDate(msg.getMsgTime()+"");
+                switch(msg.getType()){
+                    //文本信息
+                    case TXT:
+                        EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
+                        mess.setMessage(body.getMessage());
+                        showToast("收到信息"+body.getMessage());
+                        adapter.add(mess);
+                        smoothScrollToBottom();
+                        break;
+                    //图片信息
+                    case IMAGE:
+                        break;
+                    //视频
+                    case VIDEO:
+                        break;
+                    //位置
+                    case LOCATION:
+                        break;
+                    //声音
+                    case VOICE:
+                        break;
+                    //文件
+                    case FILE:
+                        break;
                 }
-                recyclerView.smoothScrollToPosition(msgNum++);
-
-            }
-
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> messages) {
-                //收到透传消息
-            }
-
-            @Override
-            public void onMessageRead(List<EMMessage> messages) {
-                //收到已读回执
-            }
-
-            @Override
-            public void onMessageDelivered(List<EMMessage> message) {
-                //收到已送达回执
-            }
-            @Override
-            public void onMessageRecalled(List<EMMessage> messages) {
-                //消息被撤回
-            }
-
-            @Override
-            public void onMessageChanged(EMMessage message, Object change) {
-                //消息状态变动
+                smoothScrollToBottom();
             }
         };
+
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
@@ -260,12 +229,17 @@ public class ChatActivity extends BaseActivity implements ChatView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     @Override
     public void onSendMessageSuccess() {
+        updateList();
+    }
 
+    private void updateList() {
+        adapter.notifyDataSetChanged();
+        smoothScrollToBottom();
     }
 
     @Override
@@ -276,41 +250,11 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     //获取会话记录
     @Override
-    public void onGetRecordSuccess(List<EMMessage> emMessages) {
-        if (emMessages == null)return;
-        for (int i=0;i<emMessages.size();i++){
-            EMMessage msg = emMessages.get(i);
-            Mess mess = new Mess();
-            mess.setCreatorID(msg.getFrom());
-            Log.i("ChatActivity",msg.getFrom());
-            mess.setDate(msg.getMsgTime()+"");
-            switch(msg.getType()){
-                //文本信息
-                case TXT:
-                    EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
-                    mess.setMessage(body.getMessage());
-                    messes.add(mess);
-                    adapter.notifyDataSetChanged();
-                    showToast("获取记录成功:"+emMessages.size());
-                    break;
-                //图片信息
-                case IMAGE:
-                    break;
-                //视频
-                case VIDEO:
-                    break;
-                //位置
-                case LOCATION:
-                    break;
-                //声音
-                case VOICE:
-                    break;
-                //文件
-                case FILE:
-                    break;
-            }
-            msgNum++;
-        }
+    public void onGetRecordSuccess() {
+        updateList();
+    }
 
+    private void smoothScrollToBottom() {
+        recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 }
