@@ -16,7 +16,7 @@
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/main_classhead"
                 android:background="@mipmap/ic_launcher"
                 android:layout_width="40dp"
@@ -33,7 +33,7 @@
             android:id="@+id/main_view_pager"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <View
             android:background="#ccc"
@@ -79,7 +79,7 @@
     //好友列表
     <android.support.design.widget.NavigationView
         android:id="@+id/main_nav_right"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="end">
         <LinearLayout
@@ -116,15 +116,38 @@
                     android:layout_height="30dp" />
             </LinearLayout>
 
-            <FrameLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
+                <LinearLayout
+
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:background="#000"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp" />
+                    <TextView
+                        android:text="好友"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:background="#000"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp" />
+                </LinearLayout>
 
                 <ListView
                     android:id="@+id/main_nav_right_listview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:divider="@android:color/transparent"
                     android:dividerHeight="0dp"
                     android:scrollbars="none" />
@@ -137,7 +160,35 @@
                     android:gravity="center"
                     android:textColor="#ffffff"
                     android:textSize="40sp"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:background="#000"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp" />
+                    <TextView
+                        android:text="班圈"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:background="#000"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp" />
+                </LinearLayout>
+                <ListView
+                    android:id="@+id/main_nav_right_list_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none"/>
 
                 <!-- 自定义字母导航栏 -->
                 <!--<cn.manchester.app.contactsnav.view.SideBar
@@ -145,7 +196,7 @@
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical" />-->
-            </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
     </android.support.design.widget.NavigationView>
 

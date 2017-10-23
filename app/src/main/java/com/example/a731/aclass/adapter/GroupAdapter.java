@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.data.Group;
 
 import java.util.List;
 
@@ -22,42 +22,42 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by 郑选辉 on 2017/10/9.
  */
 
-public class FriendAdapter extends ArrayAdapter<Users>{
+public class GroupAdapter extends ArrayAdapter<Group>{
 
 
     //布局文件ID
     private int resourceId;
 
-    public FriendAdapter(@NonNull Context context, int resourceId,List<Users> usersList) {
-        super(context,resourceId,usersList);
+    public GroupAdapter(@NonNull Context context, int resourceId, List<Group> groupList) {
+        super(context,resourceId,groupList);
         this.resourceId = resourceId;
     }
 
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Users user = getItem(position);
+        Group group = getItem(position);
         View view;
         ViewHolder holder;
         if (convertView == null) {
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             holder = new ViewHolder();
-            holder.username = (TextView) view.findViewById(R.id.fragment_friend_tv_name);
-            holder.headImg = (CircleImageView) view.findViewById(R.id.fragment_friend_iv_headImg);
+            holder.username = (TextView) view.findViewById(R.id.fragment_group_tv_name);
+            holder.headImg = (CircleImageView) view.findViewById(R.id.fragment_group_iv_headImg);
             view.setTag(holder);
         } else {
             view = convertView;
             holder = (ViewHolder) view.getTag();
         }
-        holder.username.setText(user.getUsername());
-        if (user.getHeadImg()!=null){
-            Glide.with(getContext()).load(user.getHeadImg()).into(holder.headImg);
+        holder.username.setText(group.getName());
+        if (group.getHeadImg()!=null){
+            Glide.with(getContext()).load(group.getHeadImg()).into(holder.headImg);
         }
         return view;
     }
 
-    public void onDataChanged(List<Users> usersList) {
+    public void onDataChanged(List<Group> groupList) {
         clear();
-        addAll(usersList);
+        addAll(groupList);
     }
 
     private class ViewHolder{
@@ -66,4 +66,3 @@ public class FriendAdapter extends ArrayAdapter<Users>{
     }
 
 }
-

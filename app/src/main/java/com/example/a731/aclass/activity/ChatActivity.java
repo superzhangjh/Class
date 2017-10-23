@@ -22,6 +22,7 @@ import com.example.a731.aclass.adapter.EMMessageListenerAdapter;
 import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.presenter.ChatPresenter;
 import com.example.a731.aclass.presenter.impl.ChatPresenterImpl;
+import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.view.ChatView;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -46,7 +47,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     private ChatAdapter adapter;
     private ChatPresenter chatPresenter = new ChatPresenterImpl(this);
-    private String username;
+    private String chatToId;
+    private int chatType;
+    private String myId;
 
     private EMMessageListenerAdapter msgListener;
 
@@ -58,7 +61,8 @@ public class ChatActivity extends BaseActivity implements ChatView {
     @Override
     public void initView() {
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
+        chatToId = intent.getStringExtra("chatToId");
+        chatType = intent.getIntExtra("chatType", EaseMobUtil.CHATTYPE_PERSONAL);
 
         initToolbar();
 
@@ -94,14 +98,16 @@ public class ChatActivity extends BaseActivity implements ChatView {
             @Override
             public void onClick(View v) {
                 //根据接收的布尔值判断是否为圈消息，如果是则跳转到圈详情页面，如果不是则跳转到个人详情页面
-                boolean isGroupMess = getIntent().getBooleanExtra("isGroupMess",false);
-                if (!isGroupMess){
+
+                if (chatType==EaseMobUtil.CHATTYPE_PERSONAL){
                     //个人详情页面
                     Intent intent = new Intent(getApplicationContext(),UserInfoActivity.class);
+                    intent.putExtra("username",chatToId);
                     startActivity(intent);
                 }else{
                     //圈详情页面
                     Intent intent = new Intent(getApplicationContext(),GroupInfoActivity.class);
+                    intent.putExtra("groupId",chatToId);
                     startActivity(intent);
                 }
             }
@@ -111,14 +117,14 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private void sendMessage() {
         //发送文本消息
         String edtContent = edtInput.getText().toString();
-        chatPresenter.senMessage(username,edtContent);
+        chatPresenter.senMessage(chatToId,edtContent,chatType);
         edtInput.getText().clear();
     }
 
     //消息内容呈现的recyclerview
     private void initRecyclerview() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycle_view);
-        adapter = new ChatAdapter(this,chatPresenter.getMessage(),username);
+        adapter = new ChatAdapter(this,chatPresenter.getMessage());
         LinearLayoutManager manager=new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
@@ -195,7 +201,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     @Override
     public void initData() {
-        chatPresenter.getConversationRecord(username);
+        chatPresenter.getConversationRecord(chatToId);
     }
 
     private void initToolbar() {
@@ -238,12 +244,14 @@ public class ChatActivity extends BaseActivity implements ChatView {
     }
 
     private void updateList() {
+        showToast("更新会话记录成功");
         adapter.notifyDataSetChanged();
         smoothScrollToBottom();
     }
 
     @Override
-    public void onSendMessageFail() {
+    public void onSendMessageFail(String msg) {
+        showToast("发送消息失败"+msg);
 
     }
 
@@ -251,6 +259,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
     //获取会话记录
     @Override
     public void onGetRecordSuccess() {
+        showToast("获取会话记录成功");
         updateList();
     }
 

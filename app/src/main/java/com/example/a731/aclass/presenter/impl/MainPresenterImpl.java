@@ -15,7 +15,6 @@ import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -117,14 +116,38 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void getGroup() {
         groupList = new ArrayList<>();
-        try {
-            List<EMGroup> emGroupList = EaseMobUtil.getAllGroup();
-            mMainView.onGetGroupSuccess(emGroupList);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-            mMainView.onGetGroupFail(e.getMessage());
-        }
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<EMGroup> emGroups= EaseMobUtil.getAllGroup();
+                    int i=0;
+                    for (;i<emGroups.size();i++){
+                        EMGroup emGroup = emGroups.get(i);
+                        BmobUtil.getGroupByField("groupId", emGroup.getGroupId(), new FindListener<Group>() {
+                            @Override
+                            public void done(List<Group> list, BmobException e) {
+                                groupList.add(list.get(0));
+                                mMainView.onGetGroupSuccess(groupList);
+                            }
+                        });
+                    }
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainView.onGetGroupSuccess(groupList);
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainView.onGetGroupFail(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
     }
-
-
 }

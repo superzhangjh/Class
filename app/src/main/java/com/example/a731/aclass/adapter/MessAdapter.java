@@ -3,18 +3,16 @@ package com.example.a731.aclass.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ChatActivity;
 import com.example.a731.aclass.data.Conversation;
-import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.util.EaseMobUtil;
 import com.hyphenate.chat.EMConversation;
 
 import java.util.ArrayList;
@@ -48,10 +46,15 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("username",con.getName());
+
+                Intent intent = new Intent(context,ChatActivity.class);
+
                 if (con.getChatType() == EMConversation.EMConversationType.Chat){
-                    intent.setClass(context,ChatActivity.class);
+                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatType", EaseMobUtil.CHATTYPE_PERSONAL);
+                }else{
+                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatType", EaseMobUtil.CHATTYPE_GROUP);
                 }
                 context.startActivity(intent);
             }
@@ -67,6 +70,7 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
         this.conversations = conversations;
         notifyDataSetChanged();
     }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView head;

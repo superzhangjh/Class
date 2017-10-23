@@ -93,6 +93,9 @@
         <activity android:name=".activity.VoteInfoActivity"/>
         
         <activity android:name=".activity.StartVoteActivity" />
+
+        <activity android:name=".activity.JoinGroupActivity"/>
+        <activity android:name=".activity.SystematicNotificationActivity"/>
     </application>
 
 </manifest>

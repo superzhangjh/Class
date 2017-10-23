@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter.impl;
 
+import android.util.Log;
+
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.SearchUserPresenter;
 import com.example.a731.aclass.util.BmobUtil;
@@ -18,6 +20,8 @@ import cn.bmob.v3.listener.FindListener;
  */
 
 public class SearchUserPrensterImpl implements SearchUserPresenter {
+
+    private static final String TAG="SearchUserPresenterImpl";
 
     private SearchUserView mSearchFriendView;
 
@@ -47,7 +51,9 @@ public class SearchUserPrensterImpl implements SearchUserPresenter {
                 @Override
                 public void run() {
                     try {
+                        Log.i(TAG,"开始申请好友");
                         EaseMobUtil.addFriendd(username,reason);
+                        Log.i(TAG,"申请好友成功");
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -56,16 +62,15 @@ public class SearchUserPrensterImpl implements SearchUserPresenter {
                         });
                     } catch (final HyphenateException e) {
                         e.printStackTrace();
+                        Log.i(TAG,"申请好友失败"+e.getMessage());
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mSearchFriendView.onAddFriendFail(e.getMessage());
                             }
                         });
-
                     }
                 }
             });
-
     }
 }

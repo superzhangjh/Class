@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.FriendAdapter;
+import com.example.a731.aclass.adapter.GroupAdapter;
+import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
 import com.example.a731.aclass.fragment.MessFragment;
@@ -39,6 +41,8 @@ import com.hyphenate.util.NetUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.example.a731.aclass.R.id.main_nav_view;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
@@ -53,15 +57,15 @@ public class MainActivity extends BaseActivity implements MainView{
 
     private MainPresenter mainPresenter;
 
-    private ListView friend_list_view;
+    private ListView friend_list_view,group_list_view;
     private List<Users> friendList;
     private TextView tvFriendCount;
-    private ImageView imgClasshead;
-    private List<EMGroup> groupList;
+    private CircleImageView imgClasshead;
+    private List<Group> groupList;
 
-    private FriendAdapter adapter;
+    private FriendAdapter friendAdapter;
+    private GroupAdapter groupAdapter;
 
-    private EMContactListener listener;
 
     @Override
     protected int getLayoutRes() {
@@ -79,6 +83,26 @@ public class MainActivity extends BaseActivity implements MainView{
         initToolBar();
         initActionBarDrawerLayout();
         initFriendListView();
+        initGroupListView();
+    }
+
+    private void initGroupListView() {
+        group_list_view = (ListView) findViewById(R.id.main_nav_right_list_group);
+        groupList = new ArrayList<>();
+        mainPresenter.getGroup();
+        groupAdapter = new GroupAdapter(this,R.layout.fragment_group_item,groupList);
+        group_list_view.setAdapter(groupAdapter);
+        group_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Group group = groupList.get(position);
+                Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
+                intent.putExtra("chatToId",group.getGroupId());
+                intent.putExtra("chatType",EaseMobUtil.CHATTYPE_GROUP);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void initFriendListView() {
@@ -100,15 +124,15 @@ public class MainActivity extends BaseActivity implements MainView{
 
 
 
-        adapter = new FriendAdapter(getApplicationContext(),R.layout.fragment_friend_item,friendList);
-        friend_list_view.setAdapter(adapter);
+        friendAdapter = new FriendAdapter(getApplicationContext(),R.layout.fragment_friend_item,friendList);
+        friend_list_view.setAdapter(friendAdapter);
         friend_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Users user = friendList.get(position);
                 Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-                intent.putExtra("username",user.getUsername());
-                intent.putExtra("isGroupMess",false);
+                intent.putExtra("chatToId",user.getUsername());
+                intent.putExtra("chatType",EaseMobUtil.CHATTYPE_PERSONAL);
                 startActivity(intent);
             }
         });
@@ -182,13 +206,18 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
 
-        imgClasshead = (ImageView) findViewById(R.id.main_classhead);
+        imgClasshead = (CircleImageView) findViewById(R.id.main_classhead);
         imgClasshead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //if (groupList.size()>0){
                 Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
                 intent.putExtra("groupId",groupList.get(0).getGroupId());
                 startActivity(intent);
+                /*}else{
+                    showToast("你还未加入任何班圈");
+                }*/
+
             }
         });
     }
@@ -215,45 +244,10 @@ public class MainActivity extends BaseActivity implements MainView{
                 }
             }
         });
-
-        listener = new EMContactListener() {
-            @Override
-            public void onContactAdded(String username) {
-                //好友请求被同意
-            }
-
-            @Override
-            public void onContactDeleted(String username) {
-                //好友请求被拒绝
-            }
-
-            @Override
-            public void onContactInvited(String username, String reason) {
-                //收到好友邀请
-                try {
-                    EaseMobUtil.acceptFriendRequest(username);
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFriendRequestAccepted(String username) {
-                //同意邀请时回调此方法
-
-            }
-
-            @Override
-            public void onFriendRequestDeclined(String username) {
-                //被拒绝时回调此方法
-            }
-        };
-        EMClient.getInstance().contactManager().setContactListener(listener);
     }
 
     @Override
     public void initData() {
-        mainPresenter.getGroup();
     }
 
     @Override
@@ -268,6 +262,10 @@ public class MainActivity extends BaseActivity implements MainView{
         switch (item.getItemId()){
             case R.id.main_toolbar_create_group:
                 intent.setClass(MainActivity.this,CreateGroupActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.main_toolbar_join_in:
+                intent.setClass(MainActivity.this,JoinGroupActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -289,7 +287,8 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void onGetFriendsSuccess(List<Users> friendList) {
         this.friendList = friendList;
-        adapter.onDataChanged(friendList);
+        if (friendList!=null)
+            friendAdapter.onDataChanged(friendList);
         int friendCount = friendList.size();
         tvFriendCount.setText("通讯录("+ friendCount +")");
         //showToast("获取好友列表成功:"+friendList.size());
@@ -306,8 +305,11 @@ public class MainActivity extends BaseActivity implements MainView{
     }
 
     @Override
-    public void onGetGroupSuccess(List<EMGroup> groupList) {
+    public void onGetGroupSuccess(List<Group> groupList) {
+        showToast("获取班圈列表成功："+groupList.size());
         this.groupList = groupList;
+        if (groupAdapter!=null)
+            groupAdapter.onDataChanged(groupList);
     }
 
 
@@ -330,11 +332,5 @@ public class MainActivity extends BaseActivity implements MainView{
             }
             //当前网络不可用，请检查网络设置
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EMClient.getInstance().contactManager().removeContactListener(listener);
     }
 }

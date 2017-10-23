@@ -3,44 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        //toolbar显示头像、圈名、圈ID
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/groupinfo_toolbar"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
-            <ImageView
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
-            <LinearLayout
+            android:layout_height="match_parent">
+
+            //toolbar显示头像、圈名、圈ID
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/groupinfo_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:text="15软件技术2班"
-                    android:gravity="center_vertical"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp" />
-                <TextView
-                    android:text="班ID：15131572"
-                    android:gravity="center_vertical"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#666"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp" />
-            </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+                android:layout_height="80dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/groupinfo_toolbar_iv_head"
+                    android:src="@mipmap/ic_launcher"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/groupinfo_toolbar_tv_name"
+                        android:text="15软件技术2班"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                    <TextView
+                        android:id="@+id/groupinfo_toolbar_tv_id"
+                        android:text="班ID：15131572"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#666"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
 
         <TextView
             android:layout_width="match_parent"

@@ -2,6 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/mess_tv_systematic_notification"
+        android:text="系统通知"
+        android:gravity="center_vertical"
+        android:textSize="25sp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mess_recycle_view"
         android:layout_width="match_parent"

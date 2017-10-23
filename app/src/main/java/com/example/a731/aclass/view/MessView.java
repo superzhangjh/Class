@@ -11,5 +11,5 @@ import java.util.List;
 public interface MessView {
     void onGetConversationSuccess(List<Conversation> conversations);
 
-    void onGetConversationFail();
+    void onGetConversationFail(String msg);
 }

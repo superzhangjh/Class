@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.GroupInfoMemberAdapter;
 import com.example.a731.aclass.data.Group;
@@ -21,6 +23,8 @@ import com.example.a731.aclass.presenter.impl.GroupInfoPresenterImpl;
 import com.example.a731.aclass.view.GroupInfoView;
 import java.util.List;
 
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.groupinfo_recyclerview_memberlist;
 
@@ -34,9 +38,10 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     private LinearLayout tvQRCode;
     private LinearLayout tvNickname;
     private LinearLayout llMemberList;
-    private TextView tvRecommend,tvMemberCount;
+    private TextView tvRecommend,tvMemberCount,tvGroupName,tvGroupId;
     private RecyclerView memberRecyclerView;
     private ImageView memIcon;
+    private CircleImageView ivGroupHead;
     private GroupInfoMemberAdapter memberAdapter;
     private List<Users> memberList;
 
@@ -62,7 +67,10 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         llMemberList = (LinearLayout) findViewById(R.id.groupinfo_ll_memberlist);
         tvRecommend = (TextView) findViewById(R.id.groupinfo_tv_recommend);
         tvMemberCount = (TextView) findViewById(R.id.groupinfo_tv_membercount);
+        tvGroupName = (TextView) findViewById(R.id.groupinfo_toolbar_tv_name);
+        tvGroupId = (TextView) findViewById(R.id.groupinfo_toolbar_tv_id);
         memIcon = (ImageView) findViewById(R.id.groupinfo_iv_membericon);
+        ivGroupHead = (CircleImageView) findViewById(R.id.groupinfo_toolbar_iv_head);
 
 
 
@@ -160,7 +168,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     @Override
     public void onGetGroupMemberSuccess(List<Users> list) {
         showToast("获取群成员成功"+list.size());
-        //tvMemberCount.setText(list.size()+"");
+        tvMemberCount.setText(list.size()+"");
         Users user = new Users();
         user.setName("邀请成员");
         user.setId(ADD_MORE_MEMBER);
@@ -180,7 +188,9 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         Group group = list.get(0);
         groupInfoPresenter.getGroupMember(group.getObjectId());
         tvRecommend.setText("本圈创建于"+group.getCreatedAt());
-
+        tvGroupName.setText(group.getName());
+        tvGroupId.setText("班圈ID:"+group.getGroupId());
+        Glide.with(this).load(group.getHeadImg()).into(ivGroupHead);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.a731.aclass.presenter.impl;
 
 import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ChatPresenter;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ThreadUtils;
@@ -11,6 +12,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by 郑选辉 on 2017/10/9.
@@ -26,15 +29,15 @@ public class ChatPresenterImpl implements ChatPresenter {
     }
 
     @Override
-    public void senMessage(final String username, final String content) {
+    public void senMessage(final String username, final String content, final int chatType) {
         Mess mess = new Mess();
-        mess.setCreatorID("myself");
+        mess.setCreatorID(BmobUser.getCurrentUser(Users.class).getUsername());
         mess.setMessage(content);
         messages.add(mess);
         ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                EaseMobUtil.sendTextMessage(content, username, EaseMobUtil.CHATTYPE_PERSONAL, new EMCallBack() {
+                EaseMobUtil.sendTextMessage(content, username, chatType, new EMCallBack() {
                     @Override
                     public void onSuccess() {
                         ThreadUtils.runOnUiThread(new Runnable() {
@@ -46,11 +49,11 @@ public class ChatPresenterImpl implements ChatPresenter {
                     }
 
                     @Override
-                    public void onError(int code, String error) {
+                    public void onError(final int code, final String error) {
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mChatView.onSendMessageFail();
+                                mChatView.onSendMessageFail(code+":"+error);
                             }
                         });
 
@@ -63,7 +66,6 @@ public class ChatPresenterImpl implements ChatPresenter {
                 });
             }
         });
-
     }
 
     public EMMessage getConversationLastRecord(String username){

@@ -42,7 +42,7 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String name = list.get(position).getName();
+        String name = list.get(position).getUsername();
         holder.name.setText(name);
         //holder.head.setBackgroundResource();
         holder.itemClick.setOnClickListener(new View.OnClickListener() {

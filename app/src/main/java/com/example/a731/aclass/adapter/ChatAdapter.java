@@ -12,9 +12,12 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Mess;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.EaseMobUtil;
 
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by Administrator on 2017/9/16/016.
@@ -24,12 +27,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
 
     private Context context;
     private List<Mess> messes;
-    private String chatToName;
+    private String myId;
 
-    public ChatAdapter(Context context, List<Mess> messes,String chatToName){
+    public ChatAdapter(Context context, List<Mess> messes){
         this.context = context;
         this.messes = messes;
-        this.chatToName = chatToName;
+        myId = BmobUser.getCurrentUser(Users.class).getUsername();
     }
 
     @Override
@@ -86,11 +89,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
     public int getItemViewType(int position) {
         int item_view_type;
         String origin = messes.get(position).getCreatorID();
-        Log.i("ChatAdapter",origin+"--"+chatToName);
-        if (origin.equals(chatToName)){
-            item_view_type = EaseMobUtil.TYPE_GET_MESSAGE;
-        }else {
+        if (origin.equals(myId)){
             item_view_type = EaseMobUtil.TYPE_SEND_MESSAGE;
+        }else {
+            item_view_type = EaseMobUtil.TYPE_GET_MESSAGE;
         }
         return item_view_type;
     }
