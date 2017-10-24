@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:title="好友列表"
+        android:id="@+id/main_toolbar_friend"
+        android:icon="@drawable/chat_info"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/main_toolbar_scan"
         android:icon="@mipmap/ic_launcher"
         android:title="扫一扫"

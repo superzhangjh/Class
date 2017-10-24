@@ -21,12 +21,14 @@
                 android:background="@mipmap/ic_launcher"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
-            <!--<TextView
+            <TextView
                 android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="班圈名称" />-->
+                android:text="班圈名称" />
+
+
         </android.support.v7.widget.Toolbar>
 
         <android.support.v4.view.ViewPager
@@ -77,6 +79,7 @@
     </android.support.design.widget.NavigationView>
 
     //好友列表
+    <!--<include layout="@layout/include_main_nav_right"/>-->
     <android.support.design.widget.NavigationView
         android:id="@+id/main_nav_right"
         android:layout_width="300dp"

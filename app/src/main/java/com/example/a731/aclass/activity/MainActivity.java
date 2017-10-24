@@ -48,12 +48,22 @@ import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 public class MainActivity extends BaseActivity implements MainView{
 
+    private static final String TITLE_GROUP_NAME = "班圈名称";
+    private static final String TITLE_USER_NAME = " 用户名称";
+
     private DrawerLayout mDrawerLayout;
+    private NavigationView navView;
+    private NavigationView navRight;
     private ActionBarDrawerToggle mDrawerToggle;
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private RadioGroup mRadioGroup;
     private ImageView imgSearchFriend;
+    private MenuItem itemFriend;
+    private MenuItem itemScan;
+    private MenuItem itemCreateGroup;
+    private MenuItem itemJoinIn;
+    private TextView tvTitle;
 
     private MainPresenter mainPresenter;
 
@@ -74,8 +84,8 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void initView() {
+        tvTitle = (TextView) findViewById(R.id.main_tv_title);
         mRadioGroup = (RadioGroup) findViewById(R.id.main_radiogroup);
-
 
         mainPresenter = new MainPresenterImpl(this);
         initViewPager();
@@ -161,7 +171,9 @@ public class MainActivity extends BaseActivity implements MainView{
     //个人资料侧滑栏
     private void initNavigationView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        NavigationView navView = (NavigationView) findViewById(main_nav_view);
+        navView = (NavigationView) findViewById(main_nav_view);
+        navRight = (NavigationView) findViewById(R.id.main_nav_right);
+
         navView.setNavigationItemSelectedListener(  new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -186,14 +198,13 @@ public class MainActivity extends BaseActivity implements MainView{
     private void initToolBar() {
         //设置toolbar
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mToolbar.setTitle("");
+        mToolbar.setTitleTextColor(Color.RED);
         setSupportActionBar(mToolbar);
 
         // 显示标题栏左上角的返回按钮
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //设置班圈的头像
         //设置班圈的名称
-        mToolbar.setTitle("可改变的名称");
-        mToolbar.setTitleTextColor(Color.RED);
 
         // 导航栏图标显示
         mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
@@ -237,11 +248,51 @@ public class MainActivity extends BaseActivity implements MainView{
                 switch (checkedId){
                     case R.id.main_rb_class:
                         mViewPager.setCurrentItem(0);
+                        itemFriend.setVisible(false);
+                        itemScan.setVisible(true);
+                        itemCreateGroup.setVisible(true);
+                        itemJoinIn.setVisible(true);
+                        tvTitle.setText(TITLE_GROUP_NAME);
                         break;
                     case R.id.main_rb_mess:
                         mViewPager.setCurrentItem(1);
+                        itemFriend.setVisible(true);
+                        itemScan.setVisible(false);
+                        itemCreateGroup.setVisible(false);
+                        itemJoinIn.setVisible(false);
+                        tvTitle.setText(TITLE_USER_NAME);
                         break;
                 }
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:itemFriend.setVisible(false);
+                        itemScan.setVisible(true);
+                        itemCreateGroup.setVisible(true);
+                        itemJoinIn.setVisible(true);
+                        tvTitle.setText(TITLE_GROUP_NAME);
+                        break;
+                    case 1:
+                        itemFriend.setVisible(true);
+                        itemScan.setVisible(false);
+                        itemCreateGroup.setVisible(false);
+                        itemJoinIn.setVisible(false);
+                        tvTitle.setText(TITLE_USER_NAME);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -253,6 +304,11 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_toolbar_menu,menu);
+        itemFriend = menu.findItem(R.id.main_toolbar_friend);
+        itemScan = menu.findItem(R.id.main_toolbar_scan);
+        itemCreateGroup = menu.findItem(R.id.main_toolbar_create_group);
+        itemJoinIn = menu.findItem(R.id.main_toolbar_join_in);
+        itemFriend.setVisible(false);
         return true;
     }
 
@@ -268,6 +324,8 @@ public class MainActivity extends BaseActivity implements MainView{
                 intent.setClass(MainActivity.this,JoinGroupActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.main_toolbar_friend:
+                mDrawerLayout.openDrawer(navRight);
         }
         return true;
     }
