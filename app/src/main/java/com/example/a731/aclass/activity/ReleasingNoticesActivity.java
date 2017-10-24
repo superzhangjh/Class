@@ -102,33 +102,43 @@ public class ReleasingNoticesActivity extends BaseActivity{
         imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder  dialog = new AlertDialog.Builder (v.getContext());
-                dialog.setMessage("确认发布该通知？");
-                dialog.setPositiveButton("发布",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String title = edtTitle.getText().toString().trim();
-                                String content = edtContent.getText().toString();
-                                String date = DateUtil.MMdd_hhss();
+                if (edtTitle.getText().toString().equals("")){
+                    showToast("标题不能为空");
+                    edtTitle.requestFocus();
+                    return;
+                }else if (edtContent.getText().toString().equals("")){
+                    showToast("请输入内容");
+                    edtContent.requestFocus();
+                    return;
+                } else {
+                    AlertDialog.Builder  dialog = new AlertDialog.Builder (v.getContext());
+                    dialog.setMessage("确认发布该通知？");
+                    dialog.setPositiveButton("发布",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String title = edtTitle.getText().toString().trim();
+                                    String content = edtContent.getText().toString();
+                                    String date = DateUtil.MMdd_hhss();
 
-                                Intent intent = new Intent();
-                                intent.putExtra("title",title);
-                                intent.putExtra("content",content);
-                                intent.putExtra("date",date);
-                                setResult(RESULT_OK,intent);
-                                finish();
-                            }
-                        });
-                dialog.setNegativeButton("关闭",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                // 显示
-                dialog.show();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("content",content);
+                                    intent.putExtra("date",date);
+                                    setResult(RESULT_OK,intent);
+                                    finish();
+                                }
+                            });
+                    dialog.setNegativeButton("关闭",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    // 显示
+                    dialog.show();
+                }
             }
         });
     }

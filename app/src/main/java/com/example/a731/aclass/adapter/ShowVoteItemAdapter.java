@@ -57,7 +57,7 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             //信息框
-            itemCount = (RadioButton) itemView.findViewById(R.id.item_vote_itemCount);
+            itemCount = (TextView) itemView.findViewById(R.id.item_vote_itemCount);
             itemContent = (TextView) itemView.findViewById(R.id.item_vote_content);
         }
     }

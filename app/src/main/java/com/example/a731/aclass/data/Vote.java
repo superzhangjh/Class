@@ -9,12 +9,21 @@ import java.util.List;
 public class Vote {
     private Users creator;//创建者
     private int type;//投票类型
+    private boolean singleSelect;//是否为单选
     private String title;//标题
     private String content;//内容
     private String date;//创建日期
     private String expirationDate;//截止日期
     private String[] photoList;//图片链接
     private List<Item> voteItems;//投票选项
+
+    public boolean isSingleSelect() {
+        return singleSelect;
+    }
+
+    public void setSingleSelect(boolean singleSelect) {
+        this.singleSelect = singleSelect;
+    }
 
     public Users getCreator() {
         return creator;

@@ -25,10 +25,12 @@ public class EaseMobUtil {
     public static final int CHATTYPE_PERSONAL = 1001;
     public static final int CHATTYPE_GROUP = 1002;
 
-    public static final int TYPE_SEND_MESSAGE = 1011;
-    public static final int TYPE_GET_MESSAGE = 1012;
-    public static final int MODIFIED_RESULT = 1004;
+    public static final int TYPE_SEND_MESSAGE = 1003;
+    public static final int TYPE_GET_MESSAGE = 1004;
+    public static final int MODIFIED_RESULT = 1005;
 
+    public static final int TYPE_SINGLE_SELECT = 1006;
+    public static final int TYPE_DOUBLE_SELECT = 1007;
 
     /*------------------基础功能---------------------*/
     //注册功能

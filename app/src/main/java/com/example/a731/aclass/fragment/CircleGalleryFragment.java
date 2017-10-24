@@ -3,10 +3,15 @@ package com.example.a731.aclass.fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.GalleryAdapter;
 import com.example.a731.aclass.data.Gallery;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,18 +24,48 @@ public class CircleGalleryFragment extends BaseFragment {
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Gallery> galleryList;
+    private TextView tvLocalPhoto;
+    private TextView tvTakePhoto;
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_circle_base;
+        return R.layout.fragment_circle_gallery;
     }
 
     @Override
     public void initView() {
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_base_swiperefresh);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_gallery_recyclerview);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_gallery_swiperefresh);
+        tvLocalPhoto = (TextView) mRootView.findViewById(R.id.circle_gallery_tv_localPhoto);
+        tvTakePhoto = (TextView) mRootView.findViewById(R.id.circle_gallery_tv_takePhoto);
+
         testData();
 
+        initRecyclerView();
+        
+        initUploadPhoto();
+    }
+
+    private void initUploadPhoto() {
+
+        //TODO：上传本地图片
+        tvLocalPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        //TODO:拍照上传
+        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void initRecyclerView() {
         GalleryAdapter adapter = new GalleryAdapter(getContext(),galleryList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

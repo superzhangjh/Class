@@ -7,7 +7,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextSwitcher;
+import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Vote;
@@ -51,8 +53,11 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
 
         final Vote.Item item = itemList.get(position);
 
-
+        //显示 item的内容
         if (item.getItemContent()==null){
+            if ((position+1)==getItemCount()){
+                holder.edtItem.getText().clear();
+            }
             holder.edtItem.setHint("选项"+(position+1));
         }else {
             holder.edtItem.setText(item.getItemContent());
@@ -75,6 +80,17 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
                 }
             }
         });
+        holder.ibCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getItemCount()<=2){
+                    Toast.makeText(context,"最少保留两个选项",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                itemList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public List<Vote.Item> getItemList(){
@@ -93,10 +109,12 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         EditText edtItem;
+        ImageButton ibCross;
         public ViewHolder(View itemView) {
             super(itemView);
             //信息框
             edtItem = (EditText) itemView.findViewById(R.id.item_edit_vote_item);
+            ibCross = (ImageButton) itemView.findViewById(R.id.item_edit_vote_cross);
         }
     }
 }

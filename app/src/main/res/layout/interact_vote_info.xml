@@ -102,8 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"></android.support.v7.widget.RecyclerView>
-
+        android:layout_marginTop="5dp"/>
     <LinearLayout
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
@@ -118,7 +117,7 @@
             android:textSize="16dp"
             android:gravity="center"
             android:text="剩余5天  "
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp" />
 
         <View

@@ -52,13 +52,14 @@ public class VoteInfoActivity extends BaseActivity{
         tvExpirationDate = (TextView) findViewById(R.id.interact_vote_tv_expirationDate);
         tvSelect = (TextView) findViewById(R.id.interact_vote_tv_select);
 
+        //获取数据
         String voteJson = getIntent().getStringExtra("vote");
         vote = new Gson().fromJson(voteJson,Vote.class);
         Log.i("VoteJson","VoteJson:" + voteJson);
 
         //imgHead.setImageBitmap();
-        //tvName.setText(vote.getCreator().getName());
-        //tvDate.setText(vote.getDate());
+        tvName.setText(vote.getCreator().getName());
+        tvDate.setText(vote.getDate());
         int type = vote.getType();
         switch (type){
             case 0:tvType.setText("调查");break;
@@ -68,7 +69,8 @@ public class VoteInfoActivity extends BaseActivity{
         }
         tvTitle.setText(vote.getTitle());
         tvContent.setText(vote.getContent());
-        //tvExpirationDate.setText("截止日期"+vote.getExpirationDate());
+        tvDate.setText(vote.getDate());
+        tvExpirationDate.setText("截止日期"+vote.getExpirationDate());
         //TODO:“请投票”，“已投”和“活动结束”无法点击
         //tvSelect.setText("");
 

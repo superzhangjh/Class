@@ -49,4 +49,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
            img = (ImageView) itemView.findViewById(R.id.gallery_photo_item);
         }
     }
+
+    public void setOndataChange(String[] srcList){
+        this.srcList = srcList;
+        notifyDataSetChanged();
+    }
+
 }

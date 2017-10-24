@@ -3,27 +3,30 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <TextView
-            android:id="@+id/circle_interact_start_a_vote"
-            android:gravity="center"
-            android:text="发起投票"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/circle_interact_swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/circle_interact_recyclerview"
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/circle_interact_start_a_vote"
+                    android:gravity="center"
+                    android:text="发起投票"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/circle_interact_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

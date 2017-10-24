@@ -17,11 +17,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Administrator on 2017/10/6/006.
  */
 
 public class CircleInteractFragment extends BaseFragment{
+    private static final int START_A_VOTE = 2001;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Vote> voteList = new ArrayList<>();
@@ -44,7 +47,7 @@ public class CircleInteractFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(),StartVoteActivity.class);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent,START_A_VOTE);
             }
         });
 
@@ -76,5 +79,15 @@ public class CircleInteractFragment extends BaseFragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case START_A_VOTE:
+                if (resultCode==RESULT_OK){
+                    String voteJson = data.getStringExtra("voteJson");
+                    Vote vote = new Gson().fromJson(voteJson,Vote.class);
+                    voteList.add(vote);
+                    adapter.setListDataChange(voteList);
+                }
+                break;
+        }
     }
 }

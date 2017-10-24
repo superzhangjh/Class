@@ -37,7 +37,7 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
     }
 
     //更新数据表内容
-    public void setListData(List<Vote> votesList){
+    public void setListDataChange(List<Vote> votesList){
         this.votesList = votesList;
         notifyDataSetChanged();
     }
