@@ -24,14 +24,6 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
     private OnItemClickListener onItemClickListener;
 
     public InteractAdapter(Context context,List<Vote> votesList){
-        for (int i=0;i<4;i++){
-            Vote vote = new Vote();
-            vote.setType(i);
-            vote.setTitle("这是第"+i+"个投票");
-            vote.setDate("截止日期:10-11 22:22");
-            vote.setContent("投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容投票内容内容");
-            votesList.add(vote);
-        }
         this.context = context;
         this.votesList = votesList;
     }
@@ -106,7 +98,7 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
         }
     }
 
-    public static  interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View view,int position);
     }
 }

@@ -128,7 +128,7 @@
                     android:text="单选" />
 
                 <RadioButton
-                    android:id="@+id/activity_start_vote_rb_double"
+                    android:id="@+id/activity_start_vote_rb_mutiple"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -167,28 +167,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
 
-                <EditText
+                <TextView
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="截止日期"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <Button
                     android:id="@+id/activity_start_vote_edt_expirationDate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@null"
-                    android:hint="设置截止日期" />
+                    android:hint="设置" />
 
                 <View
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"/>
 
-                <TextView
+                <Button
                     android:id="@+id/activity_start_vote_tv_addPic"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:textSize="20sp"
                     android:text="添加图片"
-                    android:background="#fff"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </LinearLayout>

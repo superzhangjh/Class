@@ -31,6 +31,20 @@ public class DateUtil {
         return now;
     }
 
+    public static String MM(){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        Date date = new Date();
+        String now = sdf.format(date);
+        return now;
+    }
+
+    public static String dd(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        Date date = new Date();
+        String now = sdf.format(date);
+        return now;
+    }
+
     public static String MMdd(){
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         Date date = new Date();

@@ -25,11 +25,13 @@ import static android.app.Activity.RESULT_OK;
 
 public class CircleInteractFragment extends BaseFragment{
     private static final int START_A_VOTE = 2001;
+    private static final int VOTE_INFO = 2002;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Vote> voteList = new ArrayList<>();
     private InteractAdapter adapter;
     private TextView tvStartVote;
+    private int index;
 
     @Override
     protected int getLayoutRes() {
@@ -60,8 +62,9 @@ public class CircleInteractFragment extends BaseFragment{
                 Intent intent = new Intent(getContext(),VoteInfoActivity.class);
                 Vote vote = voteList.get(position);
                 String voteJson = new Gson().toJson(vote);
+                index = position;
                 intent.putExtra("vote",voteJson);
-                startActivity(intent);
+                startActivityForResult(intent,VOTE_INFO);
             }
         });
     }
@@ -85,6 +88,14 @@ public class CircleInteractFragment extends BaseFragment{
                     String voteJson = data.getStringExtra("voteJson");
                     Vote vote = new Gson().fromJson(voteJson,Vote.class);
                     voteList.add(vote);
+                    adapter.setListDataChange(voteList);
+                }
+                break;
+            case VOTE_INFO:
+                if (resultCode==RESULT_OK){
+                    String voteJson = data.getStringExtra("vote");
+                    Vote vote = new Gson().fromJson(voteJson,Vote.class);
+                    voteList.set(index,vote);
                     adapter.setListDataChange(voteList);
                 }
                 break;

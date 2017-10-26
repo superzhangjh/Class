@@ -1,12 +1,16 @@
 package com.example.a731.aclass.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
+import static org.litepal.LitePalApplication.getContext;
 
 public class MainActivity extends BaseActivity implements MainView{
 
@@ -86,7 +91,6 @@ public class MainActivity extends BaseActivity implements MainView{
     public void initView() {
         tvTitle = (TextView) findViewById(R.id.main_tv_title);
         mRadioGroup = (RadioGroup) findViewById(R.id.main_radiogroup);
-
         mainPresenter = new MainPresenterImpl(this);
         initViewPager();
         initNavigationView();

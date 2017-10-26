@@ -9,7 +9,7 @@ import java.util.List;
 public class Vote {
     private Users creator;//创建者
     private int type;//投票类型
-    private boolean singleSelect;//是否为单选
+    private int optionNumber;//选项数
     private String title;//标题
     private String content;//内容
     private String date;//创建日期
@@ -17,12 +17,12 @@ public class Vote {
     private String[] photoList;//图片链接
     private List<Item> voteItems;//投票选项
 
-    public boolean isSingleSelect() {
-        return singleSelect;
+    public int getOptionNumber() {
+        return optionNumber;
     }
 
-    public void setSingleSelect(boolean singleSelect) {
-        this.singleSelect = singleSelect;
+    public void setOptionNumber(int optionNumber) {
+        this.optionNumber = optionNumber;
     }
 
     public Users getCreator() {
@@ -91,8 +91,7 @@ public class Vote {
 
     public static class Item{
         private String itemContent;//选项内容
-        private int itemCount;//票数
-        private int[] itemSelectId;//投票者id
+        private List<String> itemSelectId;//投票者id
 
         public String getItemContent() {
             return itemContent;
@@ -102,19 +101,11 @@ public class Vote {
             this.itemContent = itemContent;
         }
 
-        public int getItemCount() {
-            return itemCount;
-        }
-
-        public void setItemCount(int itemCount) {
-            this.itemCount = itemCount;
-        }
-
-        public int[] getItemSelectId() {
+        public List<String> getItemSelectId() {
             return itemSelectId;
         }
 
-        public void setItemSelectId(int[] itemSelectId) {
+        public void setItemSelectId(List<String> itemSelectId) {
             this.itemSelectId = itemSelectId;
         }
     }

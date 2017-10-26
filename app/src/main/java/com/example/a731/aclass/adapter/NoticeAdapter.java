@@ -37,7 +37,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         this.mOnNoticeClickListenrt = listener;
     }
 
-    public static interface OnNoticeClickListenrt {
+    public interface OnNoticeClickListenrt {
         void onNoticeClick(View view);
     }
 

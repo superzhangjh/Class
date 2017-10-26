@@ -1,17 +1,27 @@
 package com.example.a731.aclass.activity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.PhotoAdapter;
 import com.example.a731.aclass.adapter.ShowVoteItemAdapter;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.data.Vote;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -31,6 +41,7 @@ public class VoteInfoActivity extends BaseActivity{
     private RecyclerView mRecyclerItem;
     private TextView tvExpirationDate;
     private TextView tvSelect;
+    private List<Vote.Item> itemList= new ArrayList<>();
 
     private Vote vote;
 
@@ -57,8 +68,13 @@ public class VoteInfoActivity extends BaseActivity{
         vote = new Gson().fromJson(voteJson,Vote.class);
         Log.i("VoteJson","VoteJson:" + voteJson);
 
-        //imgHead.setImageBitmap();
-        tvName.setText(vote.getCreator().getName());
+        ;
+        Glide.with(this).load(vote.getCreator().getHeadImg()).into(imgHead);
+        if (vote.getCreator().getName()==null){
+            tvName.setText(vote.getCreator().getUsername());
+        }else {
+            tvName.setText(vote.getCreator().getName());
+        }
         tvDate.setText(vote.getDate());
         int type = vote.getType();
         switch (type){
@@ -70,7 +86,7 @@ public class VoteInfoActivity extends BaseActivity{
         tvTitle.setText(vote.getTitle());
         tvContent.setText(vote.getContent());
         tvDate.setText(vote.getDate());
-        tvExpirationDate.setText("截止日期"+vote.getExpirationDate());
+        tvExpirationDate.setText("截止日期:"+vote.getExpirationDate());
         //TODO:“请投票”，“已投”和“活动结束”无法点击
         //tvSelect.setText("");
 
@@ -79,10 +95,68 @@ public class VoteInfoActivity extends BaseActivity{
         mRecyclerPhoto.setLayoutManager(new GridLayoutManager(getApplicationContext(),LINE_COUNT));
         mRecyclerPhoto.setAdapter(photoAdapter);
 
+
         //投票子项
-        ShowVoteItemAdapter itemAdapter = new ShowVoteItemAdapter(getApplicationContext(),vote.getVoteItems());
+        itemList = vote.getVoteItems();
+        final ShowVoteItemAdapter itemAdapter = new ShowVoteItemAdapter(getApplicationContext(),itemList,vote.getOptionNumber());
         mRecyclerItem.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mRecyclerItem.setAdapter(itemAdapter);
+
+        boolean isVote = false;
+        String usernameId = BmobUser.getCurrentUser(Users.class).getUsername();
+        for (Vote.Item option :itemList){
+            if (option.getItemSelectId()!=null){
+                List<String> selectId = option.getItemSelectId();
+                for (int i=0;i<selectId.size();i++){
+                    if (String.valueOf(selectId.get(i)).equals(usernameId)){
+                        isVote = true;
+                    }
+                }
+            }else {
+                showToast("option.getItemSelectId()==null");
+            }
+        }
+        if (isVote){
+            tvSelect.setBackgroundColor(Color.YELLOW);
+            tvSelect.setText("已投");
+            tvSelect.setTextColor(Color.BLACK);
+        }else {
+            tvSelect.setText("投票");
+            tvSelect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemAdapter.setIsVoteTrue();
+                    List<String> checkItemList = itemAdapter.getcheckItemList();
+                    String username = BmobUser.getCurrentUser(Users.class).getUsername();
+                    for (String str:checkItemList){
+                        int pos = Integer.valueOf(str);
+                        if (itemList.get(pos).getItemSelectId()==null){
+                            itemList.get(pos).setItemSelectId(new ArrayList<String>());
+                        }
+                        List<String> list = itemList.get(pos).getItemSelectId();
+                        list.add(username);
+                        itemList.get(pos).setItemSelectId(list);
+                        itemAdapter.SetItemListDataChange(itemList);
+                    }
+
+                    tvSelect.setBackgroundColor(Color.YELLOW);
+                    tvSelect.setText("已投");
+                    tvSelect.setTextColor(Color.BLACK);
+
+                    //返回结果给Fragment
+                    String position = getIntent().getStringExtra("position");
+                    String data = new Gson().toJson(vote);
+                    Intent intent = new Intent();
+                    intent.putExtra("vote",data);
+                    setResult(RESULT_OK,intent);
+
+                    //TODO:更新网上数据
+                }
+            });
+
+        }
+
+
     }
 
     @Override

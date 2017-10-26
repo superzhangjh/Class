@@ -46,7 +46,6 @@ public class MessPresenterImpl implements MessPresenter {
                     @Override
                     public void done(List<Users> list, BmobException e) {
                         conversation.setImgHead(list.get(0).getHeadImg());
-
                     }
                 });
             }else if (emConversation.getType() == EMConversation.EMConversationType.GroupChat){

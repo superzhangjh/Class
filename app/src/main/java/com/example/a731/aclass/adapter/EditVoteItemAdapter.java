@@ -25,7 +25,6 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
 
     private Context context;
     private List<Vote.Item> itemList;
-    private boolean typeSingle;//是否为单选
     private SaveEditListener mSaveEditListener;
 
     public EditVoteItemAdapter(Context context,List<Vote.Item> itemList) {

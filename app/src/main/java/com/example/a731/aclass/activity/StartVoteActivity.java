@@ -1,5 +1,8 @@
 package com.example.a731.aclass.activity;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -25,6 +30,7 @@ import com.example.a731.aclass.util.DateUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,15 +54,15 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
     private RadioGroup rgSingleSelect;
     private Button btnAdd;
     private RecyclerView mRecyclerViewList;
-    private EditText edtExpirationDate;
-    private RadioButton rbSingle,rbDouble;
+    private Button btnExpirationDate;
+    private RadioButton rbSingle,rbMutiple;
     private RadioButton rbType1,rbType2,rbType3,rbType4;
     private RecyclerView mRecyclerViewPhoto;
-    private TextView tvAddPic;
+    private Button btnAddPic;
 
     private EditVoteItemAdapter itemAdapter;
     private PhotoAdapter photoAdapter;
-    private List<Vote.Item> itemList;
+    private List<Vote.Item> itemList = new ArrayList<>();
     private String[] photoList = new String[9];
     private HashMap map = new HashMap();
     private Vote vote = new Vote();
@@ -75,16 +81,16 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         rgType = (RadioGroup) findViewById(R.id.activity_start_vote_rg_type);
         btnAdd = (Button) findViewById(R.id.activity_start_vote_btn_add);
         mRecyclerViewList = (RecyclerView) findViewById(R.id.activity_start_vote_list);
-        edtExpirationDate = (EditText) findViewById(R.id.activity_start_vote_edt_expirationDate);
+        btnExpirationDate = (Button) findViewById(R.id.activity_start_vote_edt_expirationDate);
         rbSingle = (RadioButton) findViewById(R.id.activity_start_vote_rb_single);
-        rbDouble = (RadioButton) findViewById(R.id.activity_start_vote_rb_double);
+        rbMutiple = (RadioButton) findViewById(R.id.activity_start_vote_rb_mutiple);
         rgSingleSelect = (RadioGroup) findViewById(R.id.activity_start_vote_rg_select_type);
         rbType1 = (RadioButton) findViewById(R.id.activity_start_vote_rb_type_1);
         rbType2= (RadioButton) findViewById(R.id.activity_start_vote_rb_type_2);
         rbType3 = (RadioButton) findViewById(R.id.activity_start_vote_rb_type_3);
         rbType4 = (RadioButton) findViewById(R.id.activity_start_vote_rb_type_4);
         mRecyclerViewPhoto = (RecyclerView) findViewById(R.id.activity_start_vote_rec_photo);
-        tvAddPic = (TextView) findViewById(R.id.activity_start_vote_tv_addPic);
+        btnAddPic = (Button) findViewById(R.id.activity_start_vote_tv_addPic);
 
         initToolbar();
         initData();
@@ -92,11 +98,11 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
     }
 
     private void initRecyclerView() {
-        //初始化项目Adapter
         //先增2个空子项到itemList
-        itemList = new ArrayList<>();
         itemList.add(new Vote.Item());
         itemList.add(new Vote.Item());
+
+        //初始化项目Adapter
         itemAdapter = new EditVoteItemAdapter(getApplicationContext(),itemList);
         itemAdapter.setSaveEditListener(this);
         mRecyclerViewList.setLayoutManager(new GridLayoutManager(getApplicationContext(),1));
@@ -122,11 +128,34 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
     @Override
     public void initListener() {
-
+        rbMutiple.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(buttonView.getContext());
+                    builder.setTitle("请选择选项数量");
+                    //    指定下拉列表的显示数据
+                    final String[] options = {"2","3","4","5","6","7","8","9"};
+                    //    设置一个下拉的列表选择项
+                    builder.setItems(options, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            int size = which+1;
+                            vote.setOptionNumber(size);
+                            rbMutiple.setText("共"+size + "个可选项");
+                        }
+                    });
+                    builder.show();
+                }
+            }
+        });
     }
 
     @Override
     public void initData() {
+
         //添加新选项
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +170,6 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         return;
                     }
                 }
-
                 itemList.add(new Vote.Item());
                 itemAdapter.SetItemListDataChange(itemList);
                 //String json = new Gson().toJson(itemList);
@@ -150,7 +178,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         });
 
         //添加图片
-        tvAddPic.setOnClickListener(new View.OnClickListener() {
+        btnAddPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] srcList = {"http://img2.woyaogexing.com/2017/10/13/84d541a98b606416!400x400_big.jpg",
@@ -168,6 +196,40 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
             }
         });
 
+        //选择截至日期
+        btnExpirationDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int year = Integer.valueOf(DateUtil.yyyy());
+                final int month = Integer.valueOf(DateUtil.MM());
+                final int day  = Integer.valueOf(DateUtil.dd());
+
+                new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        String _month = String.valueOf(i1);
+                        String _day = String.valueOf(i2);
+                        if (i1<10){
+                           _month =  0 + _month;
+                        }else if (i2<10){
+                            _day = 0 + _day;
+                        }
+
+                        if (i>year){
+                            btnExpirationDate.setText(i + _month + _day);
+                        }else if (i==year && i1>month){
+                            btnExpirationDate.setText(i + _month + _day);
+                        }else if (i1==month && i2>day){
+                            btnExpirationDate.setText(i + _month + _day);
+                        }else {
+                            showToast("早于当前日期，请重新选择");
+                        }
+                    }
+                },year,month,day).show();
+
+            }
+        });
+
         //发布
         tvPublic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,10 +242,19 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                     showToast("请输入内容");
                     edtContent.requestFocus();
                     return;
-                }else if (edtExpirationDate.getText().toString().equals("")){
+                }else if (btnExpirationDate.getText().toString().equals("")){
                     showToast("请设置截止日期");
-                    edtExpirationDate.requestFocus();
+                    btnExpirationDate.requestFocus();
                     return;
+                }else if (vote.getOptionNumber()>itemList.size()){
+                    showToast("选项不足请补充");
+                    int size = itemList.size();
+                    for (int i=0;i<vote.getOptionNumber()-size;i++){
+                        itemList.add(new Vote.Item());
+                    }
+                    itemAdapter.SetItemListDataChange(itemList);
+                }else if (vote.getOptionNumber()<2){
+                    vote.setOptionNumber(1);
                 }
 
                 //投票类型
@@ -199,18 +270,10 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         type = 3;break;
                 }
                 vote.setType(type);
-
-                if (rgSingleSelect.getCheckedRadioButtonId()==R.id.activity_start_vote_rb_single){
-                    vote.setSingleSelect(true);
-                }else {
-                    vote.setSingleSelect(false);
-                }
-
-
                 vote.setCreator(BmobUser.getCurrentUser(Users.class));//设置用户
                 vote.setTitle(edtTitle.getText().toString().trim()); //设置标题
                 vote.setContent(edtContent.getText().toString());//设置内容
-                vote.setExpirationDate(edtExpirationDate.getText().toString().trim());//设置截止日期
+                vote.setExpirationDate(btnExpirationDate.getText().toString().trim());//设置截止日期
                 vote.setDate(DateUtil.MMdd_hhss());//设置创建日期
 
                 setItemListDataFromEditText();//获取EditText的内容
@@ -245,6 +308,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         map.put(position,str);
     }
 
+    //获取edit以输入的数据
     public void setItemListDataFromEditText() {
         if (map.get(0)!=null && !map.get(0).equals("")){
             for (int i=0;i<itemList.size();i++){
