@@ -44,6 +44,10 @@ import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.MainView;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.util.NetUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -358,6 +362,35 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        //监听环信连接状态
+        EMClient.getInstance().addConnectionListener(new EMConnectionListener() {
+            @Override
+            public void onConnected() {
+
+            }
+
+            @Override
+            public void onDisconnected(int errorCode) {
+                if(errorCode == EMError.USER_REMOVED){
+                    showToast("帐号已经被移除");
+                    // 显示帐号已经被移除
+                }else if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    showToast("帐号在其他设备登录");
+                    // 显示帐号在其他设备登录
+                    mainPresenter.logOut();
+                } else {
+                    if (NetUtils.hasNetwork(MainActivity.this)){
+                        showToast("连接不到聊天服务器");
+                    }
+                    //连接不到聊天服务器
+                    else{
+                        showToast("当前网络不可用，请检查网络设置");
+                    }
+                    //当前网络不可用，请检查网络设置
+                }
             }
         });
     }
