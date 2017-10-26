@@ -70,13 +70,8 @@ public class EaseMobUtil {
     }
 
     //发送文本消息
-    public static void sendTextMessage(String content,String toChatUsername,int chatType,EMCallBack callBack){
-        EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
-        if (chatType == CHATTYPE_GROUP)
-            message.setChatType(EMMessage.ChatType.GroupChat);
-
+    public static void sendTextMessage(EMMessage message,EMCallBack callBack){
         message.setMessageStatusCallback(callBack);
-
         EMClient.getInstance().chatManager().sendMessage(message);
     }
 

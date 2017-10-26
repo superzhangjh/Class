@@ -49,8 +49,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
 
     private CreateGroupPresenter createGroupPresenter;
 
-    private static final int CAPTURE_PIICTURE_RESULT_CODE = 1001;
-    private static final int CAPTURE_PHOTO_RESULT_CODE = 1002;
+
 
 
     @Override
@@ -81,7 +80,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
                                 String state = Environment.getExternalStorageState();
                                 if (state.equals(Environment.MEDIA_MOUNTED)) {
                                     Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
-                                    startActivityForResult(getImageByCamera, CAPTURE_PHOTO_RESULT_CODE);
+                                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
                                 }
                                 else {
                                     Toast.makeText(CreateGroupActivity.this, "请确认已经插入SD卡", Toast.LENGTH_LONG).show();
@@ -92,7 +91,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
                     public void onClick(DialogInterface dialog, int which) {
 
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent,CAPTURE_PIICTURE_RESULT_CODE);
+                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
                     }
                 }).show();
             }
@@ -115,11 +114,11 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CAPTURE_PIICTURE_RESULT_CODE){
+        if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
             Uri uri = data.getData();
             gHeadImg.setImageURI(uri);
             gHeadImgPath = ImageLoderUtil.getRealPathFromUri(this,uri);
-        }else if(requestCode == CAPTURE_PHOTO_RESULT_CODE){
+        }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
             Uri uri = data.getData();
             gHeadImg.setImageURI(uri);
             gHeadImgPath = uri.toString();

@@ -23,15 +23,10 @@
         android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:columnCount="2"
-        android:rowCount="7">
+        android:rowCount="6">
 
         //用户名
-        <TextView
-            android:textSize="16sp"
-            android:gravity="center_vertical"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:text="用户名"/>
+
         //学号
         <TextView
             android:textSize="16sp"
@@ -78,11 +73,6 @@
         //输入框
         <TextView
             android:id="@+id/modified_edt_username"
-            android:layout_width="match_parent"
-            android:textSize="14dp"
-            android:hint="用户名不可更改"/>
-        <TextView
-            android:id="@+id/modified_edt_id"
             android:background="@null"
             android:layout_width="match_parent"
             android:textSize="14dp"

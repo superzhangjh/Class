@@ -10,8 +10,12 @@ import android.provider.MediaStore;
 /**
  * Created by 郑选辉 on 2017/10/8.
  */
-
 public class ImageLoderUtil {
+
+    public static final int CAPTURE_PIICTURE_RESULT_CODE = 1001;
+    public static final int CAPTURE_PHOTO_RESULT_CODE = 1002;
+
+
     public static String getRealPathFromUri(Context context,Uri uri){
         ContentResolver resolver = context.getContentResolver();
         String[] pojo = {MediaStore.Images.Media.DATA};

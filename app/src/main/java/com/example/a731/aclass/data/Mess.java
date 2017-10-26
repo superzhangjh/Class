@@ -8,7 +8,7 @@ public class Mess {
     private String creatorID;//消息发出者
     private String name;//
     private String message;//消息内容
-    private String date;//日期
+    private Long date;//日期
     private Boolean isGroupMess;
 
     public Boolean getGroupMess() {
@@ -35,11 +35,11 @@ public class Mess {
         this.name = name;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

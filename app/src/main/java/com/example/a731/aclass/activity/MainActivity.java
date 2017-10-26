@@ -1,20 +1,26 @@
 package com.example.a731.aclass.activity;
 
-import android.Manifest;
+
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +30,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.adapter.GroupAdapter;
@@ -34,22 +41,24 @@ import com.example.a731.aclass.fragment.MessFragment;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
 import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.MainView;
-import com.hyphenate.EMContactListener;
-import com.hyphenate.EMError;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMGroup;
-import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.NetUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
+import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
-import static org.litepal.LitePalApplication.getContext;
 
 public class MainActivity extends BaseActivity implements MainView{
 
@@ -78,8 +87,15 @@ public class MainActivity extends BaseActivity implements MainView{
     private CircleImageView imgClasshead;
     private List<Group> groupList;
 
+    private String presentGroupId;
+
     private FriendAdapter friendAdapter;
     private GroupAdapter groupAdapter;
+
+    private View navHeaderView;
+    private CircleImageView headImg;
+    private TextView username,name,phoneNum,project,local,intro;
+    private Users mUser;
 
 
     @Override
@@ -174,9 +190,54 @@ public class MainActivity extends BaseActivity implements MainView{
 
     //个人资料侧滑栏
     private void initNavigationView() {
+        mUser = BmobUser.getCurrentUser(Users.class);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         navView = (NavigationView) findViewById(main_nav_view);
         navRight = (NavigationView) findViewById(R.id.main_nav_right);
+
+        navHeaderView = navView.getHeaderView(0);
+        headImg = (CircleImageView) navHeaderView.findViewById(R.id.main_nav_head);
+        username = (TextView) navHeaderView.findViewById(R.id.main_nav_username);
+        name = (TextView) navHeaderView.findViewById(R.id.main_nav_name);
+        phoneNum = (TextView) navHeaderView.findViewById(R.id.main_nav_phoneNum);
+        project = (TextView) navHeaderView.findViewById(R.id.main_nav_project);
+        local = (TextView) navHeaderView.findViewById(R.id.main_nav_local);
+        intro = (TextView) navHeaderView.findViewById(R.id.main_nav_intro);
+        if (mUser.getHeadImg()!=null)
+            Glide.with(this).load(mUser.getHeadImg()).into(headImg);
+        username.setText(mUser.getUsername());
+        phoneNum.setText(mUser.getMobilePhoneNumber());
+        name.setText(mUser.getName()==null?"请完善你的个人信息":mUser.getName());
+        project.setText(mUser.getProject()==null?"请完善你的个人信息":mUser.getProject());
+        local.setText(mUser.getHomeLand()==null?"请完善你的个人信息":mUser.getHomeLand());
+        intro.setText(mUser.getIntro()==null?"请完善你的个人信息":mUser.getIntro());
+
+        headImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this).setTitle("选择图片")
+                        .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String state = Environment.getExternalStorageState();
+                                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                                }
+                                else {
+                                    showToast("请确认已经插入SD卡");
+                                }
+                            }
+                        }).setNegativeButton("图库", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
+                    }
+                }).show();
+            }
+        });
 
         navView.setNavigationItemSelectedListener(  new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -225,13 +286,13 @@ public class MainActivity extends BaseActivity implements MainView{
         imgClasshead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if (groupList.size()>0){
+                if (presentGroupId!=null){
                 Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                intent.putExtra("groupId",groupList.get(0).getGroupId());
+                intent.putExtra("presentGroupId",groupList.get(0).getGroupId());
                 startActivity(intent);
-                /*}else{
+                }else{
                     showToast("你还未加入任何班圈");
-                }*/
+                }
 
             }
         });
@@ -334,6 +395,8 @@ public class MainActivity extends BaseActivity implements MainView{
         return true;
     }
 
+
+    /*--------------------------------事务处理回调方法-------------------------------------*/
     @Override
     public void onLogoutFail(String error) {
         showToast("退出失败:"+error);
@@ -368,31 +431,95 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void onGetGroupSuccess(List<Group> groupList) {
-        showToast("获取班圈列表成功："+groupList.size());
+        if (groupList.size()==0){
+            return;
+        }
+        //showToast("获取班圈列表成功："+groupList.size());
         this.groupList = groupList;
         if (groupAdapter!=null)
             groupAdapter.onDataChanged(groupList);
+        if (SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this)==null && groupList.size()>0){
+            presentGroupId = groupList.get(0).getGroupId();
+            SharedPreferencesUtil.saveDataToSharedPreferences("groupId",presentGroupId,this);
+        }else if (SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this)!=null){
+            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
+        }
+        for (Group group:groupList){
+            if (group.getGroupId().equals(presentGroupId)){
+                Glide.with(this).load(group.getHeadImg()).into(imgClasshead);
+                tvTitle.setText(group.getName());
+            }
+        }
+    }
+    @Override
+    public void onUpdateUserHeadImgSuccess(String imgPath) {
+        Glide.with(this).load(imgPath).into(headImg);
+        showToast("更新头像数据成功");
+    }
+
+    @Override
+    public void onUpdateUserHeadImgFail(String message) {
+        showToast("更新头像数据失败："+message);
     }
 
 
-
     @Override
-    public void onDisconnected(int errorCode) {
-        if(errorCode == EMError.USER_REMOVED){
-            showToast("帐号已经被移除");
-            // 显示帐号已经被移除
-        }else if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-            showToast("帐号在其他设备登录");
-            // 显示帐号在其他设备登录
-        } else {
-            if (NetUtils.hasNetwork(MainActivity.this)){
-                showToast("连接不到聊天服务器");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MODIFIED_RESULT){
+            Users users = BmobUser.getCurrentUser(Users.class);
+            name.setText(users.getName()==null?"请完善你的个人信息":users.getName());
+            project.setText(users.getProject()==null?"请完善你的个人信息":users.getProject());
+            local.setText(users.getHomeLand()==null?"请完善你的个人信息":users.getHomeLand());
+            intro.setText(users.getIntro()==null?"请完善你的个人信息":users.getIntro());
+            showToast("更新数据成功");
+        }
+        if(data == null){
+            return;
+        }
+
+        if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
+            Uri uri = data.getData();
+            headImg.setImageURI(uri);
+            String gHeadImgPath = ImageLoderUtil.getRealPathFromUri(this,uri);
+            mainPresenter.updateUserHeadImg(gHeadImgPath);
+        }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
+
+
+
+            /*Uri uri = data.getData();
+            headImg.setImageURI(uri);
+            String gHeadImgPath = uri.toString();
+            mainPresenter.updateUserHeadImg(gHeadImgPath);*/
+
+
+            if (resultCode == Activity.RESULT_OK) {
+                String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+                FileOutputStream b = null;
+                File file = new File("/sdcard/myImage/");
+                file.mkdirs();// 创建文件夹
+                String fileName = "/sdcard/myImage/"+name;
+                try {
+                    b = new FileOutputStream(fileName);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        try {
+                            b.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mainPresenter.updateUserHeadImg(fileName);
             }
-            //连接不到聊天服务器
-            else{
-                showToast("当前网络不可用，请检查网络设置");
-            }
-            //当前网络不可用，请检查网络设置
         }
     }
 }

@@ -40,7 +40,7 @@ public class JoinGroupPresenterImpl implements JoinGroupPresenter {
             public void done(List<Group> list, BmobException e) {
                 if (e==null){
                     mGroup = list.get(0);
-                     mJoinGroupView.onSearchGroupSuccess(mGroup);
+                    mJoinGroupView.onSearchGroupSuccess(mGroup);
                 }else{
                     mJoinGroupView.onSearchGroupFail(e.getMessage());
                 }
@@ -50,52 +50,49 @@ public class JoinGroupPresenterImpl implements JoinGroupPresenter {
 
     @Override
     public void joinGroup(){
-
-            ThreadUtils.runOnBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        EaseMobUtil.applyJoinToGroup(mGroup.getGroupId(),null);
-                        Log.i(TAG,"groupId:"+mGroup.getGroupId());
-                        Group group = new Group();
-                        BmobRelation relation = new BmobRelation();
-                        Users users = BmobUser.getCurrentUser(Users.class);
-                        relation.add(BmobUser.getCurrentUser(Users.class));
-                        Log.i(TAG,"Username"+users.getObjectId());
-                        group.setMember(relation);
-                        BmobUtil.updateGroup(mGroup.getObjectId(), group, new UpdateListener() {
-                            @Override
-                            public void done(final BmobException e) {
-                                if (e == null){
-                                    ThreadUtils.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Log.i(TAG,"加入班圈成功");
-                                            mJoinGroupView.onJoinGroupSuccess();
-                                        }
-                                    });
-                                }else{
-                                    ThreadUtils.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Log.i(TAG,"加入班圈成功");
-                                            mJoinGroupView.onJoinGroupFail(e.getMessage());
-                                        }
-                                    });
-                                }
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EaseMobUtil.applyJoinToGroup(mGroup.getGroupId(),null);
+                    Group group = new Group();
+                    BmobRelation relation = new BmobRelation();
+                    Users users = BmobUser.getCurrentUser(Users.class);
+                    relation.add(users);
+                    group.setMember(relation);
+                    BmobUtil.updateGroup(mGroup.getObjectId(), group, new UpdateListener() {
+                        @Override
+                        public void done(final BmobException e) {
+                            if (e == null){
+                                ThreadUtils.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Log.i(TAG,"加入班圈成功");
+                                        mJoinGroupView.onJoinGroupSuccess();
+                                    }
+                                });
+                            }else{
+                                ThreadUtils.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Log.i(TAG,"加入班圈成功");
+                                        mJoinGroupView.onJoinGroupFail(e.getMessage());
+                                    }
+                                });
                             }
-                        });
-                    } catch (final HyphenateException e) {
-                        e.printStackTrace();
-                        ThreadUtils.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mJoinGroupView.onJoinGroupFail(e.getMessage());
-                            }
-                        });
-                    }
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mJoinGroupView.onJoinGroupFail(e.getMessage());
+                        }
+                    });
                 }
-            });
+            }
+        });
 
     }
 }

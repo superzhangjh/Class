@@ -46,7 +46,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     private List<Users> memberList;
 
 
-    private int ADD_MORE_MEMBER = 1001;
+    private String ADD_MORE_MEMBER = "1001";
 
 
     private static final String TAG="GroupInfoActivity";
@@ -171,7 +171,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         tvMemberCount.setText(list.size()+"");
         Users user = new Users();
         user.setName("邀请成员");
-        user.setId(ADD_MORE_MEMBER);
+        user.setUsername(ADD_MORE_MEMBER);
         //user.setHeadImg(R.drawable.chat_fn);
         list.add(user);
         hideProgress();

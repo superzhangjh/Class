@@ -23,21 +23,27 @@ public class ChatPresenterImpl implements ChatPresenter {
 
     private ChatView mChatView;
     private List<Mess> messages = new ArrayList<>();
+    private String mUserName;
 
     public ChatPresenterImpl(ChatView chatView){
         mChatView = chatView;
+        mUserName = BmobUser.getCurrentUser(Users.class).getUsername();
     }
 
     @Override
     public void senMessage(final String username, final String content, final int chatType) {
+        final EMMessage message = EMMessage.createTxtSendMessage(content, username);
+        if (chatType == EaseMobUtil.CHATTYPE_GROUP)
+            message.setChatType(EMMessage.ChatType.GroupChat);
         Mess mess = new Mess();
-        mess.setCreatorID(BmobUser.getCurrentUser(Users.class).getUsername());
+        mess.setCreatorID(mUserName);
         mess.setMessage(content);
+        mess.setDate(message.localTime());
         messages.add(mess);
         ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                EaseMobUtil.sendTextMessage(content, username, chatType, new EMCallBack() {
+                EaseMobUtil.sendTextMessage(message, new EMCallBack() {
                     @Override
                     public void onSuccess() {
                         ThreadUtils.runOnUiThread(new Runnable() {
@@ -86,7 +92,7 @@ public class ChatPresenterImpl implements ChatPresenter {
                     EMMessage msg = emMessages.get(i);
                     Mess mess = new Mess();
                     mess.setCreatorID(msg.getFrom());
-                    mess.setDate(msg.getMsgTime()+"");
+                    mess.setDate(msg.getMsgTime());
                     switch(msg.getType()){
                         //文本信息
                         case TXT:

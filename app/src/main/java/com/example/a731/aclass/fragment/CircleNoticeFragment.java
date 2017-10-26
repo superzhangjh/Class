@@ -11,6 +11,10 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.NoticeAdapter;
 import com.example.a731.aclass.activity.ReleasingNoticesActivity;
 import com.example.a731.aclass.data.Notice;
+import com.example.a731.aclass.presenter.CircleNoticePresenter;
+import com.example.a731.aclass.presenter.impl.CircleNoticePresenterImpl;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
+import com.example.a731.aclass.view.CircleNoticeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +25,18 @@ import static android.app.Activity.RESULT_OK;
  * Created by Administrator on 2017/10/6/006.
  */
 
-public class CircleNoticeFragment extends BaseFragment{
+public class CircleNoticeFragment extends BaseFragment implements CircleNoticeView {
     private static final int REQUEST_RELEASING_NOTICE = 1001;
     private RecyclerView mRecyclerView;
     //private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Notice> noticeList = new ArrayList<>();
     private NoticeAdapter adapter;
     private LinearLayout btn1;
+
+    private String presentGroupId;
+
+    private CircleNoticePresenter presenter = new CircleNoticePresenterImpl(this);
+
 
 
     @Override
@@ -43,9 +52,12 @@ public class CircleNoticeFragment extends BaseFragment{
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:判断该用户的ID是否在该班圈的管理员列表中，如果存在则跳转到下面的活动，如果不存在则弹出提示没有该权限
+                //if (presenter.queryAdmin()){
                 Intent intent = new Intent(getContext(), ReleasingNoticesActivity.class);
                 startActivityForResult(intent,REQUEST_RELEASING_NOTICE);
+                //}else{
+                showToast("你不是管理员,没有该权限");
+                //}
             }
         });
 
@@ -62,27 +74,35 @@ public class CircleNoticeFragment extends BaseFragment{
 
     @Override
     public void initData() {
-
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presenter.getGroupNotice(presentGroupId);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case REQUEST_RELEASING_NOTICE :
-                if (resultCode==RESULT_OK){
-                    String title = data.getStringExtra("title");
-                    String content = data.getStringExtra("content");
-                    String date = data.getStringExtra("date");
-
-                    Notice notice = new Notice();
-                    notice.setTitle(title);
-                    notice.setContent(content);
-                    notice.setDate(date);
-                    noticeList.add(notice);
-
-                    adapter.setListData(noticeList);
-                }
-        }
+    public void onGetGroupFail(String message) {
+        showToast("获取班圈信息失败:"+message);
     }
+
+    @Override
+    public void onGetAdminFail(String message) {
+        showToast("获取管理员列表失败:"+message);
+    }
+
+    @Override
+    public void onGetNoticeSuccess(List<Notice> list) {
+        adapter.setListData(list);
+        showToast("获取通知列表成功"+list.size()+"--"+presentGroupId);
+    }
+
+    @Override
+    public void onGetNoticeFail(String message) {
+        showToast("获取通知列表失败:"+message);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.getGroupNotice(presentGroupId);
+    }
+
 }

@@ -56,7 +56,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         tvName = (TextView) findViewById(R.id.userinfo_tv_name);
         tvUsername = (TextView) findViewById(R.id.userinfo_tv_username);
         tvPhoneNember = (TextView) findViewById(R.id.userinfo_tv_phonenumber);
-        tvId = (TextView) findViewById(R.id.userinfo_tv_id);
         tvProject = (TextView) findViewById(R.id.userinfo_tv_project);
         tvHomeland = (TextView) findViewById(R.id.userinfo_tv_homeland);
         tvIntro = (TextView) findViewById(R.id.userinfo_tv_intro);
@@ -70,7 +69,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         String name = user.getName();
         String username = user.getUsername();
         String phoneNumber = user.getMobilePhoneNumber();
-        int Id = user.getId();
         String project =  user.getProject();
         String hoemland = user.getHomeLand();
         String intro = user.getIntro();

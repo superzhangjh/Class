@@ -37,37 +37,37 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
     @Override
     public void checkGroup(final String name, final Users creator, final String headImg) {
 
-            ThreadUtils.runOnBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        EMGroup group = EaseMobUtil.createGroup(name);
-                        if (group!=null){
-                            final String groupId = group.getGroupId();
-                            BmobUtil.getGroupByField("groupName",name, new FindListener<Group>() {
-                                @Override
-                                public void done(List<Group> list, final BmobException e) {
-                                    if (e == null && (list==null || list.size()==0)){
-                                        createGroup(groupId,name,creator,headImg);
-                                    }else if (list.size()>0){
-                                        mCreateGroupView.onCreateFail("班圈名已存在");
-                                    }else{
-                                        ThreadUtils.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mCreateGroupView.onCreateFail("bmob:"+e.getMessage());
-                                            }
-                                        });
-                                    }
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMGroup group = EaseMobUtil.createGroup(name);
+                    if (group!=null){
+                        final String groupId = group.getGroupId();
+                        BmobUtil.getGroupByField("groupName",name, new FindListener<Group>() {
+                            @Override
+                            public void done(List<Group> list, final BmobException e) {
+                                if (e == null && (list==null || list.size()==0)){
+                                    createGroup(groupId,name,creator,headImg);
+                                }else if (list.size()>0){
+                                    mCreateGroupView.onCreateFail("班圈名已存在");
+                                }else{
+                                    ThreadUtils.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mCreateGroupView.onCreateFail("bmob:"+e.getMessage());
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    } catch (HyphenateException e) {
-                        e.printStackTrace();
-                        mCreateGroupView.onCreateFail("easemob:"+e.getMessage()+":"+e.getErrorCode());
+                            }
+                        });
                     }
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    mCreateGroupView.onCreateFail("easemob:"+e.getMessage()+":"+e.getErrorCode());
                 }
-            });
+            }
+        });
     }
 
     private void createGroup(final String groupId, final String name, Users creator, final String filePath){
@@ -75,7 +75,7 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
             @Override
             public void done(String s, BmobException e) {
                 if (e==null){
-                    uploadImg(filePath,groupId);
+                    uploadImg(filePath,s);
                 }else{
                     mCreateGroupView.onCreateFail("bmob3:"+e.getMessage()+":"+e.getErrorCode());
                 }
@@ -83,25 +83,17 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
         });
     }
 
-    private void uploadImg(String filePath, final String groupId){
+    private void uploadImg(String filePath, final String objectId){
         final BmobFile bmobFile = new BmobFile(new File(filePath));
         bmobFile.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 imgFilPath = bmobFile.getFileUrl();
-                findGroup(groupId);
+                updateGroup(objectId);
             }
         });
     }
 
-    private void findGroup(String groupId) {
-        BmobUtil.getGroupByField("groupId",groupId, new FindListener<Group>() {
-            @Override
-            public void done(List<Group> list, BmobException e) {
-                updateGroup(list.get(0).getObjectId());
-            }
-        });
-    }
 
     private void updateGroup(String objectId){
         Group group = new Group();

@@ -9,6 +9,15 @@ public class Commend {
     private String imgHead;//评论者头像
     private String date;//评论时间
     private String content;//内容
+    private Vote vote;
+
+    public Vote getVote() {
+        return vote;
+    }
+
+    public void setVote(Vote vote) {
+        this.vote = vote;
+    }
 
     public String getId() {
         return Id;

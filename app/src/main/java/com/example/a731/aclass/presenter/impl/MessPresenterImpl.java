@@ -45,14 +45,17 @@ public class MessPresenterImpl implements MessPresenter {
                 BmobUtil.queryUser(emConversation.conversationId(), new FindListener<Users>() {
                     @Override
                     public void done(List<Users> list, BmobException e) {
-                        conversation.setImgHead(list.get(0).getHeadImg());
+                        if (e == null)
+                            conversation.setImgHead(list.get(0).getHeadImg());
+
                     }
                 });
             }else if (emConversation.getType() == EMConversation.EMConversationType.GroupChat){
                 BmobUtil.getGroupByField("groupId", emConversation.conversationId(), new FindListener<Group>() {
                     @Override
                     public void done(List<Group> list, BmobException e) {
-                        conversation.setImgHead(list.get(0).getHeadImg());
+                        if (e == null)
+                            conversation.setImgHead(list.get(0).getHeadImg());
                     }
                 });
             }

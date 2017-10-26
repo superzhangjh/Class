@@ -27,7 +27,7 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
 
     //测试数据
     private List<Users> list;
-    private int ADD_MORE_MEMBER = 1001;
+    private String ADD_MORE_MEMBER = "1001";
 
     public GroupInfoMemberAdapter(Context context,List<Users> memberList){
         this.context = context;
@@ -48,7 +48,7 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
         holder.itemClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (list.get(position).getId()==ADD_MORE_MEMBER){
+                if (list.get(position).getUsername()==ADD_MORE_MEMBER){
                     //跳转到新增
                     //Intent intent = new Intent(context, 新增.class);
                     //context.startActivity(intent);

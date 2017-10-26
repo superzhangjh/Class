@@ -64,7 +64,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         Notice notice = noticeList.get(size-position-1);
         holder.tvTitle.setText(notice.getTitle());
         holder.tvContent.setText(notice.getContent());
-        holder.tvDate.setText(notice.getDate());
+        holder.tvDate.setText(notice.getCreatedAt());
 
         if (notice.getPhotoList()!=null){
             holder.imgImage.setVisibility(View.VISIBLE);

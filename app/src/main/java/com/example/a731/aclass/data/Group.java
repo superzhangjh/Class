@@ -15,19 +15,9 @@ public class Group extends BmobObject {
     private Users creator;//创建者
     private BmobRelation member;//成员
     private BmobRelation administrator;//管理员
-    private int number;//成员数
     private String headImg;//头像
-    private BmobRelation notification;//通知
     private List<String> images;//上传图片
-    private BmobRelation vote;//投票
 
-    public BmobRelation getNotification() {
-        return notification;
-    }
-
-    public void setNotification(BmobRelation notification) {
-        this.notification = notification;
-    }
 
     public List<String> getImages() {
         return images;
@@ -35,14 +25,6 @@ public class Group extends BmobObject {
 
     public void setImages(List<String> images) {
         this.images = images;
-    }
-
-    public BmobRelation getVote() {
-        return vote;
-    }
-
-    public void setVote(BmobRelation vote) {
-        this.vote = vote;
     }
 
     public String getGroupId() {
@@ -83,14 +65,6 @@ public class Group extends BmobObject {
 
     public void setAdministrator(BmobRelation administrator) {
         this.administrator = administrator;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     public String getHeadImg() {

@@ -12,11 +12,16 @@ import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by 郑选辉 on 2017/9/27.
@@ -48,21 +53,6 @@ public class MainPresenterImpl implements MainPresenter {
             @Override
             public void onProgress(int progress, String status) {
 
-            }
-        });
-    }
-
-    @Override
-    public void checkConnectionState() {
-        EaseMobUtil.onConnectingListener(new EMConnectionListener() {
-            @Override
-            public void onConnected() {
-
-            }
-
-            @Override
-            public void onDisconnected(int errorCode) {
-                mMainView.onDisconnected(errorCode);
             }
         });
     }
@@ -147,6 +137,34 @@ public class MainPresenterImpl implements MainPresenter {
                         }
                     });
                 }
+            }
+        });
+    }
+
+    @Override
+    public void updateUserHeadImg(String gHeadImgPath) {
+        final BmobFile bmobFile = new BmobFile(new File(gHeadImgPath));
+        bmobFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null){
+                    final String imgPath = bmobFile.getFileUrl();
+                    Users users = new Users();
+                    users.setHeadImg(imgPath);
+                    BmobUtil.updateUser(users, BmobUser.getCurrentUser(Users.class).getObjectId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null){
+                                mMainView.onUpdateUserHeadImgSuccess(imgPath);
+                            }else{
+                                mMainView.onUpdateUserHeadImgFail(e.getMessage());
+                            }
+                        }
+                    });
+                }else{
+                    mMainView.onUpdateUserHeadImgFail(e.getMessage());
+                }
+
             }
         });
     }

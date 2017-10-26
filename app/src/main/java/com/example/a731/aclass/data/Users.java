@@ -13,7 +13,6 @@ public class Users extends BmobUser{
 //    private String password; 密码
 //    private String mobilePhoneNumber; 手机号码
     private String name;//姓名
-    private int id;//学号
     private int sex;//性别(1代表男，2代表女)
     private String project;//专业
     private String homeLand;//籍贯
@@ -26,14 +25,6 @@ public class Users extends BmobUser{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getHeadImg() {

@@ -12,8 +12,6 @@ import java.util.List;
 public interface MainView {
     void onLogoutFail(String error);
 
-    void onDisconnected(int errorCode);
-
     void onLogoutSuccess();
 
     void onGetFriendsSuccess(List<Users> friendList);
@@ -23,4 +21,8 @@ public interface MainView {
     void onGetGroupFail(String message);
 
     void onGetGroupSuccess(List<Group> groupList);
+
+    void onUpdateUserHeadImgSuccess(String imgPath);
+
+    void onUpdateUserHeadImgFail(String message);
 }

@@ -7,9 +7,9 @@ package com.example.a731.aclass.presenter;
 public interface MainPresenter {
     void logOut();
 
-    void checkConnectionState();
-
     void getFriendList();
 
     void getGroup();
+
+    void updateUserHeadImg(String gHeadImgPath);
 }

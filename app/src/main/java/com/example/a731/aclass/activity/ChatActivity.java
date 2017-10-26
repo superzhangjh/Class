@@ -166,7 +166,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
                 EMMessage msg = messages.get(0);
                 Mess mess = new Mess();
                 mess.setCreatorID(msg.getFrom());
-                mess.setDate(msg.getMsgTime()+"");
+                mess.setDate(msg.getMsgTime());
                 switch(msg.getType()){
                     //文本信息
                     case TXT:

@@ -1,8 +1,10 @@
 package com.example.a731.aclass.util;
 
 import com.example.a731.aclass.data.Group;
+import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
 import java.io.File;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.BmobUser;
@@ -44,10 +46,17 @@ public class BmobUtil {
         query.findObjects(listener);
     }
 
+    //更新用户信息
+    public static void updateUser(Users user,String objectId,UpdateListener listener){
+        user.update(objectId, listener);
+    }
+
     //获取验证码
     public static void requestSMSCode(String userName, QueryListener<Integer> listener){
         BmobSMS.requestSMSCode(userName,SMS_MODEL_NAME,listener);
     }
+
+    /*--------------------------------班圈操作----------------------------------------*/
 
     //创建班圈
     public static void createGroup(String groupId,String groupName, Users creator, String headImg, SaveListener<String> listener){
@@ -58,6 +67,7 @@ public class BmobUtil {
         BmobRelation relation = new BmobRelation();
         relation.add(creator);
         group.setMember(relation);
+        group.setAdministrator(relation);
         group.setHeadImg(headImg);
         group.save(listener);
     }
@@ -114,6 +124,31 @@ public class BmobUtil {
         Group group = new Group();
         group.setObjectId(groupObjectId);
         query.addWhereRelatedTo("member", new BmobPointer(group));
+        query.findObjects(listener);
+    }
+
+    public static void queryGroupAdmin(String groupObjectId,FindListener<Users> listener) {
+        BmobQuery<Users> query = new BmobQuery<>();
+        Group group = new Group();
+        group.setObjectId(groupObjectId);
+        query.addWhereRelatedTo("administrator", new BmobPointer(group));
+        query.findObjects(listener);
+    }
+
+    /*-------------------------------通知操作---------------------------------------*/
+    public static void addNotice(Notice notice,SaveListener<String> listener){
+        notice.save(listener);
+    }
+
+    public static void updateNotice(Notice notice, String objectId,UpdateListener listener) {
+        notice.update(objectId,listener);
+    }
+
+    public static void queryNotice(String groupObjectId,FindListener<Notice> listener){
+        BmobQuery<Notice> query = new BmobQuery<>();
+        Group group = new Group();
+        group.setObjectId(groupObjectId);
+        query.addWhereEqualTo("group", new BmobPointer(group));
         query.findObjects(listener);
     }
 }

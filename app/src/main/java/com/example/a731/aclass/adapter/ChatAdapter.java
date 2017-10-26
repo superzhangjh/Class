@@ -2,22 +2,22 @@ package com.example.a731.aclass.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.EaseMobUtil;
+import com.hyphenate.util.DateUtils;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Administrator on 2017/9/16/016.
@@ -27,12 +27,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
 
     private Context context;
     private List<Mess> messes;
-    private String myId;
+    private Users mUser;
 
     public ChatAdapter(Context context, List<Mess> messes){
         this.context = context;
         this.messes = messes;
-        myId = BmobUser.getCurrentUser(Users.class).getUsername();
+        mUser = BmobUser.getCurrentUser(Users.class);
     }
 
     @Override
@@ -60,7 +60,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Mess mess = messes.get(position);
         holder.content.setText(mess.getMessage());
-        holder.date.setText(mess.getDate());
+        if (position == 0 || shouldShowTimeStamp(position)){
+            String time = DateUtils.getTimestampString(new Date(mess.getDate()));
+            holder.date.setText(mess.getDate()+"");
+        }
+        if (mess.getCreatorID().equals(mUser.getUsername())){
+            Glide.with(context).load(mUser.getHeadImg()).into(holder.headImg);
+        }else{
+
+        }
     }
 
     @Override
@@ -73,15 +81,24 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
         notifyDataSetChanged();
     }
 
+    private boolean shouldShowTimeStamp(int position) {
+        long currentItemTimestamp = messes.get(position).getDate();
+        long preItemTimestamp = messes.get(position - 1).getDate();
+        boolean closeEnough = DateUtils.isCloseEnough(currentItemTimestamp, preItemTimestamp);
+        return !closeEnough;
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView content;
         TextView date;
+        CircleImageView headImg;
         public ViewHolder(View itemView) {
             super(itemView);
             //信息框
             content = (TextView) itemView.findViewById(R.id.item_chat_iv_content);
             date = (TextView) itemView.findViewById(R.id.item_chat_iv_date);
+            headImg = (CircleImageView) itemView.findViewById(R.id.item_chat_iv_head);
         }
     }
 
@@ -89,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
     public int getItemViewType(int position) {
         int item_view_type;
         String origin = messes.get(position).getCreatorID();
-        if (origin.equals(myId)){
+        if (origin.equals(mUser.getUsername())){
             item_view_type = EaseMobUtil.TYPE_SEND_MESSAGE;
         }else {
             item_view_type = EaseMobUtil.TYPE_GET_MESSAGE;
