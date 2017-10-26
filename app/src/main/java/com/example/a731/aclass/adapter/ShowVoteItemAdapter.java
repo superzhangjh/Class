@@ -12,21 +12,18 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
-import com.example.a731.aclass.data.Vote;
+import com.example.a731.aclass.data.VoteContent;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.b.I;
 
 /**
  * Created by Administrator on 2017/9/16/016.
@@ -35,19 +32,19 @@ import cn.bmob.v3.b.I;
 public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapter.ViewHolder> implements View.OnClickListener{
 
     private Context context;
-    private List<Vote.Item> itemList;
+    private List<VoteContent.Item> itemList;
     private int optionNumber;
     private OnItemClickListener onItemClickListener;
     private List<String> checkItemList = new ArrayList<>();
     private Boolean isVote = false;
 
-    public ShowVoteItemAdapter(Context context, List<Vote.Item> itemList,int optionNumber) {
+    public ShowVoteItemAdapter(Context context, List<VoteContent.Item> itemList,int optionNumber) {
         this.context = context;
         this.itemList = itemList;
         this.optionNumber = optionNumber;
     }
 
-    public void SetItemListDataChange(List<Vote.Item> itemList){
+    public void SetItemListDataChange(List<VoteContent.Item> itemList){
         this.itemList = itemList;
         notifyDataSetChanged();
     }
@@ -62,13 +59,13 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.itemView.setTag(position);
-        Vote.Item item = itemList.get(position);
+        VoteContent.Item item = itemList.get(position);
 
         //检查是否投票
         checkIsVote();
 
         //样式
-        Drawable checkboxDrawable = holder.itemContent.getButtonDrawable();
+        //Drawable checkboxDrawable = holder.itemContent.getButtonDrawable();
         if (isVote){//已投票时
             holder.itemContent.setButtonDrawable(null);
             holder.itemCount.setVisibility(View.VISIBLE);
@@ -87,7 +84,7 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
                 Toast.makeText(context,"checkItemList==null",Toast.LENGTH_SHORT).show();
             }
         }else {//未投票
-            holder.itemContent.setButtonDrawable(checkboxDrawable);
+            //holder.itemContent.setButtonDrawable(checkboxDrawable);
             holder.itemCount.setVisibility(View.INVISIBLE);
         }
 
@@ -153,7 +150,7 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
     //判断是否投票
     private void checkIsVote() {
         String usernameId = BmobUser.getCurrentUser(Users.class).getUsername();
-        for (Vote.Item option :itemList){
+        for (VoteContent.Item option :itemList){
             List<String> selectId = option.getItemSelectId();
             if (selectId!=null){
                 for (int i=0;i<selectId.size();i++){

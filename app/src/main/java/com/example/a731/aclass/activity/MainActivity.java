@@ -101,6 +101,8 @@ public class MainActivity extends BaseActivity implements MainView{
     private TextView username,name,phoneNum,project,local,intro;
     private Users mUser;
 
+    private EMConnectionListener connectionListener;
+
 
     @Override
     protected int getLayoutRes() {
@@ -365,8 +367,10 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
 
+
+
         //监听环信连接状态
-        EMClient.getInstance().addConnectionListener(new EMConnectionListener() {
+        connectionListener = new EMConnectionListener() {
             @Override
             public void onConnected() {
 
@@ -374,25 +378,27 @@ public class MainActivity extends BaseActivity implements MainView{
 
             @Override
             public void onDisconnected(int errorCode) {
-                if(errorCode == EMError.USER_REMOVED){
+                if (errorCode == EMError.USER_REMOVED) {
                     showToast("帐号已经被移除");
                     // 显示帐号已经被移除
-                }else if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                } else if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     showToast("帐号在其他设备登录");
                     // 显示帐号在其他设备登录
                     mainPresenter.logOut();
                 } else {
-                    if (NetUtils.hasNetwork(MainActivity.this)){
+                    if (NetUtils.hasNetwork(MainActivity.this)) {
                         showToast("连接不到聊天服务器");
                     }
                     //连接不到聊天服务器
-                    else{
+                    else {
                         showToast("当前网络不可用，请检查网络设置");
                     }
                     //当前网络不可用，请检查网络设置
                 }
             }
-        });
+        };
+
+        EMClient.getInstance().addConnectionListener(connectionListener);
     }
 
     @Override
@@ -554,5 +560,11 @@ public class MainActivity extends BaseActivity implements MainView{
                 mainPresenter.updateUserHeadImg(fileName);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().removeConnectionListener(connectionListener);
     }
 }

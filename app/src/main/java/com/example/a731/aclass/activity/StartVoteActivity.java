@@ -1,15 +1,23 @@
 package com.example.a731.aclass.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -25,14 +33,25 @@ import com.example.a731.aclass.adapter.EditVoteItemAdapter;
 import com.example.a731.aclass.adapter.PhotoAdapter;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.data.Vote;
+import com.example.a731.aclass.data.VoteContent;
+import com.example.a731.aclass.presenter.StartVotePresenter;
+import com.example.a731.aclass.presenter.impl.StartVotePresenterImpl;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.DateUtil;
+import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
+import com.example.a731.aclass.view.StartVoteView;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import cn.bmob.v3.BmobUser;
 
@@ -43,7 +62,7 @@ import static com.example.a731.aclass.util.EaseMobUtil.TYPE_SINGLE_SELECT;
  * Created by Administrator on 2017/10/22/022.
  */
 
-public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapter.SaveEditListener{
+public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapter.SaveEditListener,StartVoteView{
 
     private static final int LINE_COUNT = 4;
     private Toolbar toolbar;
@@ -62,10 +81,14 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
     private EditVoteItemAdapter itemAdapter;
     private PhotoAdapter photoAdapter;
-    private List<Vote.Item> itemList = new ArrayList<>();
-    private String[] photoList = new String[9];
+    private List<VoteContent.Item> itemList = new ArrayList<>();
+    private List<String> photoList = new ArrayList<>();
     private HashMap map = new HashMap();
     private Vote vote = new Vote();
+    private VoteContent voteContent = new VoteContent();
+    private String presentGroupId;
+
+    private StartVotePresenter presenter = new StartVotePresenterImpl(this);
 
     @Override
     protected int getLayoutRes() {
@@ -99,8 +122,8 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
     private void initRecyclerView() {
         //先增2个空子项到itemList
-        itemList.add(new Vote.Item());
-        itemList.add(new Vote.Item());
+        itemList.add(new VoteContent.Item());
+        itemList.add(new VoteContent.Item());
 
         //初始化项目Adapter
         itemAdapter = new EditVoteItemAdapter(getApplicationContext(),itemList);
@@ -109,7 +132,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         mRecyclerViewList.setAdapter(itemAdapter);
 
         //初始化照片Adapter
-        photoList = vote.getPhotoList();
+        //photoList = vote.getPhotoList();
         photoAdapter = new PhotoAdapter(getApplicationContext(),photoList);
         mRecyclerViewPhoto.setLayoutManager(new GridLayoutManager(getApplicationContext(),LINE_COUNT));
         mRecyclerViewPhoto.setAdapter(photoAdapter);
@@ -143,7 +166,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         public void onClick(DialogInterface dialog, int which)
                         {
                             int size = which+1;
-                            vote.setOptionNumber(size);
+                            voteContent.setOptionNumber(size);
                             rbMutiple.setText("共"+size + "个可选项");
                         }
                     });
@@ -155,7 +178,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
     @Override
     public void initData() {
-
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
         //添加新选项
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +193,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         return;
                     }
                 }
-                itemList.add(new Vote.Item());
+                itemList.add(new VoteContent.Item());
                 itemAdapter.SetItemListDataChange(itemList);
                 //String json = new Gson().toJson(itemList);
                 //Log.i("map result----:",json);
@@ -181,18 +204,38 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         btnAddPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] srcList = {"http://img2.woyaogexing.com/2017/10/13/84d541a98b606416!400x400_big.jpg",
-                        "http://img2.woyaogexing.com/2017/10/13/9b19d063b5956bab!400x400_big.jpg",
-                        "http://img2.woyaogexing.com/2017/10/13/2f3c280cb3e588bd!400x400_big.jpg",
-                        "http://img2.woyaogexing.com/2017/10/13/cd411ab9826c2e2d!400x400_big.jpg",
-                        "http://img2.woyaogexing.com/2017/10/13/aeb0a4d826941e8c!400x400_big.jpg"};
-                photoList = srcList;
-                photoAdapter.setOndataChange(photoList);
-                if (photoList[0]!=null){
-                    mRecyclerViewPhoto.setVisibility(View.VISIBLE);
-                }else {
-                    mRecyclerViewPhoto.setVisibility(View.INVISIBLE);
-                }
+                final android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(StartVoteActivity.this).create();//创建一个AlertDialog对象
+                dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
+                Window window = dialog.getWindow();
+                window.setContentView(R.layout.dialog_select_photo);
+                window.setGravity(Gravity.CENTER);//设置对话框在界面底部显示
+                dialog.setCanceledOnTouchOutside(true);
+                TextView tvTakePhoto = (TextView) window.findViewById(R.id.dialog_select_photo_take);
+                TextView tvSelectPhoto = (TextView) window.findViewById(R.id.dialog_select_photo_album);
+                //拍照
+                tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String state = Environment.getExternalStorageState();
+                        if (state.equals(Environment.MEDIA_MOUNTED)) {
+                            Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                        }
+                        else {
+                            showToast("请确认已经插入SD卡");
+                        }
+                        dialog.cancel();
+                    }
+                });
+                //选择照片
+                tvSelectPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(StartVoteActivity.this,ImagePickerActivity.class);
+                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
+                        dialog.cancel();
+                    }
+                });
             }
         });
 
@@ -246,15 +289,15 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                     showToast("请设置截止日期");
                     btnExpirationDate.requestFocus();
                     return;
-                }else if (vote.getOptionNumber()>itemList.size()){
+                }else if (voteContent.getOptionNumber()>itemList.size()){
                     showToast("选项不足请补充");
                     int size = itemList.size();
-                    for (int i=0;i<vote.getOptionNumber()-size;i++){
-                        itemList.add(new Vote.Item());
+                    for (int i=0;i<voteContent.getOptionNumber()-size;i++){
+                        itemList.add(new VoteContent.Item());
                     }
                     itemAdapter.SetItemListDataChange(itemList);
-                }else if (vote.getOptionNumber()<2){
-                    vote.setOptionNumber(1);
+                }else if (voteContent.getOptionNumber()<2){
+                    voteContent.setOptionNumber(1);
                 }
 
                 //投票类型
@@ -269,15 +312,15 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                     default:
                         type = 3;break;
                 }
-                vote.setType(type);
+                voteContent.setType(type);
                 vote.setCreator(BmobUser.getCurrentUser(Users.class));//设置用户
-                vote.setTitle(edtTitle.getText().toString().trim()); //设置标题
-                vote.setContent(edtContent.getText().toString());//设置内容
-                vote.setExpirationDate(btnExpirationDate.getText().toString().trim());//设置截止日期
-                vote.setDate(DateUtil.MMdd_hhss());//设置创建日期
+                voteContent.setTitle(edtTitle.getText().toString().trim()); //设置标题
+                voteContent.setContent(edtContent.getText().toString());//设置内容
+                voteContent.setExpirationDate(btnExpirationDate.getText().toString().trim());//设置截止日期
+                voteContent.setDate(DateUtil.MMdd_hhss());//设置创建日期
 
                 setItemListDataFromEditText();//获取EditText的内容
-                List<Vote.Item> itemList = itemAdapter.getItemList();
+                List<VoteContent.Item> itemList = itemAdapter.getItemList();
                 for (int i=0;i<itemList.size();i++){
                     String content = itemList.get(i).getItemContent();
                     if (content!=null && !content.equals("")){
@@ -287,18 +330,15 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         return;
                     }
                 }
-                vote.setVoteItems(itemList);//设置投票子选项
+                voteContent.setVoteItems(itemList);//设置投票子选项
                 if (photoList!=null){//设置图片
                     vote.setPhotoList(photoList);
                 }
                 //将Vote转成Json，返回数据给上级
-                String voteJson = new Gson().toJson(vote);
-                //TODO:将voteJson上传到网络，得到返回结果，如果成功则执行下列代码，失败则return并Toast结果
-                Intent intent = new Intent();
-                intent.putExtra("voteJson",voteJson);
-                Log.i("voteJson",voteJson);
-                setResult(RESULT_OK,intent);
-                finish();
+                String voteJson = new Gson().toJson(voteContent);
+                vote.setContent(voteJson);
+                showProgress("正在保存数据");
+                presenter.saveVote(presentGroupId,vote,photoList);
             }
         });
     }
@@ -318,5 +358,70 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
         }else {
             //showToast("map内容为空");
         }
+    }
+
+    //拍照并保存
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null){
+            showToast("获取图片失败");
+            return;
+        }
+        ArrayList<String> mImgs = new ArrayList<>();
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
+            mImgs=data.getStringArrayListExtra("selectImg");
+        }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+                String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+                FileOutputStream b = null;
+                File file = new File("/sdcard/myImage/");
+                file.mkdirs();// 创建文件夹
+                String fileName = "/sdcard/myImage/"+name;
+                try {
+                    b = new FileOutputStream(fileName);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        try {
+                            b.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mImgs.add(fileName);
+            }
+        }
+        photoList.addAll(mImgs);
+        photoAdapter.setOndataChange(photoList);
+        if (photoList.size()>0){
+            mRecyclerViewPhoto.setVisibility(View.VISIBLE);
+        }else
+
+        {
+            mRecyclerViewPhoto.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    @Override
+    public void onSaveVoteFail(String message) {
+        hideProgress();
+        showToast("保存投票失败:"+message);
+    }
+
+    @Override
+    public void onSaveVoteSuccess() {
+        hideProgress();
+        showToast("保存成功");
+        finish();
     }
 }

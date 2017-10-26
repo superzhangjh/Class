@@ -7,10 +7,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Gallery;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/10/5/005.
@@ -46,19 +49,11 @@ public class UploadPhotoActivity extends BaseActivity {
     public void initData() {
         gallery = new Gallery();
 
-        String path = getIntent().getStringExtra("path");
-        File file = null;
-        if (path!=null){
-            file = new File(path);
-        }
-        if (file.exists()){
-            //获取拍摄的图片位置
-            Bitmap bitmap= BitmapFactory.decodeFile(path);
-            Matrix matrix = new Matrix();
-            matrix.postScale(0.8f,0.8f);
-            matrix.postRotate(90);
-            Bitmap result = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-            imgPhoto.setImageBitmap(result);
-        }
+
+        //获取到的图片路径,请直接使用👇
+        List<String> path = new ArrayList<>();
+        path.addAll(getIntent().getStringArrayListExtra("imgsPath"));
+
+        Glide.with(this).load(path.get(0)).into(imgPhoto);
     }
 }

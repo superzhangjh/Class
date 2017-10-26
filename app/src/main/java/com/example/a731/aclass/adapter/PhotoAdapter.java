@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/9/16/016.
  */
@@ -16,9 +18,9 @@ import com.example.a731.aclass.R;
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     private Context context;
-    private String[] srcList;
+    private List<String> srcList;
 
-    public PhotoAdapter(Context context, String[] srcList) {
+    public PhotoAdapter(Context context, List<String> srcList) {
         this.context = context;
         this.srcList = srcList;
     }
@@ -32,13 +34,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        String imageUrl = srcList[position];
+        String imageUrl = srcList.get(position);
         Glide.with(context).load(imageUrl).centerCrop().into(holder.img);
     }
 
     @Override
     public int getItemCount() {
-        return srcList==null?0:srcList.length;
+        return srcList==null?0:srcList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,7 +52,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
         }
     }
 
-    public void setOndataChange(String[] srcList){
+    public void setOndataChange(List<String> srcList){
         this.srcList = srcList;
         notifyDataSetChanged();
     }

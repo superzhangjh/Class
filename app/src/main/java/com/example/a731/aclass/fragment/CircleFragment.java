@@ -1,23 +1,18 @@
 package com.example.a731.aclass.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -27,18 +22,20 @@ import com.azhon.suspensionfab.FabAttributes;
 import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.activity.ImagePickerActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
+import com.example.a731.aclass.util.ImageLoderUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2017/9/15/015.
@@ -152,9 +149,14 @@ public class CircleFragment extends BaseFragment{
         tvTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 启动系统相机
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CAMERA);
+                String state = Environment.getExternalStorageState();
+                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                }
+                else {
+                    showToast("请确认已经插入SD卡");
+                }
                 dialog.cancel();
             }
         });
@@ -162,7 +164,8 @@ public class CircleFragment extends BaseFragment{
         tvSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(),ImagePickerActivity.class);
+                startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
                 dialog.cancel();
             }
         });
@@ -189,56 +192,48 @@ public class CircleFragment extends BaseFragment{
         tablayout.setSmoothScrollingEnabled(false);
     }
 
+    //拍照并保存
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //拍照上传
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == REQUEST_CAMERA){
-                dialogTakePhotoMethod1(data);
-            }
-        }else{
-            //获取失败
-        }
-    }
-
-    //拍照并保存
-    private void dialogTakePhotoMethod1(Intent data){
-        String sdStatus = Environment.getExternalStorageState();
-        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)){
-            Log.i("SDcardStatus:","SD card is not avaiable/writeable right now.");
+        if(data == null){
+            showToast("获取图片失败");
             return;
         }
-        //以时间为文件命名
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String fileName = format.format(new Date())+".jpg";
-        Log.i("---fileName:",fileName);
-
-        //将intent返回的数据转换为bitmap
-        Bundle bundle = data.getExtras();
-        Bitmap bitmap = (Bitmap) bundle.get("data");
-        Log.i("---bitmap:",bitmap.toString());
-
-        //将bitmap存入本地
-        String dir = "/sdcard/Class/";//文件夹名字
-        File file = new File(dir);//文件夹名字
-        file.mkdirs();//创建文件夹
-        fileName = dir + fileName;//文件存放名字
-        try {
-            FileOutputStream out = new FileOutputStream(fileName);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);// 把数据写入文件
-            out.flush();
-            out.close();
-            //保存图片后发送广播通知更新数据库
-            Uri uri = Uri.fromFile(file);
-            getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        ArrayList<String> mImgs = new ArrayList<>();
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
+            mImgs=data.getStringArrayListExtra("selectImg");
+        }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+                String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+                FileOutputStream b = null;
+                File file = new File("/sdcard/myImage/");
+                file.mkdirs();// 创建文件夹
+                String fileName = "/sdcard/myImage/"+name;
+                try {
+                    b = new FileOutputStream(fileName);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        try {
+                            b.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mImgs.add(fileName);
+            }
         }
         Intent intent = new Intent(getContext(),UploadPhotoActivity.class);
-        intent.putExtra("path",fileName);
+        intent.putStringArrayListExtra("imgsPath",mImgs);
         getContext().startActivity(intent);
     }
 }

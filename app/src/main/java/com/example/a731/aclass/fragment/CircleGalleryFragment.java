@@ -39,7 +39,6 @@ public class CircleGalleryFragment extends BaseFragment {
         tvLocalPhoto = (TextView) mRootView.findViewById(R.id.circle_gallery_tv_localPhoto);
         tvTakePhoto = (TextView) mRootView.findViewById(R.id.circle_gallery_tv_takePhoto);
 
-        testData();
 
         initRecyclerView();
         
@@ -74,7 +73,7 @@ public class CircleGalleryFragment extends BaseFragment {
         mRecyclerView.setItemViewCacheSize(10);
     }
 
-    private void testData() {
+    /*private void testData() {
         galleryList = new ArrayList<>();
 
         Gallery gallery = new Gallery();
@@ -88,7 +87,7 @@ public class CircleGalleryFragment extends BaseFragment {
                 "http://img2.woyaogexing.com/2017/10/13/2f3c280cb3e588bd!400x400_big.jpg",
                 "http://img2.woyaogexing.com/2017/10/13/cd411ab9826c2e2d!400x400_big.jpg",
                 "http://img2.woyaogexing.com/2017/10/13/aeb0a4d826941e8c!400x400_big.jpg"};
-        gallery.setSrcList(srcList);
+        //gallery.setSrcList(srcList);
         galleryList.add(gallery);
 
         Gallery gallery1 = new Gallery();
@@ -96,9 +95,9 @@ public class CircleGalleryFragment extends BaseFragment {
         gallery1.setDate(String.valueOf(new Date()));
         gallery1.setLike(120);
         gallery1.setIntro("Glide显示的图片");
-        gallery1.setSrcList(srcList1);
+        //gallery1.setSrcList(srcList1);
         galleryList.add(gallery1);
-    }
+    }*/
 
     @Override
     public void initListener() {

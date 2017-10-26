@@ -48,15 +48,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         //holder.commend = 评论
 
         //设置图片显示格式
-        String[] srcList = gallery.getSrcList();
-        int srcListCount = srcList.length;
+        List<String> srcList = gallery.getSrcList();
+        int srcListCount = srcList.size();
         if(srcListCount==0){
             return;
         }
         if (srcListCount==1){
             holder.imgFirst.setVisibility(View.VISIBLE);
             holder.photoList.setVisibility(View.GONE);
-            String imageUrl = srcList[0];
+            String imageUrl = srcList.get(0);
             Glide.with(context).load(imageUrl).fitCenter().into(holder.imgFirst);
         } else {
             holder.imgFirst.setVisibility(View.GONE);

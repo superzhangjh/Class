@@ -12,6 +12,10 @@ import com.example.a731.aclass.activity.StartVoteActivity;
 import com.example.a731.aclass.activity.VoteInfoActivity;
 import com.example.a731.aclass.adapter.InteractAdapter;
 import com.example.a731.aclass.data.Vote;
+import com.example.a731.aclass.presenter.CircleInteractPresenter;
+import com.example.a731.aclass.presenter.impl.CircleInteractPresenterImpl;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
+import com.example.a731.aclass.view.CircleInteractView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Administrator on 2017/10/6/006.
  */
 
-public class CircleInteractFragment extends BaseFragment{
+public class CircleInteractFragment extends BaseFragment implements CircleInteractView{
     private static final int START_A_VOTE = 2001;
     private static final int VOTE_INFO = 2002;
     private RecyclerView mRecyclerView;
@@ -31,7 +35,9 @@ public class CircleInteractFragment extends BaseFragment{
     private List<Vote> voteList = new ArrayList<>();
     private InteractAdapter adapter;
     private TextView tvStartVote;
-    private int index;
+    private String presentGroupId;
+
+    private CircleInteractPresenter presenter = new CircleInteractPresenterImpl(this);
 
     @Override
     protected int getLayoutRes() {
@@ -61,10 +67,8 @@ public class CircleInteractFragment extends BaseFragment{
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getContext(),VoteInfoActivity.class);
                 Vote vote = voteList.get(position);
-                String voteJson = new Gson().toJson(vote);
-                index = position;
-                intent.putExtra("vote",voteJson);
-                startActivityForResult(intent,VOTE_INFO);
+                intent.putExtra("objectId",vote.getObjectId());
+                startActivity(intent);
             }
         });
     }
@@ -76,29 +80,20 @@ public class CircleInteractFragment extends BaseFragment{
 
     @Override
     public void initData() {
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presenter.getGroupVote(presentGroupId);
+    }
 
+
+    @Override
+    public void onGetVoteSuccess(List<Vote> list) {
+        showToast("获取投票列表成功"+list.size()+":"+presentGroupId);
+        voteList = list;
+        adapter.setListDataChange(voteList);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case START_A_VOTE:
-                if (resultCode==RESULT_OK){
-                    String voteJson = data.getStringExtra("voteJson");
-                    Vote vote = new Gson().fromJson(voteJson,Vote.class);
-                    voteList.add(vote);
-                    adapter.setListDataChange(voteList);
-                }
-                break;
-            case VOTE_INFO:
-                if (resultCode==RESULT_OK){
-                    String voteJson = data.getStringExtra("vote");
-                    Vote vote = new Gson().fromJson(voteJson,Vote.class);
-                    voteList.set(index,vote);
-                    adapter.setListDataChange(voteList);
-                }
-                break;
-        }
+    public void onGetVoteFail(String message) {
+        showToast("获取投票列表失败："+message);
     }
 }

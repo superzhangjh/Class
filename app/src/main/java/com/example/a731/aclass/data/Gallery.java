@@ -1,12 +1,14 @@
 package com.example.a731.aclass.data;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/10/2/002.
  */
 
 public class Gallery {
     //照片集
-    private String[] srcList;//链接
+    private List<String> srcList;//链接
     private String date;//创建日期
     private String intro;//相片描述
     private String creatorID;//创建者
@@ -54,11 +56,11 @@ public class Gallery {
         this.intro = intro;
     }
 
-    public String[] getSrcList() {
+    public List<String> getSrcList() {
         return srcList;
     }
 
-    public void setSrcList(String[] srcList) {
+    public void setSrcList(List<String> srcList) {
         this.srcList = srcList;
     }
 

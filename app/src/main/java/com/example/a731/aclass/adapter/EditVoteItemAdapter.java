@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Vote;
+import com.example.a731.aclass.data.VoteContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,10 @@ import java.util.List;
 public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapter.ViewHolder>{
 
     private Context context;
-    private List<Vote.Item> itemList;
+    private List<VoteContent.Item> itemList;
     private SaveEditListener mSaveEditListener;
 
-    public EditVoteItemAdapter(Context context,List<Vote.Item> itemList) {
+    public EditVoteItemAdapter(Context context,List<VoteContent.Item> itemList) {
         this.context = context;
         this.itemList = itemList;
     }
@@ -50,7 +51,7 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.edtItem.setTag(position);
 
-        final Vote.Item item = itemList.get(position);
+        final VoteContent.Item item = itemList.get(position);
 
         //显示 item的内容
         if (item.getItemContent()==null){
@@ -92,11 +93,11 @@ public class EditVoteItemAdapter extends RecyclerView.Adapter<EditVoteItemAdapte
         });
     }
 
-    public List<Vote.Item> getItemList(){
+    public List<VoteContent.Item> getItemList(){
         return itemList;
     }
 
-    public void SetItemListDataChange(List<Vote.Item> itemList){
+    public void SetItemListDataChange(List<VoteContent.Item> itemList){
         this.itemList = itemList;
         notifyDataSetChanged();
     }

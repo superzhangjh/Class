@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Vote;
+import com.example.a731.aclass.data.VoteContent;
 import com.example.a731.aclass.util.DateUtil;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -44,9 +46,9 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Vote vote = votesList.get(position);
-
+        VoteContent voteContent = new Gson().fromJson(vote.getContent(),VoteContent.class);
         //设置type类型
-        int type = vote.getType();
+        int type = voteContent.getType();
         switch (type){
             case 0:holder.tvType.setText("调查");break;
             case 1:holder.tvType.setText("评选");break;
@@ -54,14 +56,14 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
             default:holder.tvType.setText("其他");break;
         }
 
-        holder.tvTitle.setText(vote.getTitle());
-        holder.tvContent.setText(vote.getContent());
+        holder.tvTitle.setText(voteContent.getTitle());
+        holder.tvContent.setText(voteContent.getContent());
 
         //设置时间
-        if (vote.getDate()==null &&vote.getDate().equals("")){
-            vote.setDate(DateUtil.MMdd_hhss());
+        if (voteContent.getDate()==null &&voteContent.getDate().equals("")){
+            voteContent.setDate(DateUtil.MMdd_hhss());
         }
-        holder.tvDate.setText(vote.getDate());
+        holder.tvDate.setText(voteContent.getDate());
         holder.itemView.setTag(position);
     }
 

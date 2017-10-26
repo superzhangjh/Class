@@ -3,6 +3,8 @@ package com.example.a731.aclass.util;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.data.Vote;
+
 import java.io.File;
 
 import cn.bmob.v3.BmobQuery;
@@ -150,5 +152,27 @@ public class BmobUtil {
         group.setObjectId(groupObjectId);
         query.addWhereEqualTo("group", new BmobPointer(group));
         query.findObjects(listener);
+    }
+
+    /*-----------------------------------投票操作-------------------------------------------*/
+    public static void addVote(Vote vote, SaveListener<String> listener){
+        vote.save(listener);
+    }
+
+    public static void updateVote(Vote vote, String objectId,UpdateListener listener) {
+        vote.update(objectId,listener);
+    }
+
+    public static void queryVote(String groupObjectId,FindListener<Vote> listener){
+        BmobQuery<Vote> query = new BmobQuery<>();
+        Group group = new Group();
+        group.setObjectId(groupObjectId);
+        query.addWhereEqualTo("group", new BmobPointer(group));
+        query.findObjects(listener);
+    }
+
+    public static void queryVoteByObjectId(String objectId,QueryListener<Vote> listener) {
+        BmobQuery<Vote> query = new BmobQuery<>();
+        query.getObject(objectId,listener);
     }
 }
