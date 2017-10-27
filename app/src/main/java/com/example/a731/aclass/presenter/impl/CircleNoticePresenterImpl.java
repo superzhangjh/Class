@@ -30,6 +30,7 @@ public class CircleNoticePresenterImpl implements CircleNoticePresenter {
 
     @Override
     public void getGroupNotice(String groupId) {
+        Log.i("CircleNotice",groupId);
         BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
             @Override
             public void done(List<Group> list, BmobException e) {

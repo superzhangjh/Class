@@ -1,13 +1,18 @@
 package com.example.a731.aclass.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.activity.PhotoViewActivity;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -34,8 +39,18 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        String imageUrl = srcList.get(position);
+        final String imageUrl = srcList.get(position);
         Glide.with(context).load(imageUrl).centerCrop().into(holder.img);
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,PhotoViewActivity.class);
+                String photoJson = new Gson().toJson(srcList);
+                intent.putExtra("pos",String.valueOf(position));
+                intent.putExtra("photoJson",photoJson);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

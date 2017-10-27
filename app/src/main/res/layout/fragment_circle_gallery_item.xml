@@ -56,21 +56,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        //显示的第一张图片
-        <ImageView
-            android:id="@+id/item_circle_gallery_img_first"
-            android:visibility="gone"
-            android:layout_marginLeft="60dp"
-            android:layout_width="300dp"
-            android:layout_height="200dp" />
-
-        //显示所有图片
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/item_circle_gallery_recyclerview"
             android:gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -100,7 +89,7 @@
                     <TextView
                         android:id="@+id/item_circle_gallery_tv_like"
                         android:text="140"
-                        android:gravity="center_vertical|left"
+                        android:gravity="left|center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp" />
                 </LinearLayout>

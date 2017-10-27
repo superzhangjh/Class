@@ -65,15 +65,23 @@ public class CircleGalleryFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
+        testData();
+
         GalleryAdapter adapter = new GalleryAdapter(getContext(),galleryList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
         });
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setItemViewCacheSize(10);
+        adapter.setOnItemClickListener(new GalleryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                showToast(position+"");
+            }
+        });
     }
 
-    /*private void testData() {
+    private void testData() {
         galleryList = new ArrayList<>();
 
         Gallery gallery = new Gallery();
@@ -81,23 +89,13 @@ public class CircleGalleryFragment extends BaseFragment {
         gallery.setDate(String.valueOf(new Date()));
         gallery.setLike(11);
         gallery.setIntro("Glide显示的图片");
-        String[] srcList = {"http://img2.woyaogexing.com/2017/10/13/2f3c280cb3e588bd!400x400_big.jpg"};
-        String[] srcList1 = {"http://img2.woyaogexing.com/2017/10/13/84d541a98b606416!400x400_big.jpg",
-                "http://img2.woyaogexing.com/2017/10/13/9b19d063b5956bab!400x400_big.jpg",
-                "http://img2.woyaogexing.com/2017/10/13/2f3c280cb3e588bd!400x400_big.jpg",
-                "http://img2.woyaogexing.com/2017/10/13/cd411ab9826c2e2d!400x400_big.jpg",
-                "http://img2.woyaogexing.com/2017/10/13/aeb0a4d826941e8c!400x400_big.jpg"};
-        //gallery.setSrcList(srcList);
+        List<String> srcList = new ArrayList<>();
+        srcList.add("http://img2.woyaogexing.com/2017/10/13/84d541a98b606416!400x400_big.jpg");
+        srcList.add("http://img2.woyaogexing.com/2017/10/13/9b19d063b5956bab!400x400_big.jpg");
+        srcList.add("http://img2.woyaogexing.com/2017/10/13/2f3c280cb3e588bd!400x400_big.jpg");
+        gallery.setSrcList(srcList);
         galleryList.add(gallery);
-
-        Gallery gallery1 = new Gallery();
-        gallery1.setCreatorName("z啊很难过");
-        gallery1.setDate(String.valueOf(new Date()));
-        gallery1.setLike(120);
-        gallery1.setIntro("Glide显示的图片");
-        //gallery1.setSrcList(srcList1);
-        galleryList.add(gallery1);
-    }*/
+    }
 
     @Override
     public void initListener() {

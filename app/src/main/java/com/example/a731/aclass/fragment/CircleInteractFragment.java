@@ -81,7 +81,10 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
     @Override
     public void initData() {
         presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
-        presenter.getGroupVote(presentGroupId);
+        if (presentGroupId != null)
+            presenter.getGroupVote(presentGroupId);
+
+
     }
 
 
@@ -95,5 +98,12 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
     @Override
     public void onGetVoteFail(String message) {
         showToast("获取投票列表失败："+message);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (presentGroupId != null)
+        presenter.getGroupVote(presentGroupId);
     }
 }

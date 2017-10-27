@@ -92,8 +92,8 @@
         <activity android:name=".activity.VoteInfoActivity"/>
         <activity android:name=".activity.StartVoteActivity" />
         <activity android:name=".activity.ImagePickerActivity"/>
-
         <activity android:name=".activity.UploadPhotoActivity"/>
+        <activity android:name=".activity.PhotoViewActivity"/>
     </application>
 
 </manifest>

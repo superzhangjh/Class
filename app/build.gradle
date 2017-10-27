@@ -62,4 +62,7 @@ dependencies {
 
     //LitePal
     compile 'org.litepal.android:core:1.4.1'
+
+    //photoView
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
 }

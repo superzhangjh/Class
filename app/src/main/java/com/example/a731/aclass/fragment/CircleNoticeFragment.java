@@ -52,12 +52,12 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if (presenter.queryAdmin()){
+                if (presenter.queryAdmin()){
                 Intent intent = new Intent(getContext(), ReleasingNoticesActivity.class);
                 startActivityForResult(intent,REQUEST_RELEASING_NOTICE);
-                //}else{
+                }else{
                 showToast("你不是管理员,没有该权限");
-                //}
+                }
             }
         });
 
@@ -75,6 +75,7 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void initData() {
         presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        if (presentGroupId!=null)
         presenter.getGroupNotice(presentGroupId);
     }
 
@@ -102,6 +103,7 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onResume() {
         super.onResume();
+        if (presentGroupId != null)
         presenter.getGroupNotice(presentGroupId);
     }
 
