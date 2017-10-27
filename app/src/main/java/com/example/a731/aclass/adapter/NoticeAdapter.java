@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Notice;
+import com.example.a731.aclass.view.OnItemClickView;
 
 import org.w3c.dom.Text;
 
@@ -24,21 +25,11 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     private Context context;
     private List<Notice> noticeList;
 
-    private OnNoticeClickListenrt mOnNoticeClickListenrt = null;
+    private OnItemClickView mOnItemClickViewListener = null;
 
-    @Override
-    public void onClick(View v) {
-        if (mOnNoticeClickListenrt != null) {
-            mOnNoticeClickListenrt.onNoticeClick(v);
-        }
-    }
-
-    public void setOnNoticeClickListener(OnNoticeClickListenrt listener) {
-        this.mOnNoticeClickListenrt = listener;
-    }
-
-    public interface OnNoticeClickListenrt {
-        void onNoticeClick(View view);
+    //外部Item Click事件
+    public void setOnItemClickListener(OnItemClickView listener) {
+        this.mOnItemClickViewListener = listener;
     }
 
     public NoticeAdapter(Context context, List<Notice> noticeList){
@@ -55,11 +46,13 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_notice_item,parent,false);
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        holder.itemView.setTag(position);
         int size = getItemCount();
         Notice notice = noticeList.get(size-position-1);
         holder.tvTitle.setText(notice.getTitle());
@@ -76,8 +69,14 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         return noticeList==null?0:noticeList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onClick(View v) {
+        if (mOnItemClickViewListener != null) {
+            mOnItemClickViewListener.onItemClick(v,(int)v.getTag());
+        }
+    }
 
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         //type_item
         ImageView imgNotice;
         TextView tvTitle;

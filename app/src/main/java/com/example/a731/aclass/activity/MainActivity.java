@@ -1,9 +1,12 @@
 package com.example.a731.aclass.activity;
 
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,8 +16,10 @@ import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -69,6 +74,12 @@ public class MainActivity extends BaseActivity implements MainView{
     private static final String TITLE_GROUP_NAME = "班圈名称";
     private static final String TITLE_USER_NAME = " 用户名称";
 
+    private static final String[] PERMISSION = new String[]{
+            Manifest.permission.READ_CONTACTS,// 写入权限
+            Manifest.permission.READ_EXTERNAL_STORAGE,  //读取权限
+            Manifest.permission.WRITE_CALL_LOG,        //读取设备信息
+    };
+
     private DrawerLayout mDrawerLayout;
     private NavigationView navView;
     private NavigationView navRight;
@@ -111,6 +122,9 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void initView() {
+
+        setPermissions();
+
         tvTitle = (TextView) findViewById(R.id.main_tv_title);
         mRadioGroup = (RadioGroup) findViewById(R.id.main_radiogroup);
         mainPresenter = new MainPresenterImpl(this);
@@ -559,6 +573,15 @@ public class MainActivity extends BaseActivity implements MainView{
                 }
                 mainPresenter.updateUserHeadImg(fileName);
             }
+        }
+    }
+
+    public void setPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            //Android 6.0申请权限
+            ActivityCompat.requestPermissions(this,PERMISSION,1);
+        }else{
+            //Log.i(TAG,"权限申请ok");
         }
     }
 

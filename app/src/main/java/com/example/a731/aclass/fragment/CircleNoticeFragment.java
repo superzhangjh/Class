@@ -15,6 +15,7 @@ import com.example.a731.aclass.presenter.CircleNoticePresenter;
 import com.example.a731.aclass.presenter.impl.CircleNoticePresenterImpl;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CircleNoticeView;
+import com.example.a731.aclass.view.OnItemClickView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +64,13 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
 
         adapter = new NoticeAdapter(getContext(),noticeList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickView() {
+            @Override
+            public void onItemClick(View view, int position) {
+                showToast(position+"");
+            }
+        });
     }
 
     @Override

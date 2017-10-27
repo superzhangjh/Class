@@ -1,18 +1,26 @@
 package com.example.a731.aclass.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.util.DownloadImageServiceUtil.DownLoadImageService;
+import com.example.a731.aclass.util.DownloadImageServiceUtil.ImageDownLoadCallBack;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +32,28 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 
 public class PhotoViewActivity extends BaseActivity {
+    private static final int MSG_VISIBLE = 3001;
+    private static final int MSG_ERROR = 3002;
     private TextView tvIndex;
     private ViewPager mViewPager;
     private TextView tvSave;
     private List<PhotoView> photoViewList = new ArrayList<>();
     private List<String> photoList = new ArrayList<>();
     private PhotoViewAttacher mAttacher;
+    private long delayTime = 1000;
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what==MSG_VISIBLE){
+                showToast("保存成功");
+                return true;
+            }else if (msg.what==MSG_ERROR){
+                showToast("保存失败");
+                return true;
+            }
+            return false;
+        }
+    });
 
     @Override
     protected int getLayoutRes() {
@@ -48,16 +72,21 @@ public class PhotoViewActivity extends BaseActivity {
         for (int i=0;i<photoList.size();i++){
             PhotoView photoView = new PhotoView(getApplicationContext());
             mAttacher = new PhotoViewAttacher(photoView);
-            Glide.with(this).load(photoList.get(i)).into(photoView);
+            Glide.with(this).load(photoList.get(i)).error(R.drawable.cross86).into(photoView);
             mAttacher.update();
             photoViewList.add(photoView);
         }
 
-        int pos = Integer.valueOf(getIntent().getStringExtra("pos"));
+        final int pos = Integer.valueOf(getIntent().getStringExtra("pos"));
+
         PhotoPagerAdaper adaper = new PhotoPagerAdaper(photoViewList);
         mViewPager.setAdapter(adaper);
         mViewPager.setCurrentItem(pos);
+        mViewPager.setOffscreenPageLimit(1);
         tvIndex.setText((pos+1)+"/"+photoList.size());
+
+        final int[] savePosition = {pos};
+
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -66,6 +95,7 @@ public class PhotoViewActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
+                savePosition[0] = position;
                 tvIndex.setText((position+1)+"/"+photoList.size());
             }
             @Override
@@ -73,6 +103,47 @@ public class PhotoViewActivity extends BaseActivity {
 
             }
         });
+
+        //保存文件
+        tvSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = photoList.get(savePosition[0]);
+                onDownLoad(url);
+            }
+        });
+    }
+
+    private void onDownLoad(String url) {
+
+        DownLoadImageService service = new DownLoadImageService(getApplicationContext(),
+                url, new ImageDownLoadCallBack() {
+
+
+            @Override
+            public void onDownLoadSuccess(File file) {
+
+            }
+
+            @Override
+            public void onDownLoadSuccess(Bitmap bitmap) {
+                // 在这里执行图片保存方法
+                Message message = new Message();
+                message.what = MSG_VISIBLE;
+                handler.sendMessageDelayed(message,delayTime);
+
+            }
+
+            @Override
+            public void onDownLoadFailed() {
+                // 图片保存失败
+                Message message = new Message();
+                message.what = MSG_ERROR;
+                handler.sendMessageDelayed(message,delayTime);
+            }
+        });
+        //启动图片下载线程
+        new Thread(service).start();
     }
 
     @Override
