@@ -23,6 +23,7 @@ import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ImagePickerActivity;
+import com.example.a731.aclass.activity.ScheduleActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
@@ -87,8 +88,8 @@ public class CircleFragment extends BaseFragment{
     private void initSuspensionFab() {
         susFab = (SuspensionFab) mRootView.findViewById(R.id.circle_suspensionfab);
         //构建展开按钮属性
-        //更多
-        FabAttributes more = new FabAttributes.Builder()
+        //课程表
+        FabAttributes schedule = new FabAttributes.Builder()
                 .setBackgroundTint(Color.parseColor("#2096F3"))
                 .setSrc(getResources().getDrawable(R.drawable.chat_fn))
                 .setFabSize(FloatingActionButton.SIZE_AUTO)
@@ -113,7 +114,7 @@ public class CircleFragment extends BaseFragment{
                 .build();
 
         //添加菜单
-        susFab.addFab(more,album,notice);
+        susFab.addFab(schedule,album,notice);
         susFab.setAnimationManager(new FabButtonAnimate(susFab));
         //菜单点击事件
         susFab.setFabClickListener(new OnFabClickListener() {
@@ -122,7 +123,8 @@ public class CircleFragment extends BaseFragment{
                 String msg = "";
                 switch ((int)tag){
                     case 1:
-                        msg="更多";
+                        Intent intent = new Intent(getContext(), ScheduleActivity.class);
+                        startActivity(intent);
                         break;
                     case 2:
                         msg="上传照片";
