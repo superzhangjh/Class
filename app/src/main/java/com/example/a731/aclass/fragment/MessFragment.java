@@ -8,16 +8,11 @@ import android.widget.TextView;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.SystematicNotificationActivity;
-import com.example.a731.aclass.adapter.EMMessageListenerAdapter;
 import com.example.a731.aclass.adapter.MessAdapter;
 import com.example.a731.aclass.data.Conversation;
 import com.example.a731.aclass.presenter.MessPresenter;
 import com.example.a731.aclass.presenter.impl.MessPresenterImpl;
 import com.example.a731.aclass.view.MessView;
-import com.hyphenate.EMGroupChangeListener;
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
 import java.util.List;
 
 
@@ -31,7 +26,7 @@ public class MessFragment extends BaseFragment implements MessView{
     private TextView systematicNotification;
     private MessAdapter adapter;
     private MessPresenter messPresenter = new MessPresenterImpl(this);
-    private EMMessageListener msgListener;
+    //private EMMessageListener msgListener;
 
     @Override
     protected int getLayoutRes() {
@@ -55,14 +50,14 @@ public class MessFragment extends BaseFragment implements MessView{
             }
         });
 
-        msgListener = new EMMessageListenerAdapter() {
+/*        msgListener = new EMMessageListenerAdapter() {
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
                 //收到消息
                 messPresenter.getConversations();
             }
-        };
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        };*/
+        //EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
 
 
@@ -70,7 +65,6 @@ public class MessFragment extends BaseFragment implements MessView{
 
     @Override
     public void initData() {
-        messPresenter.getConversations();
     }
 
     private void initRecyclerview() {
@@ -82,7 +76,7 @@ public class MessFragment extends BaseFragment implements MessView{
 
     @Override
     public void onGetConversationSuccess(List<Conversation> conversations) {
-        //showToast("数据更新成功");
+        showToast("数据更新成功"+conversations.size());
         adapter.onDataChanged(conversations);
         smoothScrollToTop();
     }
@@ -101,7 +95,7 @@ public class MessFragment extends BaseFragment implements MessView{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        //EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     private void smoothScrollToTop() {

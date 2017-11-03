@@ -103,7 +103,5 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
     @Override
     public void onResume() {
         super.onResume();
-        if (presentGroupId != null)
-        presenter.getGroupVote(presentGroupId);
     }
 }

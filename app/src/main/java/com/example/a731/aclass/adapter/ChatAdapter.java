@@ -62,7 +62,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
         holder.content.setText(mess.getMessage());
         if (position == 0 || shouldShowTimeStamp(position)){
             String time = DateUtils.getTimestampString(new Date(mess.getDate()));
-            holder.date.setText(mess.getDate()+"");
+            holder.date.setText(time);
         }
         if (mess.getCreatorID().equals(mUser.getUsername())){
             Glide.with(context).load(mUser.getHeadImg()).into(holder.headImg);

@@ -3,7 +3,7 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="100dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/item_mess_iv_head"
         android:layout_marginLeft="10dp"
         android:src="@mipmap/ic_launcher"

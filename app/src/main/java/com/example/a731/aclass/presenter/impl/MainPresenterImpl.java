@@ -66,29 +66,25 @@ public class MainPresenterImpl implements MainPresenter {
                 try {
                     usernames = EaseMobUtil.getFriends();
                     for (int i=0;i<usernames.size();i++){
-                        Users users = new Users();
-                        users.setUsername(usernames.get(i));
-                        friendList.add(users);
-                    }
-                    /*for (int i = 0;i<usernames.size();i++){
                         BmobUtil.queryUser(usernames.get(i), new FindListener<Users>() {
                             @Override
                             public void done(List<Users> list, BmobException e) {
                                 if (e == null){
                                     Users users = list.get(0);
                                     friendList.add(users);
+                                    ThreadUtils.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mMainView.onGetFriendsSuccess(friendList);
+                                        }
+                                    });
                                 }else{
                                     mMainView.onGetFriendsFail(e.getMessage());
                                 }
                             }
                         });
-                    }*/
-                    ThreadUtils.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mMainView.onGetFriendsSuccess(friendList);
-                        }
-                    });
+                    }
+
                 } catch (final HyphenateException e) {
                     e.printStackTrace();
                     ThreadUtils.runOnUiThread(new Runnable() {
@@ -111,14 +107,18 @@ public class MainPresenterImpl implements MainPresenter {
             public void run() {
                 try {
                     List<EMGroup> emGroups= EaseMobUtil.getAllGroup();
-                    int i=0;
-                    for (;i<emGroups.size();i++){
+                    for (int i=0;i<emGroups.size();i++){
                         EMGroup emGroup = emGroups.get(i);
                         BmobUtil.getGroupByField("groupId", emGroup.getGroupId(), new FindListener<Group>() {
                             @Override
                             public void done(List<Group> list, BmobException e) {
-                                groupList.add(list.get(0));
-                                mMainView.onGetGroupSuccess(groupList);
+                                if (e==null){
+                                    groupList.add(list.get(0));
+                                    mMainView.onGetGroupSuccess(groupList);
+                                }else{
+                                    mMainView.onGetGroupFail(e.getMessage());
+                                }
+
                             }
                         });
                     }
