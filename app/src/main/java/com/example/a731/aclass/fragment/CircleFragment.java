@@ -23,11 +23,13 @@ import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ImagePickerActivity;
+import com.example.a731.aclass.activity.QRCodeActivity;
 import com.example.a731.aclass.activity.ScheduleActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.QRCodeUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -122,14 +124,18 @@ public class CircleFragment extends BaseFragment{
             public void onFabClick(FloatingActionButton fab, Object tag) {
                 String msg = "";
                 switch ((int)tag){
-                    case 1:
+                    case 1://课程表
                         Intent intent = new Intent(getContext(), ScheduleActivity.class);
                         startActivity(intent);
                         break;
                     case 2:
                         msg="上传照片";
                         showFhotoDialog();break;
-                    case 3:msg="发布通知";break;
+                    case 3:
+                        //msg="发布通知";
+                        Intent intent1 = new Intent(getContext(), QRCodeActivity.class);
+                        startActivity(intent1);
+                        break;
                     default:break;
                 }
                 showToast(msg);

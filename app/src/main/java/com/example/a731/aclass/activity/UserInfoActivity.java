@@ -13,6 +13,8 @@ import com.example.a731.aclass.presenter.UserInfoPresenter;
 import com.example.a731.aclass.presenter.impl.UserInfoPresenterImpl;
 import com.example.a731.aclass.view.UserInfoView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Administrator on 2017/10/3/003.
  */
@@ -20,7 +22,7 @@ import com.example.a731.aclass.view.UserInfoView;
 public class UserInfoActivity extends BaseActivity implements UserInfoView {
 
     private Toolbar toolbar;
-    private ImageView imgHead;//头像
+    private CircleImageView imgHead;//头像
     private ImageView imgHeadBG;//头像背景的点击事件(本地功能)
     private Users user;//用户数据从网络获取，便于修改资料的更新
 
@@ -48,7 +50,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         toolbar = (Toolbar) findViewById(R.id.userinfo_toolbar);
-        imgHead = (ImageView) findViewById(R.id.userinfo_iv_head);
+        imgHead = (CircleImageView) findViewById(R.id.userinfo_iv_head);
         imgHeadBG = (ImageView) findViewById(R.id.userinfo_headbackground);
 
         ivSex = (ImageView) findViewById(R.id.userinfo_iv_sex);
@@ -72,6 +74,8 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         String project =  user.getProject();
         String hoemland = user.getHomeLand();
         String intro = user.getIntro();
+        String qrCode = user.getQRCode();
+
 
         //性别图标显示
         if (sex==1){
@@ -113,7 +117,16 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
 
     @Override
     public void initListener() {
-
+        itQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),QRCodeActivity.class);
+                intent.putExtra("headImage",user.getHeadImg());
+                intent.putExtra("qrCode",user.getQRCode());
+                intent.putExtra("name",user.getName());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

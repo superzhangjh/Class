@@ -70,6 +70,8 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
                 if (!password.equals("") && !userName.equals("")){
                     if (!smsCode.equals("")){
                         showProgress("正在注册");
+                        //TODO:创建一个用户二维码
+                        //signUpPresenter.register(userName,phoneNum,password,qrCode,smsCode);
                         signUpPresenter.register(userName,phoneNum,password,smsCode);
                     }else{
                         Toast.makeText(SignUpActivity.this,"验证码不能为空",Toast.LENGTH_SHORT).show();

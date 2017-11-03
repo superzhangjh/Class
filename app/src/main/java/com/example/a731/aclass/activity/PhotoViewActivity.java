@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -66,8 +67,16 @@ public class PhotoViewActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.activity_photo_view_pager);
         tvSave = (TextView) findViewById(R.id.activity_photo_view_tv_save);
 
-        String photoJson = getIntent().getStringExtra("photoJson");
-        photoList =  new Gson().fromJson(photoJson,ArrayList.class);
+        //获取显示图片的来源
+        String singlePicture = getIntent().getStringExtra("singlePicture");
+        if (singlePicture!=null && !singlePicture.equals("")){//单张图片显示
+            Log.i("eee","单张图片");
+            photoList.add(singlePicture);
+        }else {//多张图片显示
+            String photoJson = getIntent().getStringExtra("photoJson");
+            photoList =  new Gson().fromJson(photoJson,ArrayList.class);
+            Log.i("eee","多张图片");
+        }
 
         for (int i=0;i<photoList.size();i++){
             PhotoView photoView = new PhotoView(getApplicationContext());
@@ -77,7 +86,14 @@ public class PhotoViewActivity extends BaseActivity {
             photoViewList.add(photoView);
         }
 
-        final int pos = Integer.valueOf(getIntent().getStringExtra("pos"));
+        String getPos = getIntent().getStringExtra("pos");
+        final int pos;
+        if (getPos!=null){
+            pos = Integer.valueOf(getPos);
+        }else {
+            pos = 0;
+        }
+
 
         PhotoPagerAdaper adaper = new PhotoPagerAdaper(photoViewList);
         mViewPager.setAdapter(adaper);
