@@ -67,7 +67,7 @@ public class CircleFragment extends BaseFragment{
 
         list_fragment = new ArrayList<>();
         //动态
-        list_fragment.add(new Fragment());
+        //list_fragment.add(new Fragment());
         //通知
         list_fragment.add(new CircleNoticeFragment());
         //互动
@@ -76,7 +76,7 @@ public class CircleFragment extends BaseFragment{
         list_fragment.add(new CircleGalleryFragment());
 
         list_title = new ArrayList<>();
-        list_title.add("动态");
+        //list_title.add("动态");
         list_title.add("通知");
         list_title.add("互动");
         list_title.add("相册");

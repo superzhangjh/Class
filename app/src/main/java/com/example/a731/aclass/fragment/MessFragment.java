@@ -31,7 +31,7 @@ public class MessFragment extends BaseFragment implements MessView{
     private TextView systematicNotification;
     private MessAdapter adapter;
     private MessPresenter messPresenter = new MessPresenterImpl(this);
-    private EMMessageListener msgListener;
+    //private EMMessageListener msgListener;
 
     @Override
     protected int getLayoutRes() {
@@ -55,14 +55,14 @@ public class MessFragment extends BaseFragment implements MessView{
             }
         });
 
-        msgListener = new EMMessageListenerAdapter() {
+        /*msgListener = new EMMessageListenerAdapter() {
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
                 //收到消息
                 messPresenter.getConversations();
             }
         };
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);*/
 
 
 
@@ -82,7 +82,7 @@ public class MessFragment extends BaseFragment implements MessView{
 
     @Override
     public void onGetConversationSuccess(List<Conversation> conversations) {
-        //showToast("数据更新成功");
+        showToast("数据更新成功"+conversations.size());
         adapter.onDataChanged(conversations);
         smoothScrollToTop();
     }
@@ -101,7 +101,7 @@ public class MessFragment extends BaseFragment implements MessView{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        //EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     private void smoothScrollToTop() {

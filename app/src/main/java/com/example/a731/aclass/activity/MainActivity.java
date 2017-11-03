@@ -308,7 +308,7 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onClick(View v) {
                 if (presentGroupId!=null){
                 Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                intent.putExtra("presentGroupId",groupList.get(0).getGroupId());
+                intent.putExtra("presentGroupId",presentGroupId);
                 startActivity(intent);
                 }else{
                     showToast("你还未加入任何班圈");

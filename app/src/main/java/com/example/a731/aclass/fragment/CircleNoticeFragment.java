@@ -109,8 +109,6 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onResume() {
         super.onResume();
-        if (presentGroupId != null)
-        presenter.getGroupNotice(presentGroupId);
     }
 
 }

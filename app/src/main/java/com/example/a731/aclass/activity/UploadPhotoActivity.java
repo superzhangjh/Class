@@ -3,6 +3,7 @@ package com.example.a731.aclass.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,11 +39,18 @@ public class UploadPhotoActivity extends BaseActivity {
         edtIntro = (EditText) findViewById(R.id.uploadphoto_edt_intro);
         btnCannel = (Button) findViewById(R.id.uploadphoto_edt_cannel);
         btnIssue = (Button) findViewById(R.id.uploadphoto_edt_issue);
+
+
     }
 
     @Override
     public void initListener() {
-
+        btnCannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

@@ -18,6 +18,15 @@ public class Users extends BmobUser{
     private String homeLand;//籍贯
     private String intro;//简介
     private String headImg;//头像
+    private String QRCode;//二维码
+
+    public String getQRCode() {
+        return QRCode;
+    }
+
+    public void setQRCode(String QRCode) {
+        this.QRCode = QRCode;
+    }
 
     public String getName() {
         return name;
