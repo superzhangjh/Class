@@ -78,6 +78,7 @@ public class PhotoViewActivity extends BaseActivity {
             Log.i("eee","多张图片");
         }
 
+
         for (int i=0;i<photoList.size();i++){
             PhotoView photoView = new PhotoView(getApplicationContext());
             mAttacher = new PhotoViewAttacher(photoView);

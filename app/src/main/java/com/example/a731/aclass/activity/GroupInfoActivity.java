@@ -44,6 +44,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     private CircleImageView ivGroupHead;
     private GroupInfoMemberAdapter memberAdapter;
     private List<Users> memberList;
+    private Group group;
 
 
     private String ADD_MORE_MEMBER = "1001";
@@ -127,7 +128,22 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
 
     @Override
     public void initListener() {
+        //TODO：设置昵称
+        tvNickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        tvQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),QRCodeRusultGroupActivity.class);
+                String groupId = group.getGroupId();
+                intent.putExtra("groupId",groupId);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -184,8 +200,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     }
 
     @Override
-    public void onGetGroupSuccess(List<Group> list) {
-        Group group = list.get(0);
+    public void onGetGroupSuccess(List<Group> list) {group = list.get(0);
         groupInfoPresenter.getGroupMember(group.getObjectId());
         tvRecommend.setText("本圈创建于"+group.getCreatedAt());
         tvGroupName.setText(group.getName());

@@ -49,6 +49,7 @@ import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.MainView;
+import com.example.a731.aclass.zxing.activity.CaptureActivity;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
@@ -75,6 +76,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private static final String TITLE_USER_NAME = " 用户名称";
 
     private static final String[] PERMISSION = new String[]{
+            Manifest.permission.CAMERA,//相机
             Manifest.permission.READ_CONTACTS,// 写入权限
             Manifest.permission.READ_EXTERNAL_STORAGE,  //读取权限
             Manifest.permission.WRITE_CALL_LOG,        //读取设备信息
@@ -427,6 +429,15 @@ public class MainActivity extends BaseActivity implements MainView{
         itemCreateGroup = menu.findItem(R.id.main_toolbar_create_group);
         itemJoinIn = menu.findItem(R.id.main_toolbar_join_in);
         itemFriend.setVisible(false);
+
+        //扫一扫功能
+        itemScan.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(getApplicationContext(), CaptureActivity.class));
+                return true;
+            }
+        });
         return true;
     }
 

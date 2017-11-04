@@ -70,9 +70,10 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
             <ImageView
+                android:id="@+id/groupinfo_iv_qrcode"
                 android:layout_marginRight="20dp"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/qr_droid"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
         </LinearLayout>

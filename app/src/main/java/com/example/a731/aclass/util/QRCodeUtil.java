@@ -19,8 +19,19 @@ import java.util.Map;
 
 public class QRCodeUtil {
     // 生成QR图
-    public static Bitmap createImage(String content, int w, int h, Bitmap logo) {
+    public static Bitmap createImage(int type,String id,Bitmap logo) {
         try {
+            String content = null;
+            if (type==0){//个人二维码
+                content = "user:" + id;
+            }else{
+                //班级二维码
+                content = "group:" + id;
+            }
+
+            //指定二维码大小
+            int w = 300;
+            int h = 300;
             Bitmap scaleLogo = getScaleLogo(logo,w,h);
             int offsetX = (w - scaleLogo.getWidth())/2;
             int offsetY = (h - scaleLogo.getHeight())/2;

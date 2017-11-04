@@ -2,7 +2,9 @@ package com.example.a731.aclass.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,9 +29,11 @@ import com.example.a731.aclass.activity.QRCodeActivity;
 import com.example.a731.aclass.activity.ScheduleActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
+import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.QRCodeUtil;
+import com.example.a731.aclass.zxing.activity.CaptureActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -132,9 +136,7 @@ public class CircleFragment extends BaseFragment{
                         msg="上传照片";
                         showFhotoDialog();break;
                     case 3:
-                        //msg="发布通知";
-                        Intent intent1 = new Intent(getContext(), QRCodeActivity.class);
-                        startActivity(intent1);
+                        msg="更多信息";
                         break;
                     default:break;
                 }

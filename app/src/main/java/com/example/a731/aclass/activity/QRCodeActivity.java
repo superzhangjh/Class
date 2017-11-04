@@ -5,8 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,8 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.DownloadImageServiceUtil.DownLoadImageService;
 import com.example.a731.aclass.util.DownloadImageServiceUtil.ImageDownLoadCallBack;
+import com.example.a731.aclass.util.QRCodeUtil;
+import com.example.a731.aclass.zxing.activity.CaptureActivity;
 
 import java.io.File;
 
@@ -101,6 +105,7 @@ public class QRCodeActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //TODO:启动该Acticity需要从上个页面传3个数据参数
         Intent intent = getIntent();
         String qrCode = intent.getStringExtra("qrCode");
         headImage = intent.getStringExtra("headImage");
@@ -115,6 +120,16 @@ public class QRCodeActivity extends BaseActivity {
         if (ImgQRCode!=null && !ImgQRCode.equals("")) {
             tvName.setText(name);
         }
+
+       /* //测试数据
+        String str = "12345678";
+        Resources res=getResources();
+        Bitmap bmp= BitmapFactory.decodeResource(res, R.drawable.userinfo_head_background);
+        Bitmap QRCode = QRCodeUtil.createImage(0,str,300,300,bmp);
+        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), QRCode, null,null));
+        Glide.with(getApplicationContext()).load(uri).into(ImgQRCode);
+        Glide.with(getApplicationContext()).load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509740956535&di=7181e23dcd2c47337c31881f12b5ad1c&imgtype=0&src=http%3A%2F%2Fimg.sj33.cn%2Fuploads%2Fallimg%2F201403%2F7-140311233041Q3.png").into(imgHead);
+        tvName.setText("麻辣脆皮鸡");*/
     }
 
     @Override
@@ -127,7 +142,7 @@ public class QRCodeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_qrCode_scan:
-                showToast("扫一扫");
+                startActivity(new Intent(getApplicationContext(), CaptureActivity.class));
                 break;
             case R.id.menu_qrCode_save:
                 String qrCode = getIntent().getStringExtra("qrCode");
