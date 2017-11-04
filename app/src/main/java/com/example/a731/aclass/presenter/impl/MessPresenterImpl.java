@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter.impl;
 
+import android.util.Log;
+
 import com.example.a731.aclass.data.Conversation;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
@@ -34,41 +36,54 @@ public class MessPresenterImpl implements MessPresenter {
 
     @Override
     public void getConversations() {
+        if (conversations!=null){
+            conversations.clear();
+        }
         conversations = new ArrayList<>();
         Map<String,EMConversation> conversationMap = EaseMobUtil.getAllConversations();
         if (conversationMap==null)return;
         for (Map.Entry<String,EMConversation> entry:conversationMap.entrySet()){
-            EMConversation emConversation = entry.getValue();
+            Log.i("MesspresenterImpl","开始获取会话"+conversationMap.size());
+            final EMConversation emConversation = entry.getValue();
             conversation = new Conversation();
             conversation.setName(emConversation.conversationId());
             if (emConversation.getType() == EMConversation.EMConversationType.Chat){
                 BmobUtil.queryUser(emConversation.conversationId(), new FindListener<Users>() {
                     @Override
                     public void done(List<Users> list, BmobException e) {
-                        if (e == null)
+                        if (e == null){
                             conversation.setImgHead(list.get(0).getHeadImg());
+                            EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
+                            conversation.setLastMess(mess.getMessage());
+                            conversation.setChatType(emConversation.getType());
+                            if (!conversations.contains(conversation))
+                            conversations.add(conversation);
+                            Log.i("MesspresenterImpl","获取到个人会话"+conversations.size());
+                            mMessView.onGetConversationSuccess(conversations);
 
+                        }else{
+                            mMessView.onGetConversationFail("获取会话失败");
+                        }
                     }
                 });
             }else if (emConversation.getType() == EMConversation.EMConversationType.GroupChat){
                 BmobUtil.getGroupByField("groupId", emConversation.conversationId(), new FindListener<Group>() {
                     @Override
                     public void done(List<Group> list, BmobException e) {
-                        if (e == null)
+                        if (e == null){
                             conversation.setImgHead(list.get(0).getHeadImg());
+                            EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
+                            conversation.setLastMess(mess.getMessage());
+                            conversation.setChatType(emConversation.getType());
+                            conversations.add(conversation);
+                            mMessView.onGetConversationSuccess(conversations);
+                            Log.i("MesspresenterImpl","获取到群组会话"+conversations.size());
+                        }else{
+                            mMessView.onGetConversationFail("获取会话失败");
+                        }
                     }
                 });
             }
-
-            EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
-            conversation.setLastMess(mess.getMessage());
-            conversation.setChatType(emConversation.getType());
-            conversations.add(conversation);
-        }
-        if (conversations.size()>0){
-            mMessView.onGetConversationSuccess(conversations);
-        }else{
-            mMessView.onGetConversationFail("获取会话失败");
         }
     }
 }
