@@ -60,16 +60,33 @@ public class GroupInfoPresenterImpl implements GroupInfoPresenter {
 
     @Override
     public void getGroup(final String groupId) {
-        BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
-            public void done(final List<Group> list, final BmobException e) {
-                if (e == null) {
-                    mGroupInfoView.onGetGroupSuccess(list);
-                }else{
-                    mGroupInfoView.onGetGroupFail("获取班圈失败:" + e.getMessage() + ":" + e.getErrorCode());
-                }
+            public void run() {
+                BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
+                    @Override
+                    public void done(final List<Group> list, final BmobException e) {
+                        if (e == null) {
+                            ThreadUtils.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mGroupInfoView.onGetGroupSuccess(list);
+                                }
+                            });
+
+                        }else{
+                            ThreadUtils.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mGroupInfoView.onGetGroupFail("获取班圈失败:" + e.getMessage() + ":" + e.getErrorCode());
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
+
     }
 
     @Override

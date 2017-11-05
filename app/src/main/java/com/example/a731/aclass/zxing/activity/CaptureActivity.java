@@ -215,7 +215,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 				break;
 			case "group"://跳转到班圈二维码
 				Intent intent1 = new Intent(this, QRCodeRusultGroupActivity.class);
-				intent1.putExtra("creatorId",id);
+				intent1.putExtra("groupId",id);
 				startActivity(intent1);
 				finish();
 				break;

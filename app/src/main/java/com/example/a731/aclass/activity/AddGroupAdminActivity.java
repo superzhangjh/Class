@@ -14,6 +14,7 @@ import com.example.a731.aclass.presenter.GroupInfoPresenter;
 import com.example.a731.aclass.presenter.impl.GroupInfoPresenterImpl;
 import com.example.a731.aclass.view.GroupInfoView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     private GroupInfoPresenter presenter = new GroupInfoPresenterImpl(this);
     private RecyclerView addGroupAdminContent;
     private AddGroupAdminAdapter adapter;
-    private List<Users> usersList;
+    private List<Users> usersList = new ArrayList<>();
     private boolean[] isAdmin;
     private boolean isGetUsersOver = false;
     private String groupObjectId;
@@ -49,7 +50,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
 
     private void initRecyclerView() {
         addGroupAdminContent = (RecyclerView) findViewById(R.id.add_group_admin_recycler_content);
-        adapter = new AddGroupAdminAdapter(this);
+        adapter = new AddGroupAdminAdapter(this,usersList);
         LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         addGroupAdminContent.setAdapter(adapter);
         addGroupAdminContent.setLayoutManager(manager);
@@ -84,14 +85,18 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     @Override
     public void onGetGroupMemberSuccess(List<Users> list) {
         if (isGetUsersOver){
+
+            list.removeAll(usersList);
+
             usersList.addAll(list);
             int size = usersList.size() - list.size();
+            isAdmin = new boolean[usersList.size()];
             for (int i=0;i<size;i++){
                 isAdmin[i] = true;
             }
             handler.sendEmptyMessage(0);
         }else{
-            usersList.addAll(list);
+            usersList = list;
             isGetUsersOver = true;
         }
     }
@@ -111,7 +116,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     @Override
     public void onGetGroupAdminSuccess(List<Users> list) {
         if (isGetUsersOver){
-
+            usersList.removeAll(list);
             List<Users> list1 = usersList;
             usersList.clear();
             usersList = list;

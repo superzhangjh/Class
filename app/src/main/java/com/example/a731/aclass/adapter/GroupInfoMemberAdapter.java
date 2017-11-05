@@ -3,6 +3,7 @@ package com.example.a731.aclass.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,12 +64,14 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
         holder.itemClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.OnItemClick(position);
+                listener.OnItemClick(holder.getAdapterPosition());
             }
         });
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){}
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
 
     public void setLitmit(boolean limit){
         this.limit = limit;
