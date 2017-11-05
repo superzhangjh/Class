@@ -78,7 +78,7 @@ public class QRCodeRusultUserActivity extends BaseActivity implements AddFriendV
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO：添加好友
+                presenter.addFriend(users.getUsername());
             }
         });
     }
@@ -111,5 +111,16 @@ public class QRCodeRusultUserActivity extends BaseActivity implements AddFriendV
         this.users = new Users();
         showToast("获取用户失败:"+message);
         hideProgress();
+    }
+
+    @Override
+    public void onAddFriendSuccess() {
+        showToast("申请好友成功");
+        finish();
+    }
+
+    @Override
+    public void onAddFriendFail(String message) {
+        showToast("申请好友失败:"+message);
     }
 }

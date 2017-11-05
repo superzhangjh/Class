@@ -21,6 +21,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -80,11 +82,9 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
         if (presentGroupId != null)
             presenter.getGroupVote(presentGroupId);
-
-
     }
 
 

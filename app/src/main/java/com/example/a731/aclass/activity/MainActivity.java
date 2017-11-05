@@ -68,12 +68,13 @@ import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
+import static com.example.a731.aclass.R.id.multiply;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 public class MainActivity extends BaseActivity implements MainView{
 
-    private static final String TITLE_GROUP_NAME = "班圈名称";
-    private static final String TITLE_USER_NAME = " 用户名称";
+    private static String TITLE_GROUP_NAME = "班圈名称";
+    private static String TITLE_USER_NAME = " 用户名称";
 
     private static final String[] PERMISSION = new String[]{
             Manifest.permission.CAMERA,//相机
@@ -213,6 +214,12 @@ public class MainActivity extends BaseActivity implements MainView{
     //个人资料侧滑栏
     private void initNavigationView() {
         mUser = BmobUser.getCurrentUser(Users.class);
+        if (mUser.getName()!=null){
+            TITLE_USER_NAME = mUser.getName();
+        }else{
+            TITLE_USER_NAME = mUser.getUsername();
+        }
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         navView = (NavigationView) findViewById(main_nav_view);
         navRight = (NavigationView) findViewById(R.id.main_nav_right);
@@ -227,12 +234,12 @@ public class MainActivity extends BaseActivity implements MainView{
         intro = (TextView) navHeaderView.findViewById(R.id.main_nav_intro);
         if (mUser.getHeadImg()!=null)
             Glide.with(this).load(mUser.getHeadImg()).into(headImg);
-        username.setText(mUser.getUsername());
-        phoneNum.setText(mUser.getMobilePhoneNumber());
-        name.setText(mUser.getName()==null?"请完善你的个人信息":mUser.getName());
-        project.setText(mUser.getProject()==null?"请完善你的个人信息":mUser.getProject());
-        local.setText(mUser.getHomeLand()==null?"请完善你的个人信息":mUser.getHomeLand());
-        intro.setText(mUser.getIntro()==null?"请完善你的个人信息":mUser.getIntro());
+        username.setText("学号："+mUser.getUsername());
+        phoneNum.setText("手机号码："+mUser.getMobilePhoneNumber());
+        name.setText(mUser.getName()==null?"请完善你的个人信息":"姓名："+mUser.getName());
+        project.setText(mUser.getProject()==null?"请完善你的个人信息":"专业："+mUser.getProject());
+        local.setText(mUser.getHomeLand()==null?"请完善你的个人信息":"籍贯："+mUser.getHomeLand());
+        intro.setText(mUser.getIntro()==null?"请完善你的个人信息":"个人简介："+mUser.getIntro());
 
         headImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,6 +272,18 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.main_nav_menu_QRCode:
+                        Intent QRintent = new Intent(MainActivity.this,QRCodeActivity.class);
+                        QRintent.putExtra("qrCode",mUser.getQRCode());
+                        QRintent.putExtra("headImage",mUser.getHeadImg());
+                        if (mUser.getName()!=null){
+                            QRintent.putExtra("name",mUser.getName());
+                        }else{
+                            QRintent.putExtra("name",mUser.getUsername());
+                        }
+
+                        startActivity(QRintent);
+                        break;
                     case R.id.main_nav_menu_logOut:
                         mainPresenter.logOut();
                         break;
@@ -272,7 +291,7 @@ public class MainActivity extends BaseActivity implements MainView{
                         //TODO:软件设置
                         break;
                     case R.id.main_nav_menu_modified:
-                        Intent intent = new Intent(getApplicationContext(),ModifiedUserDataActivity.class);
+                        Intent intent = new Intent(MainActivity.this,ModifiedUserDataActivity.class);
                         startActivityForResult(intent,MODIFIED_RESULT);
                         break;
                 }
@@ -309,9 +328,10 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onClick(View v) {
                 if (presentGroupId!=null){
-                Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                intent.putExtra("presentGroupId",presentGroupId);
-                startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
+                    intent.putExtra("presentGroupId",presentGroupId);
+
+                    startActivity(intent);
                 }else{
                     showToast("你还未加入任何班圈");
                 }
@@ -502,15 +522,16 @@ public class MainActivity extends BaseActivity implements MainView{
         this.groupList = groupList;
         if (groupAdapter!=null)
             groupAdapter.onDataChanged(groupList);
-        if (SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this)==null && groupList.size()>0){
+        if (SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this)==null && groupList.size()>0){
             presentGroupId = groupList.get(0).getGroupId();
-            SharedPreferencesUtil.saveDataToSharedPreferences("groupId",presentGroupId,this);
-        }else if (SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this)!=null){
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
+            SharedPreferencesUtil.saveDataToSharedPreferences(mUser.getUsername(),presentGroupId,this);
+        }else if (SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this)!=null){
+            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this);
         }
         for (Group group:groupList){
             if (group.getGroupId().equals(presentGroupId)){
                 Glide.with(this).load(group.getHeadImg()).into(imgClasshead);
+                TITLE_GROUP_NAME = group.getName();
                 tvTitle.setText(group.getName());
             }
         }

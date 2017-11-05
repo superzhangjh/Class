@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 
@@ -61,7 +62,10 @@ public class MyAdapter extends CommonAdapter<String>
 					mSelectedImage.remove(mDirPath + "/" + item);
 					mSelect.setImageResource(R.drawable.picture_unselected);
 					mImageView.setColorFilter(null);
-				} else
+				} else if (mSelectedImage.size() == 9){
+					Toast.makeText(mContext, "最大支持选择9张图片", Toast.LENGTH_SHORT).show();
+					return;
+				}else
 				// 未选择该图片
 				{
 					mSelectedImage.add(mDirPath + "/" + item);

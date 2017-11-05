@@ -194,7 +194,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),this);
     }
 
     @Override

@@ -105,7 +105,6 @@ public class QRCodeActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        //TODO:启动该Acticity需要从上个页面传3个数据参数
         Intent intent = getIntent();
         String qrCode = intent.getStringExtra("qrCode");
         headImage = intent.getStringExtra("headImage");

@@ -17,7 +17,15 @@ public class Group extends BmobObject {
     private BmobRelation administrator;//管理员
     private String headImg;//头像
     private List<String> images;//上传图片
+    private String QRCode;
 
+    public String getQRCode() {
+        return QRCode;
+    }
+
+    public void setQRCode(String QRCode) {
+        this.QRCode = QRCode;
+    }
 
     public List<String> getImages() {
         return images;

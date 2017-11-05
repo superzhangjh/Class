@@ -6,4 +6,6 @@ package com.example.a731.aclass.presenter;
 
 public interface AddFriendPresenter {
     void getUser(String username);
+
+    void addFriend(String username);
 }

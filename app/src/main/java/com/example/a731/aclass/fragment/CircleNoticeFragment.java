@@ -20,6 +20,8 @@ import com.example.a731.aclass.view.OnItemClickView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -80,7 +82,7 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
         if (presentGroupId!=null)
         presenter.getGroupNotice(presentGroupId);
     }

@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -102,7 +104,8 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             public void onClick(View v) {
                 String name = gName.getText().toString();
                 Users users = BmobUser.getCurrentUser(Users.class);
-                createGroupPresenter.checkGroup(name, users,gHeadImgPath);
+                Bitmap logo = BitmapFactory.decodeResource(getResources(),R.drawable.default_head_image);
+                createGroupPresenter.checkGroup(name, users,gHeadImgPath,logo);
                 showProgress("正在创建班圈");
             }
         });

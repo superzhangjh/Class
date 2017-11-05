@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by 郑选辉 on 2017/9/27.
  */
@@ -7,5 +9,5 @@ package com.example.a731.aclass.presenter;
 public interface SignUpPresenter {
     void requestSMSCode(String phoneNum);
 
-    void register(String userName, String phoneNum, String password, String smsCode);
+    void register(String userName, String phoneNum, String password, String smsCode, Bitmap logo);
 }
