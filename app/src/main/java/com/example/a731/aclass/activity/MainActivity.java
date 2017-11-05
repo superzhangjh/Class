@@ -25,12 +25,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -47,6 +50,7 @@ import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
+import com.example.a731.aclass.util.customView.NoScrollViewPager;
 import com.example.a731.aclass.view.MainView;
 import com.example.a731.aclass.zxing.activity.CaptureActivity;
 import com.hyphenate.EMConnectionListener;
@@ -63,10 +67,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
+import static com.example.a731.aclass.R.id.start;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 public class MainActivity extends BaseActivity implements MainView{
@@ -86,7 +92,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private NavigationView navView;
     private NavigationView navRight;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ViewPager mViewPager;
+    private NoScrollViewPager mViewPager;
     private Toolbar mToolbar;
     private RadioGroup mRadioGroup;
     private ImageView imgSearchFriend;
@@ -95,27 +101,29 @@ public class MainActivity extends BaseActivity implements MainView{
     private MenuItem itemCreateGroup;
     private MenuItem itemJoinIn;
     private TextView tvTitle;
+    private TextView tvCheckPhoneNumber;
+    private RadioButton rbGroup;
+    private RadioButton rbMess;
 
     private MainPresenter mainPresenter;
 
     private ListView friend_list_view,group_list_view;
     private List<Users> friendList;
     private TextView tvFriendCount;
-    private CircleImageView imgClasshead;
-    private List<Group> groupList;
-
-    private String presentGroupId;
-
-    private FriendAdapter friendAdapter;
-    private GroupAdapter groupAdapter;
-
+    private CircleImageView imgToolbarClassHead;
+    private CircleImageView imgToolbalUserHead;
     private View navHeaderView;
     private CircleImageView headImg;
     private TextView username,name,phoneNum,project,local,intro;
     private Users mUser;
 
     private EMConnectionListener connectionListener;
+    private List<Group> groupList;
 
+    private String presentGroupId;
+
+    private FriendAdapter friendAdapter;
+    private GroupAdapter groupAdapter;
 
     @Override
     protected int getLayoutRes() {
@@ -124,12 +132,11 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void initView() {
-
         setPermissions();
-
         tvTitle = (TextView) findViewById(R.id.main_tv_title);
         mRadioGroup = (RadioGroup) findViewById(R.id.main_radiogroup);
         mainPresenter = new MainPresenterImpl(this);
+        imgToolbalUserHead = (CircleImageView) findViewById(R.id.main_userhead);
         initViewPager();
         initNavigationView();
         initToolBar();
@@ -139,6 +146,8 @@ public class MainActivity extends BaseActivity implements MainView{
     }
 
     private void initGroupListView() {
+        rbGroup = (RadioButton) findViewById(R.id.main_rb_group);
+        rbMess = (RadioButton) findViewById(R.id.main_rb_mess);
         group_list_view = (ListView) findViewById(R.id.main_nav_right_list_group);
         groupList = new ArrayList<>();
         mainPresenter.getGroup();
@@ -191,7 +200,7 @@ public class MainActivity extends BaseActivity implements MainView{
     }
 
     private void initViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.main_view_pager);
+        mViewPager = (NoScrollViewPager) findViewById(R.id.main_view_pager);
         mViewPager.setCurrentItem(4);
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new CircleFragment());
@@ -230,39 +239,25 @@ public class MainActivity extends BaseActivity implements MainView{
         project = (TextView) navHeaderView.findViewById(R.id.main_nav_project);
         local = (TextView) navHeaderView.findViewById(R.id.main_nav_local);
         intro = (TextView) navHeaderView.findViewById(R.id.main_nav_intro);
+        tvCheckPhoneNumber = (TextView) findViewById(R.id.main_nav_phoneCheck);
         if (mUser.getHeadImg()!=null)
             Glide.with(this).load(mUser.getHeadImg()).into(headImg);
-        username.setText("学号："+mUser.getUsername());
-        phoneNum.setText("手机号码："+mUser.getMobilePhoneNumber());
-        name.setText(mUser.getName()==null?"请完善你的个人信息":"姓名："+mUser.getName());
-        project.setText(mUser.getProject()==null?"请完善你的个人信息":"专业："+mUser.getProject());
-        local.setText(mUser.getHomeLand()==null?"请完善你的个人信息":"籍贯："+mUser.getHomeLand());
-        intro.setText(mUser.getIntro()==null?"请完善你的个人信息":"个人简介："+mUser.getIntro());
+        username.setText(mUser.getUsername());
+        phoneNum.setText(mUser.getMobilePhoneNumber()==null?"":mUser.getMobilePhoneNumber());
+        name.setText(mUser.getName()==null?"未设置":mUser.getName());
+        project.setText(mUser.getProject()==null?"未设置":mUser.getProject());
+        local.setText(mUser.getHomeLand()==null?"未设置":mUser.getHomeLand());
+        intro.setText(mUser.getIntro()==null?"未设置":mUser.getIntro());
+        /*if (mUser.getMobilePhoneNumber()!=null){
+            tvCheckPhoneNumber.setVisibility(View.GONE);
+        }else {
+            tvCheckPhoneNumber.setVisibility(View.VISIBLE);
+        }*/
 
         headImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(MainActivity.this).setTitle("选择图片")
-                        .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String state = Environment.getExternalStorageState();
-                                if (state.equals(Environment.MEDIA_MOUNTED)) {
-                                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
-                                }
-                                else {
-                                    showToast("请确认已经插入SD卡");
-                                }
-                            }
-                        }).setNegativeButton("图库", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
-                    }
-                }).show();
+                showPhotoDialog();
             }
         });
 
@@ -282,7 +277,18 @@ public class MainActivity extends BaseActivity implements MainView{
                         startActivity(QRintent);
                         break;
                     case R.id.main_nav_menu_logOut:
-                        mainPresenter.logOut();
+                        new AlertDialog.Builder(MainActivity.this).setTitle("你真的要离开了吗/(ㄒoㄒ)/~~")
+                                .setPositiveButton("还是算了", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        return;
+                                    }
+                                }).setNegativeButton("狠心离开", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mainPresenter.logOut();
+                            }
+                        }).show();
                         break;
                     case R.id.main_nav_menu_setting:
                         //TODO:软件设置
@@ -294,6 +300,42 @@ public class MainActivity extends BaseActivity implements MainView{
                 }
                 mDrawerLayout.closeDrawers();
                 return true;
+            }
+        });
+    }
+
+    private void showPhotoDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();//创建一个AlertDialog对象
+        dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_select_photo);
+        window.setGravity(Gravity.CENTER);//设置对话框在界面底部显示
+        dialog.setCanceledOnTouchOutside(true);
+        TextView tvTakePhoto = (TextView) window.findViewById(R.id.dialog_select_photo_take);
+        TextView tvSelectPhoto = (TextView) window.findViewById(R.id.dialog_select_photo_album);
+
+        //拍照
+        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String state = Environment.getExternalStorageState();
+                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                }
+                else {
+                    showToast("请确认已经插入SD卡");
+                }
+                dialog.cancel();
+            }
+        });
+        //选择照片
+        tvSelectPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
+                dialog.cancel();
             }
         });
     }
@@ -320,18 +362,30 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
 
-        imgClasshead = (CircleImageView) findViewById(R.id.main_classhead);
-        imgClasshead.setOnClickListener(new View.OnClickListener() {
+        //设置班圈头像
+        imgToolbarClassHead = (CircleImageView) findViewById(R.id.main_classhead);
+        imgToolbarClassHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (presentGroupId!=null){
                     Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                    intent.putExtra("presentGroupId",presentGroupId);
+                    intent.putExtra("groupId",presentGroupId);
                     startActivity(intent);
                 }else{
                     showToast("你还未加入任何班圈");
                 }
 
+            }
+        });
+        //设置个人头像
+        Glide.with(this).load(BmobUser.getCurrentUser(Users.class).getHeadImg()).into(imgToolbalUserHead);
+        imgToolbalUserHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,UserInfoActivity.class);
+                String username = BmobUser.getCurrentUser(Users.class).getUsername();
+                intent.putExtra("username",username);
+                startActivity(intent);
             }
         });
     }
@@ -344,26 +398,43 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     public void initListener() {
+        //手机号验证
+        /*tvCheckPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO:联网设置用户手机号
+            }
+        });*/
+
         //点击单选时，ViewPager显示对应的子界面
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId){
-                    case R.id.main_rb_class:
+                    case R.id.main_rb_group://圈按钮
+                        rbGroup.setTextColor(Color.BLACK);
+                        rbMess.setTextColor(Color.GRAY);
                         mViewPager.setCurrentItem(0);
                         itemFriend.setVisible(false);
                         itemScan.setVisible(true);
                         itemCreateGroup.setVisible(true);
                         itemJoinIn.setVisible(true);
                         tvTitle.setText(TITLE_GROUP_NAME);
+                        imgToolbarClassHead.setVisibility(View.VISIBLE);
+                        imgToolbalUserHead.setVisibility(View.GONE);
                         break;
-                    case R.id.main_rb_mess:
+
+                    case R.id.main_rb_mess://消息按钮
+                        rbGroup.setTextColor(Color.GRAY);
+                        rbMess.setTextColor(Color.BLACK);
                         mViewPager.setCurrentItem(1);
                         itemFriend.setVisible(true);
                         itemScan.setVisible(false);
                         itemCreateGroup.setVisible(false);
                         itemJoinIn.setVisible(false);
                         tvTitle.setText(TITLE_USER_NAME);
+                        imgToolbarClassHead.setVisibility(View.GONE);
+                        imgToolbalUserHead.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -377,18 +448,27 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onPageSelected(int position) {
                 switch (position){
-                    case 0:itemFriend.setVisible(false);
+                    case 0://选中圈按钮
+                        rbGroup.setTextColor(Color.BLACK);
+                        rbMess.setTextColor(Color.GRAY);
+                        itemFriend.setVisible(false);
                         itemScan.setVisible(true);
                         itemCreateGroup.setVisible(true);
                         itemJoinIn.setVisible(true);
                         tvTitle.setText(TITLE_GROUP_NAME);
+                        imgToolbarClassHead.setVisibility(View.VISIBLE);
+                        imgToolbalUserHead.setVisibility(View.GONE);
                         break;
-                    case 1:
+                    case 1://选中消息
+                        rbGroup.setTextColor(Color.GRAY);
+                        rbMess.setTextColor(Color.BLACK);
                         itemFriend.setVisible(true);
                         itemScan.setVisible(false);
                         itemCreateGroup.setVisible(false);
                         itemJoinIn.setVisible(false);
                         tvTitle.setText(TITLE_USER_NAME);
+                        imgToolbarClassHead.setVisibility(View.GONE);
+                        imgToolbalUserHead.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -526,7 +606,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         for (Group group:groupList){
             if (group.getGroupId().equals(presentGroupId)){
-                Glide.with(this).load(group.getHeadImg()).into(imgClasshead);
+                Glide.with(this).load(group.getHeadImg()).into(imgToolbarClassHead);
                 TITLE_GROUP_NAME = group.getName();
                 tvTitle.setText(group.getName());
             }
@@ -543,7 +623,6 @@ public class MainActivity extends BaseActivity implements MainView{
     public void onUpdateUserHeadImgFail(String message) {
         showToast("更新头像数据失败："+message);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -567,22 +646,14 @@ public class MainActivity extends BaseActivity implements MainView{
             mainPresenter.updateUserHeadImg(gHeadImgPath);
         }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
 
-
-
-            /*Uri uri = data.getData();
-            headImg.setImageURI(uri);
-            String gHeadImgPath = uri.toString();
-            mainPresenter.updateUserHeadImg(gHeadImgPath);*/
-
-
             if (resultCode == Activity.RESULT_OK) {
                 String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
                 FileOutputStream b = null;
-                File file = new File("/sdcard/myImage/");
+                File file = new File("/sdcard/group_circle/");
                 file.mkdirs();// 创建文件夹
-                String fileName = "/sdcard/myImage/"+name;
+                String fileName = "/sdcard/group_circle/"+name;
                 try {
                     b = new FileOutputStream(fileName);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件

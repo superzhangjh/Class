@@ -20,7 +20,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/userinfo_iv_head"
-                android:background="@drawable/default_head_image"
+                android:src="@drawable/default_head_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 

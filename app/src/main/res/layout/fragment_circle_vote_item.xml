@@ -17,17 +17,20 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="70dp">
-            //显示投票类型：调查、评选、测试、其他
+            android:layout_height="wrap_content">
+            <!--显示投票类型：调查、评选、测试、其他-->
             <android.support.v7.widget.CardView
+                android:id="@+id/item_circle_vote_card_color"
+                app:cardBackgroundColor="@color/colorMintGreen"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 app:cardCornerRadius="25dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp">
                 <TextView
+                    android:textSize="18sp"
                     android:id="@+id/item_circle_vote_type"
-                    android:textColor="#555"
+                    android:textColor="#fff"
                     android:text="调查"
                     android:gravity="center"
                     android:layout_width="match_parent"
@@ -35,72 +38,59 @@
             </android.support.v7.widget.CardView>
 
             <LinearLayout
+                android:layout_margin="10dp"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/item_circle_vote_title"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#333"
-                    android:textSize="16dp"
-                    android:text="标题"
-                    android:maxLines="1"
-                    android:ellipsize="end"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="30dp">
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:id="@+id/item_circle_vote_title"
+                        android:textColor="#333"
+                        android:textSize="18sp"
+                        android:text="标题"
+                        android:maxLines="1"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/item_circle_vote_date"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:text="09-10 10:11截止"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/item_circle_vote_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="#666"
                     android:textSize="12dp"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:text="内容内内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <View
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_marginTop="2dp"
-                        android:id="@+id/item_circle_vote_date"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:textSize="12dp"
-                        android:text="09-10 10:11截止"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/item_circle_vote_open"
-                    android:background="@drawable/next"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
-            </LinearLayout>
+            <ImageButton
+                android:layout_marginRight="5dp"
+                android:id="@+id/item_circle_vote_open"
+                android:background="@drawable/next"
+                android:layout_gravity="center_vertical"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
 
         </LinearLayout>
 

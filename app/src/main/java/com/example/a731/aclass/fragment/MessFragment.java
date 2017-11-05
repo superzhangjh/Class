@@ -45,6 +45,11 @@ public class MessFragment extends BaseFragment implements MessView{
     }
 
     @Override
+    protected void initSpringView() {
+
+    }
+
+    @Override
     public void initListener() {
 
         systematicNotification.setOnClickListener(new View.OnClickListener() {

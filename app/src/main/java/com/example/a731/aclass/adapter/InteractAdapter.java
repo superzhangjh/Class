@@ -1,6 +1,7 @@
 package com.example.a731.aclass.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +39,8 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_vote_item,parent,false);
         view.setOnClickListener(this);
-        if (view==null){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_vote_item,parent,false);
-
-        }
         return new ViewHolder(view);
     }
 
@@ -54,10 +51,22 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
         //设置type类型
         int type = voteContent.getType();
         switch (type){
-            case 0:holder.tvType.setText("调查");break;
-            case 1:holder.tvType.setText("评选");break;
-            case 2:holder.tvType.setText("测试");break;
-            default:holder.tvType.setText("其他");break;
+            case 0:
+                holder.tvType.setText("调查");
+                holder.cvCardColor.setCardBackgroundColor(0xff00aeae);
+                break;
+            case 1:
+                holder.tvType.setText("评选");
+                holder.cvCardColor.setCardBackgroundColor(0xffff7575);
+                break;
+            case 2:
+                holder.tvType.setText("测试");
+                holder.cvCardColor.setCardBackgroundColor(0xff46a3ff);
+                break;
+            default:
+                holder.tvType.setText("其他");
+                holder.cvCardColor.setCardBackgroundColor(0xffffd306);
+                break;
         }
 
         holder.tvTitle.setText(voteContent.getTitle());
@@ -94,6 +103,7 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
         TextView tvTitle;
         TextView tvContent;
         TextView tvDate;
+        CardView cvCardColor;
 
         public ViewHolder(View view) {
             super(view);
@@ -101,6 +111,7 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
             tvTitle = (TextView) view.findViewById(R.id.item_circle_vote_title);
             tvContent = (TextView) view.findViewById(R.id.item_circle_vote_content);
             tvDate = (TextView) view.findViewById(R.id.item_circle_vote_date);
+            cvCardColor = (CardView) view.findViewById(R.id.item_circle_vote_card_color);
         }
     }
 

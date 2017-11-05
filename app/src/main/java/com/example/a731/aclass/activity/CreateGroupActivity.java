@@ -1,6 +1,7 @@
 package com.example.a731.aclass.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -19,12 +21,17 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.CreateGroupPresenter;
@@ -34,6 +41,11 @@ import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.view.CreateGroupView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Locale;
 
 import cn.bmob.v3.BmobUser;
 
@@ -75,27 +87,7 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
         gHeadImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(CreateGroupActivity.this).setTitle("选择图片")
-                        .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String state = Environment.getExternalStorageState();
-                                if (state.equals(Environment.MEDIA_MOUNTED)) {
-                                    Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
-                                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
-                                }
-                                else {
-                                    Toast.makeText(CreateGroupActivity.this, "请确认已经插入SD卡", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }).setNegativeButton("图库", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
-                    }
-                }).show();
+                showPhotoDialog();
             }
         });
 
@@ -111,6 +103,42 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
         });
     }
 
+    private void showPhotoDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();//创建一个AlertDialog对象
+        dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_select_photo);
+        window.setGravity(Gravity.CENTER);//设置对话框在界面底部显示
+        dialog.setCanceledOnTouchOutside(true);
+        TextView tvTakePhoto = (TextView) window.findViewById(R.id.dialog_select_photo_take);
+        TextView tvSelectPhoto = (TextView) window.findViewById(R.id.dialog_select_photo_album);
+
+        //拍照
+        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String state = Environment.getExternalStorageState();
+                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                }
+                else {
+                    showToast("请确认已经插入SD卡");
+                }
+                dialog.cancel();
+            }
+        });
+        //选择照片
+        tvSelectPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
+                dialog.cancel();
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(data == null){
@@ -121,10 +149,45 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
             Uri uri = data.getData();
             gHeadImg.setImageURI(uri);
             gHeadImgPath = ImageLoderUtil.getRealPathFromUri(this,uri);
+
         }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
-            Uri uri = data.getData();
-            gHeadImg.setImageURI(uri);
-            gHeadImgPath = uri.toString();
+
+
+
+            /*Uri uri = data.getData();
+            headImg.setImageURI(uri);
+            String gHeadImgPath = uri.toString();
+            mainPresenter.updateUserHeadImg(gHeadImgPath);*/
+
+
+            if (resultCode == Activity.RESULT_OK) {
+                String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+                FileOutputStream b = null;
+                File file = new File("/sdcard/group_circle/");
+                file.mkdirs();// 创建文件夹
+                String fileName = "/sdcard/group_circle/"+name;
+                try {
+                    b = new FileOutputStream(fileName);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        try {
+                            b.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        b.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Glide.with(this).load(fileName).into(gHeadImg);
+                gHeadImgPath = fileName;
+            }
         }
 
     }

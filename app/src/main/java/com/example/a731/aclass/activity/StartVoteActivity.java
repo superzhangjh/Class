@@ -167,7 +167,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
                         {
                             int size = which+1;
                             voteContent.setOptionNumber(size);
-                            rbMutiple.setText("共"+size + "个可选项");
+                            rbMutiple.setText("共"+(size+1)+ "个可选项");
                         }
                     });
                     builder.show();

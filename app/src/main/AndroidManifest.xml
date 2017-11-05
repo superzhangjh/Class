@@ -36,7 +36,7 @@
     <application
         android:name=".app.ClassApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -106,7 +106,7 @@
         <activity android:name=".activity.WebActivity"/>
         <activity android:name=".activity.NoticeActivity"/>
         <activity android:name=".activity.ReleasingNewsActivity"/>
-
+        <activity android:name=".activity.AddGroupAdminActivity"/>
         <!-- ZXing Activity-->
         <activity
             android:name=".zxing.activity.CaptureActivity"

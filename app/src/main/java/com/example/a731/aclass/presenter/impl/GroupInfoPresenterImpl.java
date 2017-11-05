@@ -9,8 +9,10 @@ import com.example.a731.aclass.view.GroupInfoView;
 
 import java.util.List;
 
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by 郑选辉 on 2017/10/18.
@@ -65,6 +67,48 @@ public class GroupInfoPresenterImpl implements GroupInfoPresenter {
                     mGroupInfoView.onGetGroupSuccess(list);
                 }else{
                     mGroupInfoView.onGetGroupFail("获取班圈失败:" + e.getMessage() + ":" + e.getErrorCode());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getGroupAdmin(String objectId) {
+        BmobUtil.queryGroupAdmin(objectId, new FindListener<Users>() {
+            @Override
+            public void done(final List<Users> list, final BmobException e) {
+                if (e == null) {
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mGroupInfoView.onGetGroupAdminSuccess(list);
+                        }
+                    });
+                } else {
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mGroupInfoView.onGetGroupAdminFail(e.getMessage());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @Override
+    public void removeAdmin(Users users, String groupObjectId) {
+        Group group = new Group();
+        BmobRelation relation = new BmobRelation();
+        relation.remove(users);
+        group.setAdministrator(relation);
+        BmobUtil.updateGroup(groupObjectId, group, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null){
+                    mGroupInfoView.onAddOrRemoveAdminSuccess();
+                }else{
+                    mGroupInfoView.onAddOrRemoveAdminFail(e.getMessage());
                 }
             }
         });

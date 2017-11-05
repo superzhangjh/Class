@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
@@ -56,7 +57,10 @@ public class CircleFragment extends BaseFragment{
     private SuspensionFab susFab;//浮动按钮
     private TextView tvTakePhoto;
     private TextView tvSelectPhoto;
-    private ImageButton ibFn;
+    private CardView ibFn;
+    private TextView tvFnText;
+
+
     private int ibFnType = 0;
     private static final int REQUEST_CAMERA = 1001;
 
@@ -70,7 +74,8 @@ public class CircleFragment extends BaseFragment{
     public void initView() {
         tvTakePhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_take);
         tvSelectPhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_album);
-        ibFn = (ImageButton) mRootView.findViewById(R.id.circle_fn);
+        ibFn = (CardView) mRootView.findViewById(R.id.circle_fn);
+        tvFnText = (TextView) mRootView.findViewById(R.id.circle_fn_text);
 
         list_fragment = new ArrayList<>();
         //通知
@@ -86,6 +91,11 @@ public class CircleFragment extends BaseFragment{
         list_title.add("动态");
         initTabViewpager();
         initSuspensionFab();
+    }
+
+    @Override
+    protected void initSpringView() {
+
     }
 
     //悬浮按钮
@@ -132,7 +142,7 @@ public class CircleFragment extends BaseFragment{
                         break;
                     case 2:
                         msg="上传照片";
-                        showFhotoDialog();break;
+                        showPhotoDialog();break;
                     case 3:
                         msg="更多信息";
                         break;
@@ -143,7 +153,7 @@ public class CircleFragment extends BaseFragment{
         });
     }
 
-    private void showFhotoDialog() {
+    private void showPhotoDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();//创建一个AlertDialog对象
         dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
         Window window = dialog.getWindow();
@@ -187,9 +197,18 @@ public class CircleFragment extends BaseFragment{
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()){
-                    case 0:ibFnType=0;break;
-                    case 1:ibFnType=1;break;
-                    case 2:ibFnType=2;break;
+                    case 0:
+                        ibFnType=0;
+                        tvFnText.setText("通知");
+                        break;
+                    case 1:
+                        ibFnType=1;
+                        tvFnText.setText("投票");
+                        break;
+                    case 2:
+                        ibFnType=2;
+                        tvFnText.setText("说说");
+                        break;
                 }
 
             }
@@ -214,6 +233,17 @@ public class CircleFragment extends BaseFragment{
             @Override
             public void onPageSelected(int position) {
                 ibFnType = position;
+                switch (position){
+                    case 0:
+                        tvFnText.setText("通知");
+                        break;
+                    case 1:
+                        tvFnText.setText("投票");
+                        break;
+                    case 2:
+                        tvFnText.setText("说说");
+                        break;
+                }
             }
 
             @Override
@@ -254,7 +284,7 @@ public class CircleFragment extends BaseFragment{
         tablayout = (TabLayout) mRootView.findViewById(R.id.circle_tablayout);
         viewpager = (ViewPager) mRootView.findViewById(R.id.circle_viewpager);
         //设置tablayout显示模式
-        tablayout.setTabMode(TabLayout.MODE_FIXED);
+        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         adapter = new CircleFragmentPagerAdapter(getActivity().getSupportFragmentManager(),list_fragment,list_title);
         viewpager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewpager);

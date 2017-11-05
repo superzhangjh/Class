@@ -17,4 +17,12 @@ public interface GroupInfoView {
     void onGetGroupSuccess(List<Group> list);
 
     void onGetGroupFail(String s);
+
+    void onGetGroupAdminSuccess(List<Users> list);
+
+    void onGetGroupAdminFail(String message);
+
+    void onAddOrRemoveAdminSuccess();
+
+    void onAddOrRemoveAdminFail(String message);
 }

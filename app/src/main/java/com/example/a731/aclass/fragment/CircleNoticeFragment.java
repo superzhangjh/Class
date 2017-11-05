@@ -1,6 +1,7 @@
 package com.example.a731.aclass.fragment;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,13 @@ import com.example.a731.aclass.presenter.CircleNoticePresenter;
 import com.example.a731.aclass.presenter.impl.CircleNoticePresenterImpl;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CircleNoticeView;
-import com.example.a731.aclass.view.OnItemClickView;
+import com.liaoinstan.springview.container.AcFunFooter;
+import com.liaoinstan.springview.container.AliFooter;
+import com.liaoinstan.springview.container.AliHeader;
+import com.liaoinstan.springview.container.MeituanFooter;
+import com.liaoinstan.springview.container.MeituanHeader;
+import com.liaoinstan.springview.widget.SpringView;
+
 import cn.bmob.v3.BmobUser;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,27 +40,23 @@ import static android.app.Activity.RESULT_OK;
 public class CircleNoticeFragment extends BaseFragment implements CircleNoticeView {
     private static final int REQUEST_RELEASING_NOTICE = 1001;
     private RecyclerView mRecyclerView;
-    //private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SpringView springView;
     private List<Notice> noticeList = new ArrayList<>();
     private NoticeAdapter adapter;
-    private LinearLayout btn1;
+    //private LinearLayout btn1;
 
     private String presentGroupId;
-
     private CircleNoticePresenter presenter = new CircleNoticePresenterImpl(this);
-
-
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_circle_notice;
+        return R.layout.fragment_circle_base;
     }
 
     @Override
     public void initView() {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
-        //mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_base_swiperefresh);
-        btn1 = (LinearLayout) mRootView.findViewById(R.id.notice_head_1);
+        /*btn1 = (LinearLayout) mRootView.findViewById(R.id.notice_head_1);
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,11 +67,43 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
                 //showToast("你不是管理员,没有该权限");
                 //}
             }
-        });
+        });*/
         adapter = new NoticeAdapter(getContext(),noticeList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setItemViewCacheSize(20);
         initData();
+    }
+
+    @Override
+    protected void initSpringView() {
+        springView = (SpringView) mRootView.findViewById(R.id.circle_base_spring_view);
+        springView.setFooter(new AliFooter(getContext()));
+        springView.setHeader(new AliHeader(getContext()));
+        springView.setType(SpringView.Type.FOLLOW);
+        springView.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (presentGroupId==null){
+                            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+                        }
+                        presenter.getGroupNotice(presentGroupId);
+                        springView.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springView.onFinishFreshAndLoad();
+                    }
+                }, 2000);            }
+        });
     }
 
     @Override
@@ -96,9 +131,12 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onGetNoticeSuccess(List<Notice> list) {
         noticeList = list;
+        if (adapter==null){
+            return;
+        }
         adapter.setListData(noticeList);
-        Log.i("--------------CircleNotice","username:"+noticeList.get(0).getCreator().getUsername());
-        showToast("获取通知列表成功"+list.size()+"--"+presentGroupId);
+        //Log.i("--------------CircleNotice","username:"+noticeList.get(0).getCreator().getUsername());
+        //showToast("获取通知列表成功"+list.size()+"--"+presentGroupId);
     }
 
     @Override
@@ -109,9 +147,10 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onResume() {
         super.onResume();
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
-        if (presentGroupId!=null)
-            presenter.getGroupNotice(presentGroupId);
+        if (presentGroupId==null){
+            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        }
+        presenter.getGroupNotice(presentGroupId);
     }
 
 }

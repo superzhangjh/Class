@@ -18,16 +18,24 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            //头像
+            <!--班圈头像-->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:src="@drawable/default_head_image"
                 android:id="@+id/main_classhead"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
 
-            //名称
+            <!--个人头像-->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:visibility="gone"
+                android:src="@drawable/default_head_image"
+                android:id="@+id/main_userhead"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <!--名称-->
             <TextView
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="30dp"
                 android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +44,7 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.v4.view.ViewPager
+        <com.example.a731.aclass.util.customView.NoScrollViewPager
             android:id="@+id/main_view_pager"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -53,18 +61,23 @@
             android:layout_height="50dp"
             android:orientation="horizontal">
 
+            <!--圈按钮-->
             <RadioButton
-                android:id="@+id/main_rb_class"
+                android:id="@+id/main_rb_group"
                 android:text="圈"
+                android:textSize="16sp"
                 android:button="@null"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center"/>
+            <!--消息按钮-->
             <RadioButton
                 android:id="@+id/main_rb_mess"
                 android:text="消息"
                 android:button="@null"
+                android:textColor="#FF888888"
+                android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -73,16 +86,16 @@
 
     </LinearLayout>
 
-    //个人信息
+    <!--个人信息-->
     <android.support.design.widget.NavigationView
         android:id="@+id/main_nav_view"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/menu_main_nav"
         app:headerLayout="@layout/activity_main_nav_header"/>
 
-    //好友列表
+    <!--好友列表-->
     <!--<include layout="@layout/include_main_nav_right"/>-->
     <android.support.design.widget.NavigationView
         android:id="@+id/main_nav_right"

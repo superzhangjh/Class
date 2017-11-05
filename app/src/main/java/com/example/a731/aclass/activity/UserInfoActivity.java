@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.UserInfoPresenter;
@@ -48,7 +49,10 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
     @Override
     public void initView() {
         Intent intent = getIntent();
+
+        /* ---------------------   调用该activity需要传入用户的username----------------------------------*/
         username = intent.getStringExtra("username");
+
         toolbar = (Toolbar) findViewById(R.id.userinfo_toolbar);
         imgHead = (CircleImageView) findViewById(R.id.userinfo_iv_head);
         imgHeadBG = (ImageView) findViewById(R.id.userinfo_headbackground);
@@ -65,7 +69,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
     }
 
     private void initBinderData() {
-
         //读取User的属性
         int sex = user.getSex();
         String name = user.getName();
@@ -74,8 +77,10 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         String project =  user.getProject();
         String hoemland = user.getHomeLand();
         String intro = user.getIntro();
-        String qrCode = user.getQRCode();
 
+        //设置头像
+        Glide.with(UserInfoActivity.this).load(user.getHeadImg()).into(imgHead);
+        imgHeadBG.setBackgroundResource(R.drawable.userinfo_head_background);
 
         //性别图标显示
         if (sex==1){

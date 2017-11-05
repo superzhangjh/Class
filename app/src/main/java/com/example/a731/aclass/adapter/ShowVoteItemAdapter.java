@@ -43,7 +43,6 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
         this.context = context;
         this.itemList = itemList;
         this.optionNumber = optionNumber;
-        isCheck = new boolean[]{false,false};
     }
 
     public void SetItemListDataChange(List<VoteContent.Item> itemList){
@@ -98,11 +97,11 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
                     if (optionNumber==1){
                         checkItemList.clear();//清空其他选择
                         //TODO:点击选项时取消其他已选
-                        for (int i=0;i<isCheck.length;i++){
+                        /*for (int i=0;i<isCheck.length;i++){
                             isCheck[i] = false;
                         }
-                        isCheck[position] = isChecked;
-                        Toast.makeText(context,"isCheck"+position+" "+isCheck[0]+";"+isCheck[1],Toast.LENGTH_SHORT).show();
+                        isCheck[position] = isChecked;*/
+                        //Toast.makeText(context,"isCheck"+position+" "+isCheck[0]+";"+isCheck[1],Toast.LENGTH_SHORT).show();
                     }
                     checkItemList.add(pos);
                     //Toast.makeText(context,"checkItemList.size():"+checkItemList.size(),Toast.LENGTH_SHORT).show();
@@ -114,9 +113,9 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
             }
         });
 
-        if (!isCheck[position]){
+        /*if (!isCheck[position-1]){
             holder.itemContent.setChecked(false);
-        }
+        }*/
 
         String itemContent = item.getItemContent();
         holder.itemContent.setText(itemContent);

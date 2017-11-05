@@ -1,6 +1,8 @@
 package com.example.a731.aclass.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,10 @@ import com.example.a731.aclass.presenter.impl.CircleInteractPresenterImpl;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CircleInteractView;
 import com.google.gson.Gson;
+import com.liaoinstan.springview.container.AliFooter;
+import com.liaoinstan.springview.container.AliHeader;
+import com.liaoinstan.springview.widget.SpringView;
+
 import cn.bmob.v3.BmobUser;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,37 +39,25 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
     private static final int START_A_VOTE = 2001;
     private static final int VOTE_INFO = 2002;
     private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Vote> voteList = new ArrayList<>();
     private InteractAdapter adapter;
-    private TextView tvStartVote;
     private String presentGroupId;
+    private SpringView springView;
 
     private CircleInteractPresenter presenter = new CircleInteractPresenterImpl(this);
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_circle_interact;
+        return R.layout.fragment_circle_base;
     }
 
     @Override
     public void initView() {
-        tvStartVote = (TextView) mRootView.findViewById(R.id.circle_interact_start_a_vote);
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_interact_recyclerview);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.circle_interact_swiperefresh);
-
-        //发动投票功能
-        tvStartVote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(),StartVoteActivity.class);
-                startActivityForResult(intent,START_A_VOTE);
-            }
-        });
-
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
         adapter = new InteractAdapter(getContext(),voteList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setItemViewCacheSize(20);
         adapter.setOnItemClickListener(new InteractAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -72,6 +66,33 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
                 intent.putExtra("objectId",vote.getObjectId());
                 startActivity(intent);
             }
+        });
+    }
+
+    @Override
+    protected void initSpringView() {
+        springView = (SpringView) mRootView.findViewById(R.id.circle_base_spring_view);
+        springView.setFooter(new AliFooter(getContext()));
+        springView.setHeader(new AliHeader(getContext()));
+        springView.setType(SpringView.Type.FOLLOW);
+        springView.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springView.onFinishFreshAndLoad();
+                    }
+                }, 2000);
+            }
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        springView.onFinishFreshAndLoad();
+                    }
+                }, 2000);            }
         });
     }
 

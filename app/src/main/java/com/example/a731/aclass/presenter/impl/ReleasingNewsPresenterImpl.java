@@ -1,11 +1,10 @@
 package com.example.a731.aclass.presenter.impl;
 
 import com.example.a731.aclass.data.Group;
-import com.example.a731.aclass.data.Notice;
-import com.example.a731.aclass.data.Vote;
-import com.example.a731.aclass.presenter.StartVotePresenter;
+import com.example.a731.aclass.data.News;
+import com.example.a731.aclass.presenter.ReleasingNewsPresenter;
 import com.example.a731.aclass.util.BmobUtil;
-import com.example.a731.aclass.view.StartVoteView;
+import com.example.a731.aclass.view.ReleasingNewsView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,19 +18,21 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
- * Created by 郑选辉 on 2017/10/26.
+ * Created by 郑选辉 on 2017/11/5.
  */
 
-public class StartVotePresenterImpl implements StartVotePresenter {
-    private StartVoteView mView;
+public class ReleasingNewsPresenterImpl implements ReleasingNewsPresenter {
+
     private List<String> imgList = new ArrayList<>();
     private String objectId;
-    public StartVotePresenterImpl(StartVoteView view){
+
+    private ReleasingNewsView mView;
+    public ReleasingNewsPresenterImpl(ReleasingNewsView view){
         mView = view;
     }
 
     @Override
-    public void saveVote(final String presentGroupId, final Vote vote, final List<String> mImgs) {
+    public void saveNews(final String presentGroupId, final News news, final List<String> mImgs) {
         if ( mImgs!=null && mImgs.size()>0){
             for (String imgPath:mImgs){
                 final BmobFile bmobFile = new BmobFile(new File(imgPath));
@@ -41,57 +42,56 @@ public class StartVotePresenterImpl implements StartVotePresenter {
                         if (e == null){
                             imgList.add(bmobFile.getFileUrl());
                             if (imgList.size() == mImgs.size()){
-                                addVote(vote,presentGroupId);
+                                addNews(news,presentGroupId);
                             }
                         }else{
-                            mView.onSaveVoteFail(e.getMessage());
+                            mView.onSaveNoticeFail(e.getMessage());
                         }
                     }
                 });
             }
         }else{
-            addVote(vote,presentGroupId);
+            addNews(news,presentGroupId);
         }
     }
 
 
-    private void addVote(Vote vote, final String presentGroupId){
-        BmobUtil.addVote(vote, new SaveListener<String>() {
+    public void addNews(News news, final String presentGroupd) {
+        BmobUtil.addNews(news, new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null){
                     objectId = s;
-                    updateNotice(presentGroupId);
+                    updateNews(presentGroupd);
                 }else{
-                    mView.onSaveVoteFail(e.getMessage());
+                    mView.onSaveNoticeFail(e.getMessage());
                 }
             }
         });
     }
 
-
-    private void updateNotice(String presentGroupId) {
+    private void updateNews(String presentGroupId) {
         BmobUtil.getGroupByField("groupId", presentGroupId, new FindListener<Group>() {
             @Override
             public void done(List<Group> list, BmobException e) {
                 if (e == null){
-                    Vote vote = new Vote();
-                    vote.setPhotoList(imgList);
+                    News news = new News();
+                    news.setPhotoList(imgList);
                     Group group = new Group();
                     group.setObjectId(list.get(0).getObjectId());
-                    vote.setGroup(group);
-                    BmobUtil.updateVote(vote, objectId, new UpdateListener() {
+                    news.setGroup(group);
+                    BmobUtil.updateNews(news, objectId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null){
-                                mView.onSaveVoteSuccess();
+                                mView.onSaveNoticeSuccess();
                             }else{
-                                mView.onSaveVoteFail(e.getMessage());
+                                mView.onSaveNoticeFail(e.getMessage());
                             }
                         }
                     });
                 }else{
-                    mView.onSaveVoteFail(e.getMessage());
+                    mView.onSaveNoticeFail(e.getMessage());
                 }
             }
         });

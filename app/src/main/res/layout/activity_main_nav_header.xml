@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="#00aaaa">
+        android:background="#00aeae">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/main_nav_head"
             android:layout_width="100dp"
@@ -16,70 +16,206 @@
             android:src="@drawable/default_head_image"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/main_nav_username"
-        android:text="学号"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"/>
-    <TextView
-        android:id="@+id/main_nav_name"
-        android:text="姓名"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/main_nav_phoneNum"
-        android:text="手机号"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/main_nav_project"
-        android:text="专业"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/main_nav_local"
-        android:text="来自"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/main_nav_intro"
-        android:text="简介"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"/>
+        <!--学号-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_userinfo_id"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="学号"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_username"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!--手机号-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:background="@drawable/icon_phone"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="手机"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_phoneNum"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:visibility="gone"
+                android:gravity="center_vertical"
+                android:id="@+id/main_nav_phoneCheck"
+                android:layout_gravity="center_vertical"
+                android:textColor="#4a4aff"
+                android:text="验证"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!--分割线-->
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"/>
+
+        <!--姓名-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_note"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="姓名"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_name"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!--专业-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_project"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="专业"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_project"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!--地区-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_location"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="地区"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_local"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!--简介-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--<ImageView
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_intro"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />-->
+            <TextView
+                android:text="简介"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorText1"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/main_nav_intro"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTextDark1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!--分割线-->
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

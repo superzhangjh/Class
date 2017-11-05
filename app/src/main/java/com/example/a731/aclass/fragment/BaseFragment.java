@@ -38,6 +38,7 @@ public abstract class BaseFragment extends Fragment {
                     getLayoutRes(),container,false);
 
             initView();
+            initSpringView();
             initData();
             initListener();
         }
@@ -45,11 +46,16 @@ public abstract class BaseFragment extends Fragment {
         return mRootView;
     }
 
+
+
     /** 返回Fragment界面的布局文件 */
     protected abstract int getLayoutRes();
 
     /** 查找子控件 */
     public abstract void initView();
+
+    /*设置springView 下拉刷新下拉加载*/
+    protected abstract void initSpringView();
 
     /** 设置监听器 */
     public abstract void initListener() ;

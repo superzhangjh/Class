@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        //内容
+        <!--内容-->
         <EditText
             android:id="@+id/releasing_news_tv_content"
             android:hint="发表你的心情吧~"
@@ -32,7 +32,7 @@
             android:layout_height="1dp"
             android:background="#ccc"/>
 
-        //添加图片
+        <!--添加图片-->
         <Button
             android:id="@+id/releasing_news_btn_add_picture"
             android:text="添加图片"
@@ -40,6 +40,12 @@
             android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <!--图片列表-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/releasing_news_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>
