@@ -22,6 +22,8 @@ import cn.bmob.v3.BmobUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 import static android.app.Activity.RESULT_OK;
 
 /**

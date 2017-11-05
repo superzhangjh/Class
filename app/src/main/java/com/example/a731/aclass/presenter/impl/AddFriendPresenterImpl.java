@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter.impl;
 
+import android.util.Log;
+
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.AddFriendPresenter;
 import com.example.a731.aclass.util.BmobUtil;
