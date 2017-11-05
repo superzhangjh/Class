@@ -1,5 +1,6 @@
 package com.example.a731.aclass.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;
@@ -8,7 +9,7 @@ import cn.bmob.v3.BmobObject;
  * Created by Administrator on 2017/10/2/002.
  */
 
-public class Vote extends BmobObject{
+public class Vote extends BmobObject implements Serializable {
     private Users creator;//创建者
     /*private int type;//投票类型
     private int optionNumber;//选项数

@@ -36,8 +36,11 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_groupinfo_item_member,parent,false);
-        return new ViewHolder(cell);
+        View view=null;
+        if (view==null) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_groupinfo_item_member, parent, false);
+        }
+        return new ViewHolder(view);
     }
 
     @Override

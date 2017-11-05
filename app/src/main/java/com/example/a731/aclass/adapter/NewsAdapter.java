@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.data.Gallery;
+import com.example.a731.aclass.data.News;
+import com.example.a731.aclass.data.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +21,21 @@ import java.util.List;
  * Created by Administrator on 2017/9/16/016.
  */
 
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> implements  View.OnClickListener{
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> implements  View.OnClickListener{
 
     private static final int LINE_COUNT = 3;
     private Context context;
-    private List<Gallery> galleryList = new ArrayList<>();
+    private List<News> newsList = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener = null;
 
-    public GalleryAdapter(Context context, List<Gallery> galleryList){
+    public NewsAdapter(Context context, List<News> newsList){
         this.context = context;
-        this.galleryList = galleryList;
+        this.newsList = newsList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_gallery_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_news_item,parent,false);
         view.setOnClickListener(this);
         return new ViewHolder(view);
     }
@@ -42,17 +43,17 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.itemView.setTag(position);
-        Gallery gallery = galleryList.get(position);
-        //Bitmap headBitmap = getHeadBitmapForCreatorId();
-        //holder.imgHead.setImageBitmap();
-        holder.creatorName.setText(gallery.getCreatorName());
-        holder.date.setText(gallery.getDate());
-        holder.intro.setText(gallery.getIntro());
-        holder.like.setText(String.valueOf(gallery.getLike()));
+        News news = newsList.get(position);
+        Users users = news.getUsers();
+        Glide.with(context).load(users.getHeadImg()).into(holder.imgHead);
+        holder.creatorName.setText(users.getName());
+        holder.date.setText(news.getDate());
+        holder.intro.setText(news.getContent());
+        holder.like.setText(String.valueOf(news.getLike()));
         //holder.commend = 评论
 
         //设置图片显示格式
-        List<String> srcList = gallery.getSrcList();
+        List<String> srcList = news.getPhotoList();
         PhotoAdapter adapter = new PhotoAdapter(context, srcList);
         holder.photoList.setLayoutManager(new GridLayoutManager(context, LINE_COUNT));
         holder.photoList.setAdapter(adapter);
@@ -60,7 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return galleryList==null?0:galleryList.size();
+        return newsList ==null?0: newsList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -73,13 +74,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         RecyclerView photoList;//图片显示的列表
         public ViewHolder(View itemView) {
             super(itemView);
-            creatorName = (TextView) itemView.findViewById(R.id.item_circle_gallery_iv_name);
-            date = (TextView) itemView.findViewById(R.id.item_circle_gallery_tv_date);
-            intro = (TextView) itemView.findViewById(R.id.item_circle_gallery_tv_intro);
-            like = (TextView) itemView.findViewById(R.id.item_circle_gallery_tv_like);
-            commend = (TextView) itemView.findViewById(R.id.item_circle_gallery_tv_commend);
-            photoList = (RecyclerView) itemView.findViewById(R.id.item_circle_gallery_recyclerview);
-            imgHead = (ImageView) itemView.findViewById(R.id.item_circle_gallery_iv_head);
+            creatorName = (TextView) itemView.findViewById(R.id.item_circle_news_iv_name);
+            date = (TextView) itemView.findViewById(R.id.item_circle_news_tv_date);
+            intro = (TextView) itemView.findViewById(R.id.item_circle_news_tv_intro);
+            like = (TextView) itemView.findViewById(R.id.item_circle_news_tv_like);
+            commend = (TextView) itemView.findViewById(R.id.item_circle_news_tv_commend);
+            photoList = (RecyclerView) itemView.findViewById(R.id.item_circle_news_recyclerview);
+            imgHead = (ImageView) itemView.findViewById(R.id.item_circle_news_iv_head);
         }
     }
 

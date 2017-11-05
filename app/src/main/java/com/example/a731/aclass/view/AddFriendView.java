@@ -10,4 +10,8 @@ public interface AddFriendView {
     void onGetUserSuccess(Users users);
 
     void onGetUserFail(String message);
+
+    void onAddFriendSuccess();
+
+    void onAddFriendFail(String message);
 }

@@ -44,7 +44,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
 //    显示
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.schedule_menu,menu);
+        getMenuInflater().inflate(R.menu.menu_schedule,menu);
         return true;
     }
 //    事件

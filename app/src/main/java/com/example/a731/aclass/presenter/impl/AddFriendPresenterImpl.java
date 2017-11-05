@@ -3,7 +3,10 @@ package com.example.a731.aclass.presenter.impl;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.AddFriendPresenter;
 import com.example.a731.aclass.util.BmobUtil;
+import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.AddFriendView;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.List;
 
@@ -30,6 +33,32 @@ public class AddFriendPresenterImpl implements AddFriendPresenter {
                     mView.onGetUserSuccess(list.get(0));
                 }else{
                     mView.onGetUserFail(e.getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void addFriend(final String username) {
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EaseMobUtil.addFriendd(username,null);
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.onAddFriendSuccess();
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.onAddFriendFail(e.getMessage());
+                        }
+                    });
                 }
             }
         });

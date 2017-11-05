@@ -17,7 +17,7 @@ import com.example.a731.aclass.presenter.impl.CircleInteractPresenterImpl;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CircleInteractView;
 import com.google.gson.Gson;
-
+import cn.bmob.v3.BmobUser;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +80,9 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
         if (presentGroupId != null)
             presenter.getGroupVote(presentGroupId);
-
-
     }
 
 

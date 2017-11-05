@@ -178,8 +178,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
-        //添加新选项
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),this);        //添加新选项
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

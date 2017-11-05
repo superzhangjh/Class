@@ -1,39 +1,17 @@
 package com.example.a731.aclass.data;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/10/16/016.
  */
 
-public class Commend {
-    private String Id;//评论者id
-    private String imgHead;//评论者头像
+public class Commend implements Serializable {
+    private Users users;//评论者
     private String date;//评论时间
     private String content;//内容
-    private Vote vote;
-
-    public Vote getVote() {
-        return vote;
-    }
-
-    public void setVote(Vote vote) {
-        this.vote = vote;
-    }
-
-    public String getId() {
-        return Id;
-    }
-
-    public void setId(String id) {
-        Id = id;
-    }
-
-    public String getImgHead() {
-        return imgHead;
-    }
-
-    public void setImgHead(String imgHead) {
-        this.imgHead = imgHead;
-    }
+    private String like;//点赞
+    private String BmobId;//根据上传到网上的数据返回的BmobID判断该评论的归属位置,打开评论页面时
 
     public String getDate() {
         return date;
@@ -51,6 +29,10 @@ public class Commend {
         this.content = content;
     }
 
+    public void setVote(Vote vote) {
+        this.vote = vote;
+    }
+
     public String getLike() {
         return like;
     }
@@ -59,5 +41,18 @@ public class Commend {
         this.like = like;
     }
 
-    private String like;//点赞
+    private Vote vote;
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
+    }
+
+    public Vote getVote() {
+
+        return vote;
+    }
 }

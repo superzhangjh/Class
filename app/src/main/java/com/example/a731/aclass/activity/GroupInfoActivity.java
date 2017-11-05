@@ -61,7 +61,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     @Override
     public void initView() {
         Intent intent = getIntent();
-        String groupId = intent.getStringExtra("groupId");
+        String groupId = intent.getStringExtra("presentGroupId");
         toolbar = (Toolbar) findViewById(R.id.groupinfo_toolbar);
         tvQRCode = (LinearLayout) findViewById(R.id.groupinfo_tv_qrcode);
         tvNickname = (LinearLayout) findViewById(R.id.groupinfo_ll_nickname);
@@ -138,9 +138,10 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         tvQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),QRCodeRusultGroupActivity.class);
-                String groupId = group.getGroupId();
-                intent.putExtra("groupId",groupId);
+                Intent intent = new Intent(getApplicationContext(),QRCodeActivity.class);
+                intent.putExtra("qrCode",group.getQRCode());
+                intent.putExtra("headImg",group.getHeadImg());
+                intent.putExtra("name",group.getName());
                 startActivity(intent);
             }
         });
@@ -167,7 +168,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.groupinfo_toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.menu_groupinfo_toolbar,menu);
         return true;
     }
 
@@ -200,7 +201,8 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     }
 
     @Override
-    public void onGetGroupSuccess(List<Group> list) {group = list.get(0);
+    public void onGetGroupSuccess(List<Group> list) {
+        group = list.get(0);
         groupInfoPresenter.getGroupMember(group.getObjectId());
         tvRecommend.setText("本圈创建于"+group.getCreatedAt());
         tvGroupName.setText(group.getName());

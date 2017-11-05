@@ -17,17 +17,21 @@
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp">
+
+            //头像
             <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/default_head_image"
                 android:id="@+id/main_classhead"
-                android:background="@mipmap/ic_launcher"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            //名称
             <TextView
+                android:layout_marginLeft="20dp"
                 android:id="@+id/main_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="班圈名称" />
+                android:layout_centerInParent="true" />
 
 
         </android.support.v7.widget.Toolbar>
@@ -75,7 +79,7 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/main_nav_menu"
+        app:menu="@menu/menu_main_nav"
         app:headerLayout="@layout/activity_main_nav_header"/>
 
     //好友列表

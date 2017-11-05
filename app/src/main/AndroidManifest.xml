@@ -104,6 +104,8 @@
         <activity android:name=".activity.QRCodeRusultUserActivity"/>
         <activity android:name=".activity.QRCodeRusultGroupActivity"/>
         <activity android:name=".activity.WebActivity"/>
+        <activity android:name=".activity.NoticeActivity"/>
+        <activity android:name=".activity.ReleasingNewsActivity"/>
 
         <!-- ZXing Activity-->
         <activity

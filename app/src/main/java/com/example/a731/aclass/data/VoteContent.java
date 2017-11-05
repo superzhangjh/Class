@@ -1,12 +1,13 @@
 package com.example.a731.aclass.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 郑选辉 on 2017/10/26.
  */
 
-public class VoteContent {
+public class VoteContent implements Serializable {
     private int type;//投票类型
     private int optionNumber;//选项数
     private String title;//标题

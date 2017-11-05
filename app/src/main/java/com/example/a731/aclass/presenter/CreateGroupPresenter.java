@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter;
 
+import android.graphics.Bitmap;
+
 import com.example.a731.aclass.data.Users;
 
 /**
@@ -7,5 +9,5 @@ import com.example.a731.aclass.data.Users;
  */
 
 public interface CreateGroupPresenter {
-    void checkGroup(String name, Users creator, String headImg);
+    void checkGroup(String name, Users creator, String headImg,Bitmap logo);
 }

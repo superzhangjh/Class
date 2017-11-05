@@ -151,6 +151,7 @@ public class BmobUtil {
         Group group = new Group();
         group.setObjectId(groupObjectId);
         query.addWhereEqualTo("group", new BmobPointer(group));
+        query.include("creator,group.name");
         query.findObjects(listener);
     }
 

@@ -37,7 +37,10 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_mess_item,parent,false);
+        View view = null;
+        if (view==null){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_mess_item,parent,false);
+        }
         return new ViewHolder(view);
     }
 

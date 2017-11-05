@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 
@@ -26,7 +27,7 @@ public class MyAdapter extends CommonAdapter<String>
 	private String mDirPath;
 
 	public MyAdapter(Context context, List<String> mDatas, int itemLayoutId,
-			String dirPath)
+					 String dirPath)
 	{
 		super(context, mDatas, itemLayoutId);
 		this.mDirPath = dirPath;
@@ -38,14 +39,14 @@ public class MyAdapter extends CommonAdapter<String>
 		//设置no_pic
 		helper.setImageResource(R.id.id_item_image, R.drawable.pictures_no);
 		//设置no_selected
-				helper.setImageResource(R.id.id_item_select,
-						R.drawable.picture_unselected);
+		helper.setImageResource(R.id.id_item_select,
+				R.drawable.picture_unselected);
 		//设置图片
 		helper.setImageByUrl(R.id.id_item_image, mDirPath + "/" + item);
-		
+
 		final ImageView mImageView = helper.getView(R.id.id_item_image);
 		final ImageView mSelect = helper.getView(R.id.id_item_select);
-		
+
 		mImageView.setColorFilter(null);
 		//设置ImageView的点击事件
 		mImageView.setOnClickListener(new OnClickListener()
@@ -61,7 +62,10 @@ public class MyAdapter extends CommonAdapter<String>
 					mSelectedImage.remove(mDirPath + "/" + item);
 					mSelect.setImageResource(R.drawable.picture_unselected);
 					mImageView.setColorFilter(null);
-				} else
+				} else if (mSelectedImage.size() == 9){
+					Toast.makeText(mContext, "最大支持选择9张图片", Toast.LENGTH_SHORT).show();
+					return;
+				}else
 				// 未选择该图片
 				{
 					mSelectedImage.add(mDirPath + "/" + item);
@@ -71,7 +75,7 @@ public class MyAdapter extends CommonAdapter<String>
 
 			}
 		});
-		
+
 		/**
 		 * 已经选择过的图片，显示出选择过的效果
 		 */

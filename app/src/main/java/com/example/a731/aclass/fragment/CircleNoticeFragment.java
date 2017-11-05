@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.activity.NoticeActivity;
 import com.example.a731.aclass.adapter.NoticeAdapter;
 import com.example.a731.aclass.activity.ReleasingNoticesActivity;
 import com.example.a731.aclass.data.Notice;
@@ -16,7 +18,7 @@ import com.example.a731.aclass.presenter.impl.CircleNoticePresenterImpl;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CircleNoticeView;
 import com.example.a731.aclass.view.OnItemClickView;
-
+import cn.bmob.v3.BmobUser;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,16 +63,10 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
                 //}
             }
         });
-
         adapter = new NoticeAdapter(getContext(),noticeList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickView() {
-            @Override
-            public void onItemClick(View view, int position) {
-                showToast(position+"");
-            }
-        });
+        initData();
     }
 
     @Override
@@ -80,7 +76,7 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
         if (presentGroupId!=null)
         presenter.getGroupNotice(presentGroupId);
     }
@@ -97,7 +93,9 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
 
     @Override
     public void onGetNoticeSuccess(List<Notice> list) {
-        adapter.setListData(list);
+        noticeList = list;
+        adapter.setListData(noticeList);
+        Log.i("--------------CircleNotice","username:"+noticeList.get(0).getCreator().getUsername());
         showToast("获取通知列表成功"+list.size()+"--"+presentGroupId);
     }
 
@@ -109,6 +107,9 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onResume() {
         super.onResume();
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
+        if (presentGroupId!=null)
+            presenter.getGroupNotice(presentGroupId);
     }
 
 }

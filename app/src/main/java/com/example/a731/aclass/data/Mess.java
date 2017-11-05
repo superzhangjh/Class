@@ -1,10 +1,12 @@
 package com.example.a731.aclass.data;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/9/16/016.
  */
 
-public class Mess {
+public class Mess  implements Serializable {
     private String creatorID;//消息发出者
     private String name;//
     private String message;//消息内容

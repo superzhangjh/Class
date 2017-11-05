@@ -11,8 +11,11 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.AddFriendPresenter;
+import com.example.a731.aclass.presenter.QRCodeResultGroupPresenter;
 import com.example.a731.aclass.presenter.impl.AddFriendPresenterImpl;
+import com.example.a731.aclass.presenter.impl.QRCodeResultGroupPresenterImpl;
 import com.example.a731.aclass.view.AddFriendView;
+import com.example.a731.aclass.view.QRCodeResultGroupView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -20,7 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Administrator on 2017/11/4/004.
  */
 
-public class QRCodeRusultGroupActivity extends BaseActivity implements AddFriendView{
+public class QRCodeRusultGroupActivity extends BaseActivity implements QRCodeResultGroupView{
 
     private Toolbar toolbar;
     private CircleImageView ivClassHead;
@@ -33,7 +36,7 @@ public class QRCodeRusultGroupActivity extends BaseActivity implements AddFriend
     private Users users;
     private Group group;
 
-    private AddFriendPresenter presenter = new AddFriendPresenterImpl(this);
+    private QRCodeResultGroupPresenter presenter = new QRCodeResultGroupPresenterImpl(this);
 
     @Override
     protected int getLayoutRes() {
@@ -58,9 +61,7 @@ public class QRCodeRusultGroupActivity extends BaseActivity implements AddFriend
     public void initData() {
         String groupId = getIntent().getStringExtra("groupId");
         //根据groupId获取班级信息
-        group = new Group();//测试数据
-        users = group.getCreator();
-
+        presenter.getGroup(groupId);
     }
 
     private void initToolbar() {
@@ -80,17 +81,11 @@ public class QRCodeRusultGroupActivity extends BaseActivity implements AddFriend
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO：加入班圈
+                presenter.joinGroup(group.getGroupId(),group.getObjectId());
             }
         });
     }
 
-    @Override
-    public void onGetUserSuccess(Users users) {
-        this.users = users;
-        hideProgress();
-        setView();
-    }
 
     //获取网络数据成功时设置内容
     private void setView() {
@@ -104,9 +99,25 @@ public class QRCodeRusultGroupActivity extends BaseActivity implements AddFriend
     }
 
     @Override
-    public void onGetUserFail(String message) {
-        this.users = new Users();
-        showToast("获取用户失败:"+message);
-        hideProgress();
+    public void onGetGroupSuccess(Group group) {
+        this.group = group;
+        users = group.getCreator();
+        setView();
+    }
+
+    @Override
+    public void onGetGroupFail(String message) {
+        showToast("获取班圈信息失败："+message);
+    }
+
+    @Override
+    public void onJoinGroupSuccess() {
+        showToast("申请加入班圈成功");
+        finish();
+    }
+
+    @Override
+    public void onJoinGroupFail(String message) {
+        showToast("申请加入班圈失败："+message);
     }
 }

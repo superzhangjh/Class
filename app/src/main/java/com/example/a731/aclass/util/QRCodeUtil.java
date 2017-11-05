@@ -24,7 +24,7 @@ public class QRCodeUtil {
             String content = null;
             if (type==0){//个人二维码
                 content = "user:" + id;
-            }else{
+            }else if (type==1){
                 //班级二维码
                 content = "group:" + id;
             }

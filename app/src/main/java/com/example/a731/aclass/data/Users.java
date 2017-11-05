@@ -1,13 +1,15 @@
 package com.example.a731.aclass.data;
 
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobUser;
 
 /**
  * Created by 郑选辉 on 2017/9/19.
  */
 
-public class Users extends BmobUser{
+public class Users extends BmobUser implements Serializable {
     //bmob已经提供了用户表,只需添加额外需要的字段就可以了
 //    private String username; 用户名
 //    private String password; 密码

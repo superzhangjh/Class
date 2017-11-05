@@ -9,13 +9,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.adapter.PhotoAdapter;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ReleasingNoticesPresenter;
@@ -24,6 +28,7 @@ import com.example.a731.aclass.util.DateUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.ReleasingNoticesView;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,6 +44,7 @@ import cn.bmob.v3.BmobUser;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 /**
+ * 发起投票
  * Created by Administrator on 2017/10/17/017.
  */
 
@@ -51,13 +57,12 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     private ImageView imgSound;
     private ImageView imgCross;
     private ImageView imgCheck;
-    private ImageView imgTest;
+    private RecyclerView recPhoto;
 
-    private Notice notice;
-    private Users user;
-    private List<String> mImgs = new ArrayList<>();
+    private List<String> mImgs = new ArrayList<>();//图片选择器
     private ReleasingNoticesPresenter presenter = new ReleasingNoticesPresenterImpl(this);
     private String presentGroupId;
+    private Notice notice;
 
     @Override
     protected int getLayoutRes() {
@@ -73,8 +78,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
         imgSound = (ImageView) findViewById(R.id.releasing_notices_imgSound);
         imgCross = (ImageView) findViewById(R.id.releasing_notices_cross);
         imgCheck = (ImageView) findViewById(R.id.releasing_notices_check);
-
-        imgTest = (ImageView) findViewById(R.id.image_test);
+        recPhoto = (RecyclerView) findViewById(R.id.releasing_notices_recycler_photo);
     }
 
     @Override
@@ -170,11 +174,14 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
                                     String title = edtTitle.getText().toString().trim();
                                     String content = edtContent.getText().toString();
 
-                                    Notice notice = new Notice();
+                                    notice = new Notice();
+                                    notice.setPhotoList(mImgs);
+                                    notice.setDate(DateUtil.yyyyMMdd_hhmmss());
                                     notice.setTitle(title);
                                     notice.setContent(content);
                                     notice.setCreator(BmobUser.getCurrentUser(Users.class));
 
+                                    //联网上传数据
                                     presenter.saveNotice(presentGroupId,notice,mImgs);
                                 }
                             });
@@ -194,8 +201,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",this);
-    }
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),this);    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -203,11 +209,9 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
             mImgs.addAll(data.getStringArrayListExtra("selectImg"));
-            Glide.with(this).load(mImgs.get(0)).into(imgTest);
+            setPhotoList(mImgs);
         }else if(requestCode == ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE){
             if (resultCode == Activity.RESULT_OK) {
                 String name = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
@@ -235,9 +239,15 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
                     }
                 }
                 mImgs.add(fileName);
-                Glide.with(this).load(fileName).into(imgTest);
+                setPhotoList(mImgs);
             }
         }
+    }
+
+    private void setPhotoList(List<String> mImgs) {
+        PhotoAdapter adapter = new PhotoAdapter(this,mImgs);
+        recPhoto.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recPhoto.setAdapter(adapter);
     }
 
     @Override

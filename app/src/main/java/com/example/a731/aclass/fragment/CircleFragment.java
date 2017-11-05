@@ -2,9 +2,7 @@ package com.example.a731.aclass.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +16,7 @@ import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.azhon.suspensionfab.FabAttributes;
@@ -25,15 +24,14 @@ import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ImagePickerActivity;
-import com.example.a731.aclass.activity.QRCodeActivity;
+import com.example.a731.aclass.activity.ReleasingNewsActivity;
+import com.example.a731.aclass.activity.ReleasingNoticesActivity;
 import com.example.a731.aclass.activity.ScheduleActivity;
+import com.example.a731.aclass.activity.StartVoteActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
-import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
-import com.example.a731.aclass.util.QRCodeUtil;
-import com.example.a731.aclass.zxing.activity.CaptureActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,6 +56,8 @@ public class CircleFragment extends BaseFragment{
     private SuspensionFab susFab;//浮动按钮
     private TextView tvTakePhoto;
     private TextView tvSelectPhoto;
+    private ImageButton ibFn;
+    private int ibFnType = 0;
     private static final int REQUEST_CAMERA = 1001;
 
     @Override
@@ -70,22 +70,20 @@ public class CircleFragment extends BaseFragment{
     public void initView() {
         tvTakePhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_take);
         tvSelectPhoto = (TextView) mRootView.findViewById(R.id.dialog_select_photo_album);
+        ibFn = (ImageButton) mRootView.findViewById(R.id.circle_fn);
 
         list_fragment = new ArrayList<>();
-        //动态
-        //list_fragment.add(new Fragment());
         //通知
         list_fragment.add(new CircleNoticeFragment());
         //互动
         list_fragment.add(new CircleInteractFragment());
-        //相册
-        list_fragment.add(new CircleGalleryFragment());
+        //动态
+        list_fragment.add(new CircleNewsFragment());
 
         list_title = new ArrayList<>();
-        //list_title.add("动态");
         list_title.add("通知");
         list_title.add("互动");
-        list_title.add("相册");
+        list_title.add("动态");
         initTabViewpager();
         initSuspensionFab();
     }
@@ -184,6 +182,67 @@ public class CircleFragment extends BaseFragment{
     @Override
     public void initListener() {
 
+        //tablayout选择监听
+        tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:ibFnType=0;break;
+                    case 1:ibFnType=1;break;
+                    case 2:ibFnType=2;break;
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ibFnType = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        //功能按钮作用
+        ibFn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (ibFnType){
+                    case 0:
+                        Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
+                        startActivity(releasingNotice);
+                    break;
+                    case 1:
+                        Intent startVoteIntent = new Intent(getContext(), StartVoteActivity.class);
+                        startActivity(startVoteIntent);
+                        break;
+                    case 2:
+                        Intent ReleasingNews = new Intent(getContext(), ReleasingNewsActivity.class);
+                        startActivity(ReleasingNews);
+                        break;
+                }
+            }
+        });
     }
 
     @Override

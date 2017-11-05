@@ -36,12 +36,14 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
     private int optionNumber;
     private OnItemClickListener onItemClickListener;
     private List<String> checkItemList = new ArrayList<>();
+    private boolean[] isCheck;
     private Boolean isVote = false;
 
     public ShowVoteItemAdapter(Context context, List<VoteContent.Item> itemList,int optionNumber) {
         this.context = context;
         this.itemList = itemList;
         this.optionNumber = optionNumber;
+        isCheck = new boolean[]{false,false};
     }
 
     public void SetItemListDataChange(List<VoteContent.Item> itemList){
@@ -96,22 +98,34 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
                     if (optionNumber==1){
                         checkItemList.clear();//清空其他选择
                         //TODO:点击选项时取消其他已选
+                        for (int i=0;i<isCheck.length;i++){
+                            isCheck[i] = false;
+                        }
+                        isCheck[position] = isChecked;
+                        Toast.makeText(context,"isCheck"+position+" "+isCheck[0]+";"+isCheck[1],Toast.LENGTH_SHORT).show();
                     }
                     checkItemList.add(pos);
-                    Toast.makeText(context,"checkItemList.size():"+checkItemList.size(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"checkItemList.size():"+checkItemList.size(),Toast.LENGTH_SHORT).show();
                 }else {
                     checkItemList.remove(pos);
-                    Toast.makeText(context,"checkItemList.size():"+checkItemList.size(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"checkItemList.size():"+checkItemList.size(),Toast.LENGTH_SHORT).show();
                 }
+                notifyDataSetChanged();
             }
         });
+
+        if (!isCheck[position]){
+            holder.itemContent.setChecked(false);
+        }
+
         String itemContent = item.getItemContent();
         holder.itemContent.setText(itemContent);
     }
 
     @Override
     public int getItemCount() {
-        return itemList==null?0:itemList.size();
+        int size = itemList==null?0:itemList.size();
+        return size;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -138,7 +152,7 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
 
     //外部获取已点击的选项
     public List<String> getcheckItemList(){
-       return checkItemList;
+        return checkItemList;
     }
     //已投票时调用
 

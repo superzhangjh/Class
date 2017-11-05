@@ -111,7 +111,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.userinfo_toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.menu_userinfo_toolbar,menu);
         return super.onCreateOptionsMenu(menu);
     }
 

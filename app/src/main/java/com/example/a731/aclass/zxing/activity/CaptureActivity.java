@@ -207,24 +207,24 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		String type = results[0];
 		String id = results[1];
 		switch (type){
-			case "user" :
+			case "user" ://跳转到个人二维码
 				Intent intent = new Intent(this, QRCodeRusultUserActivity.class);
 				intent.putExtra("username",id);
 				startActivity(intent);
 				finish();
 				break;
-			case "group":
+			case "group"://跳转到班圈二维码
 				Intent intent1 = new Intent(this, QRCodeRusultGroupActivity.class);
 				intent1.putExtra("creatorId",id);
 				startActivity(intent1);
 				finish();
 				break;
-			case "http":
+			case "http"://跳转到网页
 				Intent intent2 = new Intent(getApplicationContext(), WebActivity.class);
 				intent2.putExtra("url",result);
 				startActivity(intent2);
 				break;
-			case "https":
+			case "https"://跳转到网页
 				Intent intent3 = new Intent(getApplicationContext(), WebActivity.class);
 				intent3.putExtra("url",result);
 				startActivity(intent3);

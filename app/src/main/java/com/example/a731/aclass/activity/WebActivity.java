@@ -80,7 +80,7 @@ public class WebActivity extends BaseActivity {
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        getMenuInflater().inflate(R.menu.web_menu,menu);
+        getMenuInflater().inflate(R.menu.menu_web,menu);
         return super.onMenuOpened(featureId, menu);
     }
 

@@ -1,6 +1,8 @@
 package com.example.a731.aclass.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.presenter.SignUpPresenter;
 import com.example.a731.aclass.presenter.impl.SignUpPresenterImpl;
@@ -71,8 +74,9 @@ public class SignUpActivity extends BaseActivity implements SignUpView {
                     if (!smsCode.equals("")){
                         showProgress("正在注册");
                         //TODO:创建一个用户二维码
+                        Bitmap logo = BitmapFactory.decodeResource(getResources(),R.drawable.default_head_image);
                         //signUpPresenter.register(userName,phoneNum,password,qrCode,smsCode);
-                        signUpPresenter.register(userName,phoneNum,password,smsCode);
+                        signUpPresenter.register(userName,phoneNum,password,smsCode,logo);
                     }else{
                         Toast.makeText(SignUpActivity.this,"验证码不能为空",Toast.LENGTH_SHORT).show();
                     }

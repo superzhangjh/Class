@@ -1,14 +1,9 @@
 package com.example.a731.aclass.activity;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,15 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.DownloadImageServiceUtil.DownLoadImageService;
 import com.example.a731.aclass.util.DownloadImageServiceUtil.ImageDownLoadCallBack;
-import com.example.a731.aclass.util.QRCodeUtil;
 import com.example.a731.aclass.zxing.activity.CaptureActivity;
 
 import java.io.File;
 
-import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -105,7 +97,6 @@ public class QRCodeActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        //TODO:启动该Acticity需要从上个页面传3个数据参数
         Intent intent = getIntent();
         String qrCode = intent.getStringExtra("qrCode");
         headImage = intent.getStringExtra("headImage");
@@ -134,7 +125,7 @@ public class QRCodeActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.qr_code_menu,menu);
+        getMenuInflater().inflate(R.menu.menu_qr_code,menu);
         return true;
     }
 

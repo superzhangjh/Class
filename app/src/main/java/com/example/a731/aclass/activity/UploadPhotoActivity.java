@@ -1,8 +1,5 @@
 package com.example.a731.aclass.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,9 +7,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.data.Gallery;
+import com.example.a731.aclass.data.News;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +22,7 @@ public class UploadPhotoActivity extends BaseActivity {
     private EditText edtIntro;
     private Button btnCannel;
     private Button btnIssue;
-    private Gallery gallery;
+    private News news;
 
     @Override
     protected int getLayoutRes() {
@@ -55,7 +51,7 @@ public class UploadPhotoActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        gallery = new Gallery();
+        news = new News();
 
 
         //获取到的图片路径,请直接使用👇

@@ -46,7 +46,6 @@ public class MessPresenterImpl implements MessPresenter {
             Log.i("MesspresenterImpl","开始获取会话"+conversationMap.size());
             final EMConversation emConversation = entry.getValue();
             conversation = new Conversation();
-            conversation.setName(emConversation.conversationId());
             if (emConversation.getType() == EMConversation.EMConversationType.Chat){
                 BmobUtil.queryUser(emConversation.conversationId(), new FindListener<Users>() {
                     @Override
@@ -56,8 +55,14 @@ public class MessPresenterImpl implements MessPresenter {
                             EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
                             conversation.setLastMess(mess.getMessage());
                             conversation.setChatType(emConversation.getType());
+                            if (list.get(0).getName()!=null){
+                                conversation.setName(list.get(0).getName());
+                            }else{
+                                conversation.setName(list.get(0).getUsername());
+                            }
+
                             if (!conversations.contains(conversation))
-                            conversations.add(conversation);
+                                conversations.add(conversation);
                             Log.i("MesspresenterImpl","获取到个人会话"+conversations.size());
                             mMessView.onGetConversationSuccess(conversations);
 
@@ -75,6 +80,7 @@ public class MessPresenterImpl implements MessPresenter {
                             EMTextMessageBody mess = (EMTextMessageBody) emConversation.getLastMessage().getBody();
                             conversation.setLastMess(mess.getMessage());
                             conversation.setChatType(emConversation.getType());
+                            conversation.setName(list.get(0).getName());
                             conversations.add(conversation);
                             mMessView.onGetConversationSuccess(conversations);
                             Log.i("MesspresenterImpl","获取到群组会话"+conversations.size());
