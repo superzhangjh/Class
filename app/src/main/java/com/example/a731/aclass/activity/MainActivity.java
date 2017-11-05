@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
@@ -264,7 +265,18 @@ public class MainActivity extends BaseActivity implements MainView{
                         startActivity(QRintent);
                         break;
                     case R.id.main_nav_menu_logOut:
-                        mainPresenter.logOut();
+                        new AlertDialog.Builder(MainActivity.this).setTitle("你真的要离开了吗/(ㄒoㄒ)/~~")
+                                .setPositiveButton("还是算了", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        return;
+                                    }
+                                }).setNegativeButton("狠心离开", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mainPresenter.logOut();
+                            }
+                        }).show();
                         break;
                     case R.id.main_nav_menu_setting:
                         //TODO:软件设置
@@ -308,7 +320,7 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onClick(View v) {
                 if (presentGroupId!=null){
                     Intent intent = new Intent(getApplicationContext(), GroupInfoActivity.class);
-                    intent.putExtra("presentGroupId",presentGroupId);
+                    intent.putExtra("groupId",presentGroupId);
                     startActivity(intent);
                 }else{
                     showToast("你还未加入任何班圈");

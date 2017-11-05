@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_marginTop="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_add_group_admin_iv_head"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/default_head_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"/>
+    <TextView
+        android:id="@+id/item_add_group_admin_tv_name"
+        android:text="username"
+        android:layout_marginLeft="90dp"
+        android:textSize="18sp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/item_add_group_admin_btn_add"
+        android:text="设为管理员"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginRight="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</android.support.v7.widget.CardView>

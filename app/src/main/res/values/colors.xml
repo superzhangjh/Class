@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="chatData">#00ff11</color>
     <color name="line">#aaaaaa</color>
+    <color name="mainGroupBtn">#79befa</color>
 </resources>
