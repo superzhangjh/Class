@@ -132,7 +132,7 @@ public class CircleFragment extends BaseFragment{
                         break;
                     case 2:
                         msg="上传照片";
-                        showFhotoDialog();break;
+                        showPhotoDialog();break;
                     case 3:
                         msg="更多信息";
                         break;
@@ -143,7 +143,7 @@ public class CircleFragment extends BaseFragment{
         });
     }
 
-    private void showFhotoDialog() {
+    private void showPhotoDialog() {
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();//创建一个AlertDialog对象
         dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
         Window window = dialog.getWindow();

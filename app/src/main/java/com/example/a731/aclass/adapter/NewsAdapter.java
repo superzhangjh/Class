@@ -45,11 +45,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> im
         holder.itemView.setTag(position);
         News news = newsList.get(position);
         Users users = news.getUsers();
+        if (users.getHeadImg() != null)
         Glide.with(context).load(users.getHeadImg()).into(holder.imgHead);
-        holder.creatorName.setText(users.getName());
+        if (users.getName() != null){
+            holder.creatorName.setText(users.getName());
+        }else{
+            holder.creatorName.setText(users.getUsername());
+        }
+
         holder.date.setText(news.getDate());
         holder.intro.setText(news.getContent());
-        holder.like.setText(String.valueOf(news.getLike()));
+        holder.like.setText(String.valueOf(news.getLike().size()));
         //holder.commend = 评论
 
         //设置图片显示格式
@@ -62,6 +68,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> im
     @Override
     public int getItemCount() {
         return newsList ==null?0: newsList.size();
+    }
+
+    public void setListData(List<News> newsList) {
+        this.newsList = newsList;
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

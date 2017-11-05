@@ -96,9 +96,10 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onGetNoticeSuccess(List<Notice> list) {
         noticeList = list;
-        adapter.setListData(noticeList);
+        if (adapter!=null)
+            adapter.setListData(noticeList);
         Log.i("--------------CircleNotice","username:"+noticeList.get(0).getCreator().getUsername());
-        showToast("获取通知列表成功"+list.size()+"--"+presentGroupId);
+        showToast("获取动态列表成功"+list.size()+"--"+presentGroupId);
     }
 
     @Override

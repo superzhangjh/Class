@@ -1,6 +1,7 @@
 package com.example.a731.aclass.util;
 
 import com.example.a731.aclass.data.Group;
+import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.data.Vote;
@@ -174,6 +175,29 @@ public class BmobUtil {
 
     public static void queryVoteByObjectId(String objectId,QueryListener<Vote> listener) {
         BmobQuery<Vote> query = new BmobQuery<>();
+        query.getObject(objectId,listener);
+    }
+
+    /*-------------------------动态操作--------------------------------*/
+    public static void addNews(News news, SaveListener<String> listener){
+        news.save(listener);
+    }
+
+    public static void updateNews(News news, String objectId,UpdateListener listener) {
+        news.update(objectId,listener);
+    }
+
+    public static void queryNews(String groupObjectId,FindListener<News> listener){
+        BmobQuery<News> query = new BmobQuery<>();
+        Group group = new Group();
+        group.setObjectId(groupObjectId);
+        query.addWhereEqualTo("group", new BmobPointer(group));
+        query.include("users");
+        query.findObjects(listener);
+    }
+
+    public static void queryNewsByObjectId(String objectId,QueryListener<News> listener) {
+        BmobQuery<News> query = new BmobQuery<>();
         query.getObject(objectId,listener);
     }
 }

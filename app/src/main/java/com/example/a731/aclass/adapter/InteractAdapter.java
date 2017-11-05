@@ -38,12 +38,8 @@ public class InteractAdapter extends RecyclerView.Adapter<InteractAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_vote_item,parent,false);
         view.setOnClickListener(this);
-        if (view==null){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_circle_vote_item,parent,false);
-
-        }
         return new ViewHolder(view);
     }
 

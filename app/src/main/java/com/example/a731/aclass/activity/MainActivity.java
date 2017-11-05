@@ -25,9 +25,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -242,27 +244,7 @@ public class MainActivity extends BaseActivity implements MainView{
         headImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(MainActivity.this).setTitle("选择图片")
-                        .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String state = Environment.getExternalStorageState();
-                                if (state.equals(Environment.MEDIA_MOUNTED)) {
-                                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
-                                }
-                                else {
-                                    showToast("请确认已经插入SD卡");
-                                }
-                            }
-                        }).setNegativeButton("图库", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
-                    }
-                }).show();
+                showPhotoDialog();
             }
         });
 
@@ -473,6 +455,42 @@ public class MainActivity extends BaseActivity implements MainView{
                 mDrawerLayout.openDrawer(navRight);
         }
         return true;
+    }
+
+    private void showPhotoDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();//创建一个AlertDialog对象
+        dialog.show();//一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了\
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.dialog_select_photo);
+        window.setGravity(Gravity.CENTER);//设置对话框在界面底部显示
+        dialog.setCanceledOnTouchOutside(true);
+        TextView tvTakePhoto = (TextView) window.findViewById(R.id.dialog_select_photo_take);
+        TextView tvSelectPhoto = (TextView) window.findViewById(R.id.dialog_select_photo_album);
+
+        //拍照
+        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String state = Environment.getExternalStorageState();
+                if (state.equals(Environment.MEDIA_MOUNTED)) {
+                    Intent getImageByCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(getImageByCamera, ImageLoderUtil.CAPTURE_PHOTO_RESULT_CODE);
+                }
+                else {
+                    showToast("请确认已经插入SD卡");
+                }
+                dialog.cancel();
+            }
+        });
+        //选择照片
+        tvSelectPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent,ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE);
+                dialog.cancel();
+            }
+        });
     }
 
 
