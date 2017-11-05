@@ -56,7 +56,7 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
                             @Override
                             public void done(List<Group> list, final BmobException e) {
                                 if (e == null && (list==null || list.size()==0)){
-                                    Bitmap qrCode = QRCodeUtil.createImage(1,name,logo);
+                                    Bitmap qrCode = QRCodeUtil.createImage(1,groupId,logo);
                                     String QRCode = saveBitmapToFile(qrCode);
                                     createGroup(groupId,name,creator,headImg,QRCode);
                                 }else if (list.size()>0){

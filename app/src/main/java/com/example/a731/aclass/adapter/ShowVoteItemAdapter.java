@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -69,14 +70,15 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
         //Drawable checkboxDrawable = holder.itemContent.getButtonDrawable();
         if (isVote){//已投票时
             holder.itemContent.setButtonDrawable(null);
-            holder.itemCount.setVisibility(View.VISIBLE);
+            holder.itemCountBg.setVisibility(View.VISIBLE);
             if (checkItemList!=null){
                 if (itemList.get(position).getItemSelectId()!=null){
                     int size = itemList.get(position).getItemSelectId().size();
                     holder.itemCount.setText(String.valueOf(size));
                     String username = BmobUser.getCurrentUser(Users.class).getUsername();
                     if (itemList.get(position).getItemSelectId().contains(username)){
-                        holder.eachItem.setBackgroundColor(Color.YELLOW);
+                        holder.eachItemBg.setCardBackgroundColor(0xFF00aeae);
+                        holder.itemContent.setTextColor(Color.WHITE);
                     }
                 }else{
                     holder.itemCount.setText("0");
@@ -86,7 +88,7 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
             }
         }else {//未投票
             //holder.itemContent.setButtonDrawable(checkboxDrawable);
-            holder.itemCount.setVisibility(View.INVISIBLE);
+            holder.itemCountBg.setVisibility(View.INVISIBLE);
         }
 
         holder.itemContent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -131,12 +133,16 @@ public class ShowVoteItemAdapter extends RecyclerView.Adapter<ShowVoteItemAdapte
         LinearLayout eachItem;
         TextView itemCount;
         CheckBox itemContent;
+        CardView itemCountBg;
+        CardView eachItemBg;
         public ViewHolder(View itemView) {
             super(itemView);
             //信息框
             eachItem = (LinearLayout) itemView.findViewById(R.id.item_vote_eachItem);
             itemCount = (TextView) itemView.findViewById(R.id.item_vote_itemCount);
             itemContent = (CheckBox) itemView.findViewById(R.id.item_vote_itemContent);
+            itemCountBg = (CardView) itemView.findViewById(R.id.item_vote_itemCount_bg);
+            eachItemBg = (CardView) itemView.findViewById(R.id.item_vote_eachIteBg);
         }
     }
 

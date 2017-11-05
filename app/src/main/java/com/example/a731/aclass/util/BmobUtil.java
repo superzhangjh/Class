@@ -102,9 +102,10 @@ public class BmobUtil {
     });
     * */
 
-    public static void getGroupByField(String field,String groupId,FindListener<Group> listener){
+    public static void getGroupByField(String field,String value,FindListener<Group> listener){
         BmobQuery<Group> query = new BmobQuery<>();
-        query.addWhereEqualTo(field,groupId);
+        query.addWhereEqualTo(field,value);
+        query.include("creator");
         query.findObjects(listener);
     }
 
@@ -175,6 +176,7 @@ public class BmobUtil {
 
     public static void queryVoteByObjectId(String objectId,QueryListener<Vote> listener) {
         BmobQuery<Vote> query = new BmobQuery<>();
+        query.include("creator");
         query.getObject(objectId,listener);
     }
 

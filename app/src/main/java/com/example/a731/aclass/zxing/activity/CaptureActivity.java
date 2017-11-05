@@ -58,7 +58,7 @@ import okhttp3.Response;
  * thread. It draws a viewfinder to help the user place the barcode correctly,
  * shows feedback as the image processing is happening, and then overlays the
  * results when a scan is successful.
- * 
+ *
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
@@ -186,10 +186,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	/**
 	 * A valid barcode has been found, so give an indication of success and show
 	 * the results.
-	 * 
+	 *
 	 * @param rawResult
 	 *            The contents of the barcode.
-	 * 
+	 *
 	 * @param bundle
 	 *            The extras
 	 */
@@ -215,7 +215,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 				break;
 			case "group"://跳转到班圈二维码
 				Intent intent1 = new Intent(this, QRCodeRusultGroupActivity.class);
-				intent1.putExtra("creatorId",id);
+				intent1.putExtra("groupId",id);
 				startActivity(intent1);
 				finish();
 				break;

@@ -2,6 +2,7 @@ package com.example.a731.aclass.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,10 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
     private boolean[] isAdmin;
     private OnItemClickListener listener;
 
-    public AddGroupAdminAdapter(Context context){
+    public AddGroupAdminAdapter(Context context,List<Users> usersList){
         this.context = context;
+        this.usersList = usersList;
+
     }
 
     @Override
@@ -38,7 +41,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Users users = usersList.get(position);
         if (isAdmin[position]){
             holder.btnAddOrCancel.setText("取消管理员");
@@ -46,7 +49,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
             holder.btnAddOrCancel.setText("设置为管理员");
         }
         if (users.getHeadImg()!=null)
-        Glide.with(context).load(users.getHeadImg()).into(holder.headImg);
+            Glide.with(context).load(users.getHeadImg()).into(holder.headImg);
         if (users.getName()!=null){
             holder.name.setText(users.getName());
         }else{
@@ -56,7 +59,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
         holder.btnAddOrCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(position);
+                listener.onItemClick(holder.getAdapterPosition());
             }
         });
     }
@@ -77,6 +80,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
     public void setDataChanged(List<Users> usersList, boolean[] isAdmin){
         this.usersList = usersList;
         this.isAdmin = isAdmin;
+        Log.i("AddGroupAdminAdapter",usersList.size()+"---"+isAdmin.length);
         notifyDataSetChanged();
     }
 

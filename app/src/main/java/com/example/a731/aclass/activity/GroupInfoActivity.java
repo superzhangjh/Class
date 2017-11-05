@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +89,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         initAdminRecyclerView();
 
         showProgress("正在加载圈界面");
-
+        Log.i("GroupInfoActivity",groupId);
         groupInfoPresenter.getGroup(groupId);
     }
 
@@ -182,6 +183,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
             @Override
             public void onClick(View v) {
                 SharedPreferencesUtil.saveDataToSharedPreferences(BmobUser.getCurrentUser().getUsername(),group.getGroupId(),GroupInfoActivity.this);
+                showToast("修改主班圈成功，请重新进入应用以更新信息");
             }
         });
     }
@@ -240,6 +242,10 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
 
     @Override
     public void onGetGroupSuccess(List<Group> list) {
+        if (list == null || list.size() == 0){
+            Log.i("GroupInfoActivity","获取班圈失败");
+            return;
+        }
         group = list.get(0);
         if (group.getCreator().getUsername().equals(BmobUser.getCurrentUser().getUsername()) ){
             limit = true;
@@ -255,7 +261,8 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
 
     @Override
     public void onGetGroupFail(String s) {
-        showToast("获取班圈失败"+s+getIntent().getStringExtra("groupId"));
+        showToast(s+"---"+getIntent().getStringExtra("groupId"));
+        Log.i("GroupInfoActivity",s);
         hideProgress();
     }
 

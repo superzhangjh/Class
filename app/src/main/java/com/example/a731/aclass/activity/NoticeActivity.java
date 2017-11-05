@@ -27,6 +27,7 @@ public class NoticeActivity extends BaseActivity {
     private TextView tvDate;
     private TextView tvGroupName;
     private TextView tvContent;
+    private TextView tvSelect;
     private RecyclerView recyclePhoto;
 
     private Notice notice;
@@ -79,11 +80,25 @@ public class NoticeActivity extends BaseActivity {
         tvGroupName = (TextView) findViewById(R.id.activity_notice_tv_group_name);
         tvContent = (TextView) findViewById(R.id.activity_notice_tv_content);
         recyclePhoto = (RecyclerView) findViewById(R.id.activity_notice_recycle_photo);
+        tvSelect = (TextView) findViewById(R.id.activity_notice_tv_select);
     }
 
     @Override
     public void initListener() {
+        //删除
+        tvSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO:判断是否是本人发的，如果是显示该按钮并实现，如果不是隐藏
+            }
+        });
+        //跳转班圈
+        tvGroupName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
     @Override

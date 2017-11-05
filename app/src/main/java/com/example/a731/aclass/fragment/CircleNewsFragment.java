@@ -98,9 +98,9 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
 
     @Override
     public void initData() {
-        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-        if (presentGroupId!=null)
-            presenter.getGroupNews(presentGroupId);
+        if (presentGroupId==null)
+            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        presenter.getGroupNews(presentGroupId);
     }
 
     @Override
@@ -120,5 +120,13 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
     @Override
     public void onGetGroupFail(String message) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (presentGroupId==null)
+            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        presenter.getGroupNews(presentGroupId);
     }
 }

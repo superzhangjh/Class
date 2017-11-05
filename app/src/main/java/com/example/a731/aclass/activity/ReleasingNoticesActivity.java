@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
@@ -29,6 +30,8 @@ import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.ReleasingNoticesView;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,9 +55,9 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
 
     private EditText edtTitle;
     private EditText edtContent;
-    private ImageView imgImage;
-    private ImageView imgFile;
-    private ImageView imgSound;
+    private TextView tvAddPhoto;
+    private TextView tvAddDocument;
+    private TextView tvAddSounds;
     private ImageView imgCross;
     private ImageView imgCheck;
     private RecyclerView recPhoto;
@@ -73,9 +76,9 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     public void initView() {
         edtTitle = (EditText) findViewById(R.id.releasing_notices_edtTitle);
         edtContent = (EditText) findViewById(R.id.releasing_notices_edt);
-        imgImage = (ImageView) findViewById(R.id.releasing_notices_imgImage);
-        imgFile = (ImageView) findViewById(R.id.releasing_notices_imgFile);
-        imgSound = (ImageView) findViewById(R.id.releasing_notices_imgSound);
+        tvAddPhoto = (TextView) findViewById(R.id.releasing_notices_tv_photo);
+        tvAddDocument = (TextView) findViewById(R.id.releasing_notices_tv_document);
+        tvAddSounds = (TextView) findViewById(R.id.releasing_notices_tv_sounds);
         imgCross = (ImageView) findViewById(R.id.releasing_notices_cross);
         imgCheck = (ImageView) findViewById(R.id.releasing_notices_check);
         recPhoto = (RecyclerView) findViewById(R.id.releasing_notices_recycler_photo);
@@ -105,7 +108,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     }
 
     private void addDocument() {
-        imgFile.setOnClickListener(new View.OnClickListener() {
+        tvAddDocument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO:打开文件管理器,仅支持ppt,word,excll，和zip
@@ -114,7 +117,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     }
 
     private void addVoice() {
-        imgSound.setOnClickListener(new View.OnClickListener() {
+        tvAddSounds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO:录音功能
@@ -123,7 +126,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     }
 
     private void addImage() {
-        imgImage.setOnClickListener(new View.OnClickListener() {
+        tvAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new android.support.v7.app.AlertDialog.Builder(ReleasingNoticesActivity.this).setTitle("选择图片")

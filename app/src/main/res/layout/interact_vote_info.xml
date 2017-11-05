@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="10dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/interact_vote_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.CardView
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="50dp"
-            android:layout_height="24dp">
+        android:layout_height="50dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--类型-->
+            <android.support.v7.widget.CardView
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="50dp"
+                android:layout_height="24dp">
+                <TextView
+                    android:id="@+id/interact_vote_tv_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+            </android.support.v7.widget.CardView>
+            <!--头像-->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/interact_vote_img_head"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <!--名称-->
             <TextView
-                android:id="@+id/interact_vote_tv_type"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#077"
-                android:gravity="center"
-                android:text="调查"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-        </android.support.v7.widget.CardView>
+                android:id="@+id/interact_vote_tv_name"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/interact_vote_img_head"
-            android:src="@drawable/userinfo_head_background"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            <View
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <!--日期-->
+            <TextView
+                android:layout_marginRight="10dp"
+                android:id="@+id/interact_vote_tv_date"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/interact_vote_tv_name"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"
-            android:text="发布者名称"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-        <View
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/interact_vote_tv_date"
-            android:layout_gravity="center_vertical"
-            android:text="09-20 11:11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -70,9 +70,12 @@
             android:textColor="#111"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:text="我在任命广场吃着炸鸡啊在任命广场吃着炸鸡啊在任命广场吃着炸鸡啊"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"/>
     </LinearLayout>
 
     <TextView
@@ -80,12 +83,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    //相片
-
+    <!--//相片-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/interact_vote_recycler_item"
         android:layout_width="match_parent"
@@ -100,41 +101,49 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="5dp"/>
 
-    //投票内容
-
+    <!--//投票内容-->
     <LinearLayout
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/interact_vote_tv_expirationDate"
-            android:textColor="#333"
-            android:textSize="16dp"
-            android:gravity="center"
-            android:text="剩余5天  "
             android:layout_width="wrap_content"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textColor="#333"
+            android:textSize="16sp" />
 
         <View
-            android:layout_weight="1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/interact_vote_tv_select"
-            android:background="#f33"
-            android:textColor="#fff"
-            android:textSize="16dp"
-            android:gravity="center"
-            android:text="已投票"
+        <android.support.v7.widget.CardView
+            android:id="@+id/interact_vote_tv_select_bg"
             android:layout_width="wrap_content"
-            android:layout_height="30dp" />
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#888"
+            app:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/interact_vote_tv_select"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </LinearLayout>

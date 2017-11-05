@@ -1,9 +1,11 @@
 package com.example.a731.aclass.activity;
 
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
 
     private static final int LINE_COUNT = 4;
     private CircleImageView imgHead;
+    private Toolbar toolbar;
     private TextView tvType;
     private TextView tvName;
     private TextView tvDate;
@@ -42,6 +45,7 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
     private RecyclerView mRecyclerItem;
     private TextView tvExpirationDate;
     private TextView tvSelect;
+    private CardView tvSelectBg;
     private List<VoteContent.Item> itemList= new ArrayList<>();
 
     private VoteInfoPresenter presenter = new VoteInfoPresenterImpl(this);
@@ -56,6 +60,13 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
 
     @Override
     public void initView() {
+        initToolbar();
+
+        //获取数据
+        objectId = getIntent().getStringExtra("objectId");
+        showToast(objectId);
+        presenter.getVoteByObjectId(objectId);
+
         imgHead = (CircleImageView) findViewById(R.id.interact_vote_img_head);
         tvType = (TextView) findViewById(R.id.interact_vote_tv_type);
         tvName = (TextView) findViewById(R.id.interact_vote_tv_name);
@@ -66,7 +77,22 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
         mRecyclerItem = (RecyclerView) findViewById(R.id.interact_vote_recycler_item);
         tvExpirationDate = (TextView) findViewById(R.id.interact_vote_tv_expirationDate);
         tvSelect = (TextView) findViewById(R.id.interact_vote_tv_select);
+        tvSelectBg = (CardView) findViewById(R.id.interact_vote_tv_select_bg);
+    }
 
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.interact_vote_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        // 显示标题栏左上角的返回按钮
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //点击toolbar后导航栏 左上角的图标后，退出当前界面
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -76,10 +102,6 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
 
     @Override
     public void initData() {
-        //获取数据
-        objectId = getIntent().getStringExtra("objectId");
-        showToast(objectId);
-        presenter.getVoteByObjectId(objectId);
     }
 
     @Override
@@ -119,10 +141,18 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
         tvDate.setText(voteContent.getDate());
         int type = voteContent.getType();
         switch (type){
-            case 0:tvType.setText("调查");break;
-            case 1:tvType.setText("评选");break;
-            case 2:tvType.setText("测试");break;
-            default:tvType.setText("其他");break;
+            case 0:tvType.setText("调查");
+                tvType.setBackgroundColor(0xff00aeae);
+                break;
+            case 1:tvType.setText("评选");
+                tvType.setBackgroundColor(0xffff7575);
+                break;
+            case 2:tvType.setText("测试");
+                tvType.setBackgroundColor(0xff46a3ff);
+                break;
+            default:tvType.setText("其他");
+                tvType.setBackgroundColor(0xffffd306);
+                break;
         }
         tvTitle.setText(voteContent.getTitle());
         tvContent.setText(voteContent.getContent());
@@ -156,9 +186,9 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
             }
         }
         if (isVote){
-            tvSelect.setBackgroundColor(Color.YELLOW);
+            tvSelectBg.setCardBackgroundColor(0xFF00aeae);
             tvSelect.setText("已投");
-            tvSelect.setTextColor(Color.BLACK);
+            tvSelect.setTextColor(Color.WHITE);
         }else {
             tvSelect.setText("投票");
             tvSelect.setOnClickListener(new View.OnClickListener() {
@@ -178,9 +208,9 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
                         itemAdapter.SetItemListDataChange(itemList);
                     }
 
-                    tvSelect.setBackgroundColor(Color.YELLOW);
+                    tvSelectBg.setCardBackgroundColor(0xFF00aeae);
                     tvSelect.setText("已投");
-                    tvSelect.setTextColor(Color.BLACK);
+                    tvSelect.setTextColor(Color.WHITE);
 
                     String data = new Gson().toJson(voteContent);
                     vote.setContent(data);

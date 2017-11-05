@@ -77,17 +77,33 @@ public class QRCodeResultGroupPresenterImpl implements QRCodeResultGroupPresente
     }
 
     @Override
-    public void getGroup(String groupId) {
-        BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
+    public void getGroup(final String groupId) {
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
-            public void done(List<Group> list, BmobException e) {
-                if (e == null){
-                    mView.onGetGroupSuccess(list.get(0));
-                }else{
-                    mView.onGetGroupFail(e.getMessage());
-                }
+            public void run() {
+                BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
+                    @Override
+                    public void done(final List<Group> list, final BmobException e) {
+                        if (e == null){
+                            ThreadUtils.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mView.onGetGroupSuccess(list.get(0));
+                                }
+                            });
+                        }else{
+                            ThreadUtils.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mView.onGetGroupFail(e.getMessage());
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
+
     }
 
 }

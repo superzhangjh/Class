@@ -98,6 +98,7 @@
     <!--好友列表-->
     <!--<include layout="@layout/include_main_nav_right"/>-->
     <android.support.design.widget.NavigationView
+        android:padding="10dp"
         android:id="@+id/main_nav_right"
         android:layout_width="300dp"
         android:layout_height="match_parent"
@@ -136,33 +137,25 @@
                     android:layout_height="30dp" />
             </LinearLayout>
 
+            <View
+                android:background="@color/line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-                <LinearLayout
 
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:background="#000"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp" />
-                    <TextView
-                        android:text="好友"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:background="#000"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp" />
-                </LinearLayout>
+                <TextView
+                    android:textColor="#000"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="好友"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <ListView
                     android:id="@+id/main_nav_right_listview"
@@ -181,27 +174,22 @@
                     android:textColor="#ffffff"
                     android:textSize="40sp"
                     android:visibility="gone" />
-                <LinearLayout
-                    android:orientation="horizontal"
+
+                <View
+                    android:layout_marginTop="10dp"
+                    android:background="@color/line"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:background="#000"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp" />
-                    <TextView
-                        android:text="班圈"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:background="#000"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp" />
-                </LinearLayout>
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:textColor="#000"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="班圈"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <ListView
                     android:id="@+id/main_nav_right_list_group"
                     android:layout_width="match_parent"
