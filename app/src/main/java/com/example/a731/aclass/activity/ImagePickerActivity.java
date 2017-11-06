@@ -300,6 +300,7 @@ public class ImagePickerActivity extends Activity implements ListImageDirPopupWi
 				Intent intent = new Intent();
 				intent.putStringArrayListExtra("selectImg",mSelectImages);
 				setResult(1,intent);
+				mAdapter.getImages().clear();
 				finish();
 			}
 		});

@@ -88,7 +88,7 @@ public class SignUpPresenterImpl implements SignUpPresenter{
     private void registerBmob(final String userName, String phoneNum, final String password, String smsCode, final String filePath) {
         BmobUtil.register(userName, phoneNum, password, smsCode, new SaveListener<Users>() {
             @Override
-            public void done(Users users, final BmobException e) {
+            public void done(final Users users, final BmobException e) {
                 if (e == null){
                     final BmobFile bmobFile = new BmobFile(new File(filePath));
                     bmobFile.uploadblock(new UploadFileListener() {
@@ -96,20 +96,24 @@ public class SignUpPresenterImpl implements SignUpPresenter{
                         public void done(BmobException e) {
                             if (e == null){
                                 final String imgPath = bmobFile.getFileUrl();
-                                Users users = new Users();
-                                users.setQRCode(imgPath);
-                                BmobUtil.updateUser(users, BmobUser.getCurrentUser(Users.class).getObjectId(), new UpdateListener() {
+                                Users user = new Users();
+                                user.setQRCode(imgPath);
+                                BmobUtil.updateUser(user, users.getObjectId(), new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null){
-                                            ThreadUtils.runOnUiThread(new Runnable() {
+                                            ThreadUtils.runOnBackgroundThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    mSignUpView.onRegisterSuccess();
                                                     EaseMobUtil.login(userName, password, new EMCallBack() {
                                                         @Override
                                                         public void onSuccess() {
-                                                            mSignUpView.onRegisterSuccess();
+                                                            ThreadUtils.runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    mSignUpView.onRegisterSuccess();
+                                                                }
+                                                            });
                                                         }
 
                                                         @Override

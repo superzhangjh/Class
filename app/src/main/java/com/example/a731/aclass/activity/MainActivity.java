@@ -3,6 +3,7 @@ package com.example.a731.aclass.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,12 +43,14 @@ import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.adapter.GroupAdapter;
+import com.example.a731.aclass.data.BasicMessage;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
 import com.example.a731.aclass.fragment.MessFragment;
 import com.example.a731.aclass.presenter.MainPresenter;
 import com.example.a731.aclass.presenter.impl.MainPresenterImpl;
+import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
@@ -58,6 +61,9 @@ import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.util.NetUtils;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.exceptions.DataSupportException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -128,6 +134,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     protected int getLayoutRes() {
+
         return R.layout.activity_main;
     }
 
@@ -573,7 +580,27 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void onGetFriendsSuccess(List<Users> friendList) {
         this.friendList = friendList;
-        if (friendList!=null)
+        for (Users users:friendList){
+
+            List<BasicMessage> messages = DataSupport.where("userId = ?",users.getUsername()).find(BasicMessage.class);
+            if (messages.size() == 0){
+                BasicMessage message = new BasicMessage();
+                message.setType(BasicMessage.GROUP);
+                message.setUserId(users.getUsername());
+                message.setName(users.getName());
+                message.setHeadImg(users.getHeadImg());
+                message.save();
+            }
+
+            else{
+                ContentValues values = new ContentValues();
+                values.put("type",BasicMessage.GROUP);
+                values.put("name",users.getName());
+                values.put("headImg",users.getHeadImg());
+                DataSupport.updateAll(BasicMessage.class,values,"userId = ?",users.getUsername()+"");
+            }
+        }
+        if (friendAdapter!=null)
             friendAdapter.onDataChanged(friendList);
         int friendCount = friendList.size();
         tvFriendCount.setText("通讯录("+ friendCount +")");
@@ -605,12 +632,32 @@ public class MainActivity extends BaseActivity implements MainView{
         }else if (SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this)!=null){
             presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this);
         }
+
+
         for (Group group:groupList){
             if (group.getGroupId().equals(presentGroupId)){
                 Glide.with(this).load(group.getHeadImg()).into(imgToolbarClassHead);
                 TITLE_GROUP_NAME = group.getName();
                 tvTitle.setText(group.getName());
             }
+
+            List<BasicMessage> messages = DataSupport.where("userId = ?",group.getGroupId()).find(BasicMessage.class);
+            if (messages.size() == 0){
+                BasicMessage message = new BasicMessage();
+                message.setType(BasicMessage.GROUP);
+                message.setUserId(group.getGroupId());
+                message.setName(group.getName());
+                message.setHeadImg(group.getHeadImg());
+                message.save();
+            }
+            else{
+                ContentValues values = new ContentValues();
+                values.put("type",BasicMessage.GROUP);
+                values.put("name",group.getName());
+                values.put("headImg",group.getHeadImg());
+                DataSupport.updateAll(BasicMessage.class,values,"userId = ?",group.getGroupId()+"");
+            }
+
         }
     }
 
@@ -628,18 +675,17 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MODIFIED_RESULT){
-            Users users = BmobUser.getCurrentUser(Users.class);
-            name.setText(users.getName()==null?"请完善你的个人信息":users.getName());
-            project.setText(users.getProject()==null?"请完善你的个人信息":users.getProject());
-            local.setText(users.getHomeLand()==null?"请完善你的个人信息":users.getHomeLand());
-            intro.setText(users.getIntro()==null?"请完善你的个人信息":users.getIntro());
-            showToast("更新数据成功");
-        }
         if(data == null){
             return;
         }
+        if (requestCode == MODIFIED_RESULT){
 
+            name.setText(data.getStringExtra("name") == null?mUser.getName():data.getStringExtra("name"));
+            project.setText(data.getStringExtra("project")==null?mUser.getProject():data.getStringExtra("project"));
+            local.setText(data.getStringExtra("homeLand")==null?mUser.getHomeLand():data.getStringExtra("homeLand"));
+            intro.setText(data.getStringExtra("intro")==null?mUser.getIntro():data.getStringExtra("intro"));
+            showToast("更新数据成功");
+        }
         if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
             Uri uri = data.getData();
             headImg.setImageURI(uri);

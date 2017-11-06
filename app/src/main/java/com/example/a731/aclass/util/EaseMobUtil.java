@@ -104,6 +104,10 @@ public class EaseMobUtil {
         return messages;
     }
 
+    public static EMConversation getConversation(String username) {
+        return EMClient.getInstance().chatManager().getConversation(username);
+    }
+
     /*-------------------好友功能----------------------------*/
     //获取好友列表
     public static List<String> getFriends() throws HyphenateException {

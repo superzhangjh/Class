@@ -21,7 +21,9 @@ import com.example.a731.aclass.presenter.impl.VoteInfoPresenterImpl;
 import com.example.a731.aclass.view.VoteInfoView;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
@@ -159,6 +161,10 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
         tvDate.setText(voteContent.getDate());
         tvExpirationDate.setText("截止日期:"+voteContent.getExpirationDate());
         //TODO:“请投票”，“已投”和“活动结束”无法点击
+        SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+        int now = Integer.valueOf(format.format(new Date()));
+        int last = Integer.valueOf(voteContent.getExpirationDate());
+
         //tvSelect.setText("");
 
         //相片

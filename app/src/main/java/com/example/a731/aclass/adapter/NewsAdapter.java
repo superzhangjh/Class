@@ -72,7 +72,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         holder.intro.setText(news.getContent());
 
 
-        final String username = users.getUsername();
+        String username = users.getUsername();
         if (news.getLike().contains(username)){
             holder.likeIcon.setBackgroundResource(R.drawable.icon_like);
         }else {
@@ -82,19 +82,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (news.getLike().contains(username)){
+                String currentUser = BmobUser.getCurrentUser(Users.class).getUsername();
+                if (news.getLike().contains(currentUser)){
                     Toast.makeText(context,"你已经赞过了",Toast.LENGTH_SHORT).show();
                 }else {
                     if (news.getLike().size()==0){
                         news.setLike(new ArrayList<String>());
                     }
                     List<String> likeList = news.getLike();
-                    likeList.add(BmobUser.getCurrentUser(Users.class).getUsername());
+                    likeList.add(currentUser);
                     holder.likeIcon.setBackgroundResource(R.drawable.icon_like);
                     int addLike = news.getLike().size();
                     holder.likeCount.setText(addLike+"");
                     news.setLike(likeList);
                     //TODO:更新news的数据到网上，不要刷新本地列表
+
+
                 }
             }
         });

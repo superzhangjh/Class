@@ -1,5 +1,7 @@
 package com.example.a731.aclass.presenter.impl;
 
+import android.util.Log;
+
 import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ChatPresenter;
@@ -7,6 +9,7 @@ import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.ChatView;
 import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
@@ -74,25 +77,21 @@ public class ChatPresenterImpl implements ChatPresenter {
         });
     }
 
-    public EMMessage getConversationLastRecord(String username){
-        return EaseMobUtil.getConversationLastRecord(username);
-    }
-
     public void getConversationRecord(final String username){
         ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
             public void run() {
-                EMMessage msgs = getConversationLastRecord(username);
-                if (msgs == null) return;
-                String lastMsgId = msgs.getMsgId();
-                List<EMMessage> emMessages = EaseMobUtil.getConversationRecord(username,lastMsgId);
-                emMessages.add(msgs);
+                EMConversation conversation = EaseMobUtil.getConversation(username);
+                if (conversation == null) return;
+                List<EMMessage> emMessages = conversation.getAllMessages();
+
 
                 for (int i=0; i<emMessages.size();i++){
                     EMMessage msg = emMessages.get(i);
                     Mess mess = new Mess();
                     mess.setCreatorID(msg.getFrom());
                     mess.setDate(msg.getMsgTime());
+                    Log.i("ChatPresenterImpl-time",msg.getMsgTime()+"");
                     switch(msg.getType()){
                         //文本信息
                         case TXT:

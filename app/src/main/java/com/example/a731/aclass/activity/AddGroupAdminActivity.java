@@ -31,13 +31,6 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     private boolean isGetUsersOver = false;
     private String groupObjectId;
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            adapter.setDataChanged(usersList,isAdmin);
-        }
-    };
     @Override
     protected int getLayoutRes() {
         return R.layout.activity_add_group_admin;
@@ -52,8 +45,9 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
         addGroupAdminContent = (RecyclerView) findViewById(R.id.add_group_admin_recycler_content);
         adapter = new AddGroupAdminAdapter(this,usersList);
         LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        addGroupAdminContent.setAdapter(adapter);
         addGroupAdminContent.setLayoutManager(manager);
+        addGroupAdminContent.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new AddGroupAdminAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -85,20 +79,19 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     @Override
     public void onGetGroupMemberSuccess(List<Users> list) {
         if (isGetUsersOver){
-
             list.removeAll(usersList);
-
             usersList.addAll(list);
             int size = usersList.size() - list.size();
             isAdmin = new boolean[usersList.size()];
             for (int i=0;i<size;i++){
                 isAdmin[i] = true;
             }
-            handler.sendEmptyMessage(0);
+            adapter.setDataChanged(usersList,isAdmin);
         }else{
             usersList = list;
             isGetUsersOver = true;
         }
+
     }
 
     @Override
@@ -125,7 +118,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
             for (int i=0;i<list.size();i++){
                 isAdmin[i] = true;
             }
-            handler.sendEmptyMessage(0);
+            adapter.setDataChanged(usersList,isAdmin);
         }else{
             usersList = list;
             isGetUsersOver = true;
