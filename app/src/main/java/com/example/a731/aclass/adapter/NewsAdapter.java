@@ -97,8 +97,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
                     holder.likeCount.setText(addLike+"");
                     news.setLike(likeList);
                     //TODO:更新news的数据到网上，不要刷新本地列表
-
-
                 }
             }
         });

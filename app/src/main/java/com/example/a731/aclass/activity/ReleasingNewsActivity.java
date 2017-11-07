@@ -30,6 +30,7 @@ import com.example.a731.aclass.presenter.impl.ReleasingNewsPresenterImpl;
 import com.example.a731.aclass.util.DateUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.SharedPreferencesUtil;
+import com.example.a731.aclass.util.ToastUtil;
 import com.example.a731.aclass.view.ReleasingNewsView;
 
 import java.io.File;
@@ -221,7 +222,13 @@ public class ReleasingNewsActivity extends BaseActivity implements ReleasingNews
                     }
                 }
                 mImgs.add(fileName);
-                photoList = mImgs;
+                for (String fileUrl :mImgs){
+                    if (photoList.size()>=9){
+                        showToast("最多只能添加9张图片哦~");
+                        return;
+                    }
+                    photoList.add(fileUrl);
+                }
                 photoAdapter.setOndataChange(photoList);
             }
         }

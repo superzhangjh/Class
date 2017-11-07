@@ -1,5 +1,6 @@
 package com.example.a731.aclass.data;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Vote extends BmobObject implements Serializable {
     private String date;//创建日期
     private String expirationDate;//截止日期*/
     private List<String> photoList;//图片链接
+
     //private List<Item> voteItems;//投票选项
     private Group group;
     private String Content;//封装的Joson数据

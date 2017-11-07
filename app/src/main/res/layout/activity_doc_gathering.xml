@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/releasing_doc_gather_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--内容-->
+            <EditText
+                android:id="@+id/releasing_doc_gather_edt_content"
+                android:hint="描述下想要收取的资料类型吧~"
+                android:gravity="start"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ccc"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="添加"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <!--添加图片-->
+                <Button
+                    android:textSize="20sp"
+                    android:textColor="@color/colorDarkBlue"
+                    android:id="@+id/releasing_doc_gather_btn_add_picture"
+                    android:text="图片"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
+                <!--添加文件-->
+                <Button
+                    android:textSize="20sp"
+                    android:textColor="@color/colorDarkBlue"
+                    android:id="@+id/releasing_doc_gather_btn_add_file"
+                    android:text="文件"
+                    android:gravity="center"
+                    android:background="@null"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!--图片列表-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/releasing_news_recycler_pinture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <!--文件数量提醒-->
+            <TextView
+                android:visibility="gone"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/releasing_doc_gather_tv_file_count"
+                android:layout_marginTop="10dp"
+                android:text="已添加的文件(9)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <!--图片列表-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/releasing_doc_gather_recycler_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

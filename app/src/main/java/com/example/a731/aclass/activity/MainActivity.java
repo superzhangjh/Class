@@ -274,6 +274,10 @@ public class MainActivity extends BaseActivity implements MainView{
                         startActivity(intent);
                         break;
                     case R.id.main_nav_menu_groupinfo://跳转到班圈主页
+                        if (presentGroupId==null){
+                            showToast("你还未设置班圈");
+                            finish();
+                        }
                         Intent groupInfoIntent = new Intent(MainActivity.this,GroupInfoActivity.class);
                         groupInfoIntent.putExtra("groupId",presentGroupId);
                         startActivity(groupInfoIntent);

@@ -26,6 +26,7 @@ import com.azhon.suspensionfab.OnFabClickListener;
 import com.azhon.suspensionfab.SuspensionFab;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.ImagePickerActivity;
+import com.example.a731.aclass.activity.ReleasingDocGatheringActivity;
 import com.example.a731.aclass.activity.ReleasingNewsActivity;
 import com.example.a731.aclass.activity.ReleasingNoticesActivity;
 import com.example.a731.aclass.activity.ScheduleActivity;
@@ -34,6 +35,8 @@ import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.PopItemUtil;
+import com.example.a731.aclass.util.ToastUtil;
 import com.example.a731.aclass.util.customView.NoScrollViewPager;
 
 import java.io.File;
@@ -234,7 +237,7 @@ public class CircleFragment extends BaseFragment{
                         break;
                     case 1:
                         ibFnType=1;
-                        tvFnText.setText("投票");
+                        tvFnText.setText("互动");
                         break;
                     case 2:
                         ibFnType=2;
@@ -271,7 +274,7 @@ public class CircleFragment extends BaseFragment{
                         tvFnText.setText("通知");
                         break;
                     case 1:
-                        tvFnText.setText("投票");
+                        tvFnText.setText("互动");
                         break;
                     case 2:
                         tvFnText.setText("说说");
@@ -291,15 +294,30 @@ public class CircleFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 switch (ibFnType){
-                    case 0:
-                        Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
-                        startActivity(releasingNotice);
+                    case 0://通知
+                        String[] interactTypes = {"发布通知","资料收取"};
+                        PopItemUtil popItemUtil = new PopItemUtil(getContext(),interactTypes);
+                        popItemUtil.setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                switch (position){
+                                    case 0:
+                                        Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
+                                        startActivity(releasingNotice);
+                                        break;
+                                    case 1:
+                                        Intent gatherDocIntent = new Intent(getContext(), ReleasingDocGatheringActivity.class);
+                                        startActivity(gatherDocIntent);
+                                        break;
+                                }
+                            }
+                        });
                     break;
-                    case 1:
+                    case 1://互动
                         Intent startVoteIntent = new Intent(getContext(), StartVoteActivity.class);
                         startActivity(startVoteIntent);
                         break;
-                    case 2:
+                    case 2://动态
                         Intent ReleasingNews = new Intent(getContext(), ReleasingNewsActivity.class);
                         startActivity(ReleasingNews);
                         break;

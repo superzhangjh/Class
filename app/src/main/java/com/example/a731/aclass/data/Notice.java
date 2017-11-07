@@ -15,7 +15,17 @@ public class Notice extends BmobObject implements Serializable{
     private String title;//标题
     private String content;//内容
     private List<String> photoList;//图片链接
+    private List<String> fileList;//文件链接
     private Group group;
+
+    public List<String> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<String> fileList) {
+        this.fileList = fileList;
+    }
+
     private String date;
 
     public String getDate() {
