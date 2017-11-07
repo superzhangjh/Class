@@ -109,7 +109,7 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
 
     @Override
     public void onGetNewsSuccess(List<News> list) {
-        showToast("获取动态成功"+list.size());
+        //showToast("获取动态成功"+list.size());
         newsList = list;
         if (adapter != null){
             adapter.setListData(newsList);

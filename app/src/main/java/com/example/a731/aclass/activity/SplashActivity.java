@@ -2,21 +2,11 @@ package com.example.a731.aclass.activity;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
-
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.data.BasicMessage;
-import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.SplashPresenter;
 import com.example.a731.aclass.presenter.impl.SplashPresenterImpl;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.view.SplashView;
-
-import org.litepal.crud.DataSupport;
-import org.litepal.exceptions.DataSupportException;
-
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobUser;
 
 /**
  * Created by 郑选辉 on 2017/9/19.

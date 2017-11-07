@@ -79,7 +79,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
         return usersList.size();
     }
 
-    public void setDataChanged(List<Users> usersList, boolean[] isAdmin){
+    public void setListData(List<Users> usersList, boolean[] isAdmin){
         this.usersList = usersList;
         this.isAdmin = isAdmin;
         Log.i("AddGroupAdminAdapter",usersList.size()+"---"+isAdmin.length);

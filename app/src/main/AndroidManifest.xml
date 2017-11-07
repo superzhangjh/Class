@@ -75,18 +75,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ChatActivity"/>
 
         <activity android:name=".activity.SignUpActivity"/>
 
-        <activity android:name=".activity.ChatActivity"/>
 
         <activity android:name=".activity.CreateGroupActivity">
         </activity>
 
         <activity android:name=".activity.GroupInfoActivity"
             android:theme="@style/NoActionBar"/>
-
         <activity android:name=".activity.UserInfoActivity"
+
             android:theme="@style/NoActionBar"
             android:label=""/>
         <activity android:name=".activity.SearchUserActivity"/>
@@ -107,6 +107,9 @@
         <activity android:name=".activity.NoticeActivity"/>
         <activity android:name=".activity.ReleasingNewsActivity"/>
         <activity android:name=".activity.AddGroupAdminActivity"/>
+        <activity android:name=".activity.SignatureQRCodeActivity"/>
+        <activity android:name=".activity.SignatureDetailActivity"/>
+        <activity android:name=".activity.SignatureActivity"/>
         <!-- ZXing Activity-->
         <activity
             android:name=".zxing.activity.CaptureActivity"

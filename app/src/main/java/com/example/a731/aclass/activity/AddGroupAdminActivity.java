@@ -86,7 +86,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
             for (int i=0;i<size;i++){
                 isAdmin[i] = true;
             }
-            adapter.setDataChanged(usersList,isAdmin);
+            adapter.setListData(usersList,isAdmin);
         }else{
             usersList = list;
             isGetUsersOver = true;
@@ -118,7 +118,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
             for (int i=0;i<list.size();i++){
                 isAdmin[i] = true;
             }
-            adapter.setDataChanged(usersList,isAdmin);
+            adapter.setListData(usersList,isAdmin);
         }else{
             usersList = list;
             isGetUsersOver = true;
@@ -133,7 +133,7 @@ public class AddGroupAdminActivity extends BaseActivity implements GroupInfoView
     @Override
     public void onAddOrRemoveAdminSuccess() {
         showToast("修改成功");
-        adapter.setDataChanged(usersList,isAdmin);
+        adapter.setListData(usersList,isAdmin);
     }
 
     @Override

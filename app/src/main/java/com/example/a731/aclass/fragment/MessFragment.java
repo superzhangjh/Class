@@ -87,7 +87,7 @@ public class MessFragment extends BaseFragment implements MessView{
 
     @Override
     public void onGetConversationSuccess(List<Conversation> conversations) {
-        showToast("数据更新成功"+conversations.size());
+        //showToast("数据更新成功"+conversations.size());
         adapter.onDataChanged(conversations);
         smoothScrollToTop();
     }

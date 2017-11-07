@@ -42,7 +42,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     private Toolbar toolbar;
     private LinearLayout tvQRCode;
     private LinearLayout llMemberList;
-    private TextView tvRecommend,tvMemberCount,tvGroupName,tvGroupId;
+    private TextView tvRecommend,tvMemberCount,tvGroupName,tvGroupId,tvSignature;
     private Button btnSetMainGroup;
     private RecyclerView memberRecyclerView;
     private RecyclerView adminRecyclerView;
@@ -78,6 +78,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         tvMemberCount = (TextView) findViewById(R.id.groupinfo_tv_membercount);
         tvGroupName = (TextView) findViewById(R.id.groupinfo_toolbar_tv_name);
         tvGroupId = (TextView) findViewById(R.id.groupinfo_toolbar_tv_id);
+        tvSignature = (TextView) findViewById(R.id.groupinfo_tv_signature);
         memIcon = (ImageView) findViewById(R.id.groupinfo_iv_membericon);
         ivGroupHead = (CircleImageView) findViewById(R.id.groupinfo_toolbar_iv_head);
         btnSetMainGroup = (Button) findViewById(R.id.groupinfo_btn_setMainGroup);
@@ -184,6 +185,17 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
             public void onClick(View v) {
                 SharedPreferencesUtil.saveDataToSharedPreferences(BmobUser.getCurrentUser().getUsername(),group.getGroupId(),GroupInfoActivity.this);
                 showToast("修改主班圈成功，请重新进入应用以更新信息");
+            }
+        });
+
+        tvSignature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInfoActivity.this,SignatureActivity.class);
+                intent.putExtra("groupObjectId",group.getObjectId());
+                intent.putExtra("groupId",group.getGroupId());
+                intent.putExtra("groupName",group.getName());
+                startActivity(intent);
             }
         });
     }

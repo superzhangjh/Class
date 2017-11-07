@@ -113,7 +113,7 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
 
     @Override
     public void onGetVoteSuccess(List<Vote> list) {
-        showToast("获取投票列表成功"+list.size()+":"+presentGroupId);
+        //showToast("获取投票列表成功"+list.size()+":"+presentGroupId);
         voteList = list;
         adapter.setListDataChange(voteList);
     }
