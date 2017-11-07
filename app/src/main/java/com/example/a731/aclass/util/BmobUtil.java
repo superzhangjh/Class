@@ -3,6 +3,7 @@ package com.example.a731.aclass.util;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Notice;
+import com.example.a731.aclass.data.Signature;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.data.Vote;
 
@@ -109,14 +110,6 @@ public class BmobUtil {
         query.findObjects(listener);
     }
 
-    //上传文件
-    public static BmobFile uploadBlock(String filePath, UploadFileListener listener){
-        BmobFile bmobFile = new BmobFile(new File(filePath));
-        bmobFile.uploadblock(listener);
-        bmobFile.getFileUrl();
-        return bmobFile;
-    }
-
     public static void logOut() {
         BmobUser.logOut();
     }
@@ -198,8 +191,31 @@ public class BmobUtil {
         query.findObjects(listener);
     }
 
-    public static void queryNewsByObjectId(String objectId,QueryListener<News> listener) {
-        BmobQuery<News> query = new BmobQuery<>();
-        query.getObject(objectId,listener);
+
+    /*-------------------------------签到操作-----------------------------------*/
+
+    public static void createSignature(Signature signature,SaveListener<String> listener) {
+        signature.save(listener);
+    }
+
+    public static void updateSignature(Signature signature,String objectId,UpdateListener listener) {
+        signature.update(objectId,listener);
+    }
+
+    public static void querySignature(String groupObjectId,FindListener<Signature> listener){
+        BmobQuery<Signature> query = new BmobQuery<>();
+        Group group = new Group();
+        group.setObjectId(groupObjectId);
+        query.addWhereEqualTo("group", new BmobPointer(group));
+        query.findObjects(listener);
+    }
+
+
+    public static void querySignatureMembers(String objectId,FindListener<Users> listener) {
+        BmobQuery<Users> query = new BmobQuery<>();
+        Signature signature = new Signature();
+        signature.setObjectId(objectId);
+        query.addWhereRelatedTo("member", new BmobPointer(signature));
+        query.findObjects(listener);
     }
 }

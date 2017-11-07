@@ -41,6 +41,10 @@ import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.QRCodeRusultGroupActivity;
 import com.example.a731.aclass.activity.QRCodeRusultUserActivity;
 import com.example.a731.aclass.activity.WebActivity;
+import com.example.a731.aclass.presenter.SignatureQRCodePresenter;
+import com.example.a731.aclass.presenter.impl.SignatureQRCodePresenterImpl;
+import com.example.a731.aclass.util.ToastUtil;
+import com.example.a731.aclass.view.CaptureView;
 import com.example.a731.aclass.zxing.camera.CameraManager;
 import com.example.a731.aclass.zxing.decode.DecodeThread;
 import com.example.a731.aclass.zxing.utils.BeepManager;
@@ -62,7 +66,7 @@ import okhttp3.Response;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends Activity implements SurfaceHolder.Callback ,CaptureView {
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -75,6 +79,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private RelativeLayout scanContainer;
 	private RelativeLayout scanCropView;
 	private ImageView scanLine;
+
+	private SignatureQRCodePresenter presenter = new SignatureQRCodePresenterImpl(this);
 
 	private Rect mCropRect = null;
 
@@ -203,6 +209,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		//处理扫描到的文字
 		final String result = rawResult.getText();
+		ToastUtil.showToast(this,"扫描结果:"+result);
 		String[] results = result.split(":");
 		String type = results[0];
 		String id = results[1];
@@ -218,6 +225,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 				intent1.putExtra("groupId",id);
 				startActivity(intent1);
 				finish();
+				break;
+			case "signature":
+				presenter.updateSignature(id);
 				break;
 			case "http"://跳转到网页
 				Intent intent2 = new Intent(getApplicationContext(), WebActivity.class);
@@ -344,5 +354,17 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	@Override
+	public void onSignatureSuccess() {
+		Toast.makeText(this, "签到成功", Toast.LENGTH_SHORT).show();
+		finish();
+	}
+
+	@Override
+	public void onSignatureFail(String message) {
+		Toast.makeText(this, "签到失败:"+message, Toast.LENGTH_SHORT).show();
+		finish();
 	}
 }

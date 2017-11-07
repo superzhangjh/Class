@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.GroupInfoMemberAdapter;
 import com.example.a731.aclass.data.Group;
@@ -51,6 +52,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     private GroupInfoMemberAdapter memberAdapter;
     private GroupInfoMemberAdapter adminAdapter;
     private List<Users> memberList,adminList;
+    private TextView tvSignature;
     private Group group;
 
     private boolean limit = false;
@@ -71,6 +73,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         Intent intent = getIntent();
         String groupId = intent.getStringExtra("groupId");
 
+        tvSignature = (TextView) findViewById(R.id.groupinfo_tv_signature);
         toolbar = (Toolbar) findViewById(R.id.groupinfo_toolbar);
         tvQRCode = (LinearLayout) findViewById(R.id.groupinfo_tv_qrcode);
         llMemberList = (LinearLayout) findViewById(R.id.groupinfo_ll_memberlist);
@@ -144,7 +147,6 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
     }
 
     private void initAddView() {
-
         //点击添加recyclerview,右侧图标旋转
         final View subView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_groupinfo_sub_memberlist,null,false);
         LinearLayout.LayoutParams subParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,200);
@@ -184,6 +186,16 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
             public void onClick(View v) {
                 SharedPreferencesUtil.saveDataToSharedPreferences(BmobUser.getCurrentUser().getUsername(),group.getGroupId(),GroupInfoActivity.this);
                 showToast("修改主班圈成功，请重新进入应用以更新信息");
+            }
+        });
+        tvSignature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInfoActivity.this,SignatureActivity.class);
+                intent.putExtra("groupObjectId",group.getObjectId());
+                intent.putExtra("groupId",group.getGroupId());
+                intent.putExtra("groupName",group.getName());
+                startActivity(intent);
             }
         });
     }
@@ -255,8 +267,7 @@ public class GroupInfoActivity extends BaseActivity implements GroupInfoView{
         tvRecommend.setText("本圈创建于"+group.getCreatedAt());
         tvGroupName.setText(group.getName());
         tvGroupId.setText("班圈ID:"+group.getGroupId());
-        Glide.with(this).load(group.getHeadImg()).into(ivGroupHead);
-
+        Glide.with(this).load(group.getHeadImg()).diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().centerCrop().error(R.drawable.default_head_image).into(ivGroupHead);
     }
 
     @Override

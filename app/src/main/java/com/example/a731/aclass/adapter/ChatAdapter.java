@@ -8,11 +8,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.data.BasicMessage;
 import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.hyphenate.util.DateUtils;
 
+import org.litepal.crud.DataSupport;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -61,13 +65,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
         Mess mess = messes.get(position);
         holder.content.setText(mess.getMessage());
         if (position == 0 || shouldShowTimeStamp(position)){
-            String time = DateUtils.getTimestampString(new Date(mess.getDate()));
+            SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+            String time = format.format(new Date(mess.getDate()));
             holder.date.setText(time);
         }
         if (mess.getCreatorID().equals(mUser.getUsername())){
             Glide.with(context).load(mUser.getHeadImg()).into(holder.headImg);
         }else{
-
+            List<BasicMessage> toChat = DataSupport.where("id",mess.getCreatorID()).find(BasicMessage.class);
+            Glide.with(context).load(toChat.get(0).getHeadImg()).into(holder.headImg);
         }
     }
 

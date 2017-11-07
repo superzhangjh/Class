@@ -6,7 +6,8 @@
     <color name="chatData">#00ff11</color>
     <color name="line">#ccc</color>
     <color name="colorText1">#6c6c6c</color>
-    <color name="colorTextDark1">#3C3C3C</color>
+    <color name="colorTextGary">#aaa</color>
+    <color name="colorTextDark1">#5E5E5E</color>
     <color name="colorDarkBlue">#4A4Aff</color>
     <color name="colorMintGreen">#00aeae</color>
     <color name="colorCarmineRed">#ff7575</color>

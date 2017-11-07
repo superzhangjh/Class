@@ -87,10 +87,9 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (presentGroupId==null){
-                            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
-                        }
-                        presenter.getGroupNotice(presentGroupId);
+                        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+                        if (presentGroupId!=null)
+                            presenter.getGroupNotice(presentGroupId);
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -102,7 +101,8 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
                     public void run() {
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);            }
+                }, 2000);
+            }
         });
     }
 
@@ -115,7 +115,7 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     public void initData() {
         presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
         if (presentGroupId!=null)
-        presenter.getGroupNotice(presentGroupId);
+            presenter.getGroupNotice(presentGroupId);
     }
 
     @Override
@@ -147,10 +147,10 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void onResume() {
         super.onResume();
-        if (presentGroupId==null){
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences("groupId",getContext());
-        }
-        presenter.getGroupNotice(presentGroupId);
+
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        if (presentGroupId!=null)
+            presenter.getGroupNotice(presentGroupId);
     }
 
 }

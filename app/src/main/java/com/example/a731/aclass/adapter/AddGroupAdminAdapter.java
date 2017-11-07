@@ -48,6 +48,7 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
         }else {
             holder.btnAddOrCancel.setText("设置为管理员");
         }
+        Log.i("AddGroupAdminAdapter","开始绑定数据");
         if (users.getHeadImg()!=null)
             Glide.with(context).load(users.getHeadImg()).into(holder.headImg);
         if (users.getName()!=null){
@@ -74,10 +75,11 @@ public class AddGroupAdminAdapter extends RecyclerView.Adapter<AddGroupAdminAdap
 
     @Override
     public int getItemCount() {
-        return usersList==null?0:usersList.size();
+        Log.i("AddGroupAdminAdapter",usersList.size()+"");
+        return usersList.size();
     }
 
-    public void setDataChanged(List<Users> usersList, boolean[] isAdmin){
+    public void setListData(List<Users> usersList, boolean[] isAdmin){
         this.usersList = usersList;
         this.isAdmin = isAdmin;
         Log.i("AddGroupAdminAdapter",usersList.size()+"---"+isAdmin.length);

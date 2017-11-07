@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    app:cardElevation="5dp"
+    android:layout_marginLeft="10dp"
+    app:cardCornerRadius="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--头部-->
+        <LinearLayout
+            android:paddingRight="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/colorText1"
+                android:text="评论详情"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"/>
+                <!--关闭按钮-->
+                <ImageButton
+                    android:id="@+id/pop_window_commend_cross"
+                    android:contentDescription="关闭"
+                    android:scaleType="centerInside"
+                    android:background="@drawable/icon_error"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+        <!--内容区-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pop_window_commend_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <!--<View
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line" />
+        <!--评论区-->
+        <LinearLayout
+            android:background="@color/colorCarmineRed"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="17dp"
+                app:cardBackgroundColor="#efefef"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+                <!--输入框-->
+                <EditText
+                    android:id="@+id/pop_window_commend_edt_content"
+                    android:textSize="14sp"
+                    android:hint="留下你的评论吧"
+                    android:background="@null"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/pop_window_commend_tv_send"
+                android:layout_gravity="center_vertical"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:text="发送"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

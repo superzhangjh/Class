@@ -110,6 +110,7 @@ public class ReleasingNewsActivity extends BaseActivity implements ReleasingNews
             showToast("先填写好内容再发布吧~");
             return;
         }else{
+            showProgress("努力发布中...");
             presenter.saveNews(presentGroupId,news,photoList);
         }
     }
@@ -225,16 +226,19 @@ public class ReleasingNewsActivity extends BaseActivity implements ReleasingNews
             }
         }
         photoList = mImgs;
+        photoAdapter.setOndataChange(photoList);
     }
 
     @Override
     public void onSaveNoticeSuccess() {
-        showToast("保存数据成功");
+        showToast("发布成功！");
+        hideProgress();
         finish();
     }
 
     @Override
     public void onSaveNoticeFail(String message) {
+        hideProgress();
         showToast("保存数据失败:"+message);
     }
 }

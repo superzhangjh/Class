@@ -20,6 +20,8 @@ import com.example.a731.aclass.data.Users;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Administrator on 2017/9/16/016.
  */
@@ -50,21 +52,15 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Users users = list.get(position);
-        if (users.getName() != null){
-            holder.name.setText(users.getName());
-        }else{
-            holder.name.setText(users.getUsername());
-        }
-
         if (users.getHeadImg()!=null)
-            Glide.with(context).load(users.getHeadImg()).into(holder.head);
+            Glide.with(context).load(users.getHeadImg()).crossFade().placeholder(R.drawable.default_head_image).into(holder.head);
         if (users.getUsername().equals(ADD_MORE_MEMBER) || users.getUsername().equals(ADD_MORE_ADMIN)){
-            Glide.with(context).load(R.drawable.add).into(holder.head);
+            Glide.with(context).load(R.drawable.icon_add).into(holder.head);
         }
-        holder.itemClick.setOnClickListener(new View.OnClickListener() {
+        holder.head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.OnItemClick(holder.getAdapterPosition());
+                listener.OnItemClick(position);
             }
         });
     }
@@ -88,14 +84,10 @@ public class GroupInfoMemberAdapter extends RecyclerView.Adapter<GroupInfoMember
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView head;
-        TextView name;
-        LinearLayout itemClick;
+        CircleImageView head;
         public ViewHolder(View itemView) {
             super(itemView);
-            itemClick = (LinearLayout) itemView.findViewById(R.id.groupinfo_rec_memberlist_click);
-            name = (TextView) itemView.findViewById(R.id.groupinfo_rec_memberlist_name);
-            head = (ImageView) itemView.findViewById(R.id.groupinfo_rec_memberlist_head);
+            head = (CircleImageView) itemView.findViewById(R.id.groupinfo_rec_memberlist_head);
         }
     }
 

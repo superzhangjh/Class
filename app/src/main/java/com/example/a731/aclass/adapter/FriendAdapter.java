@@ -48,7 +48,11 @@ public class FriendAdapter extends ArrayAdapter<Users>{
             view = convertView;
             holder = (ViewHolder) view.getTag();
         }
-        holder.username.setText(user.getUsername());
+        if (user.getName() !=null){
+            holder.username.setText(user.getName());
+        }else{
+            holder.username.setText(user.getUsername());
+        }
         if (user.getHeadImg()!=null){
             Glide.with(getContext()).load(user.getHeadImg()).into(holder.headImg);
         }

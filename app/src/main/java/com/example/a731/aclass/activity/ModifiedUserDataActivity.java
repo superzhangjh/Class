@@ -1,5 +1,6 @@
 package com.example.a731.aclass.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -79,7 +80,12 @@ public class ModifiedUserDataActivity extends BaseActivity implements ModifiedUs
                     user.setIntro(intro);
 
                 mPresenter.save(user,objectId);
-
+                Intent intent = new Intent();
+                intent.putExtra("name",user.getName());
+                intent.putExtra("project",user.getProject());
+                intent.putExtra("homeLand",user.getHomeLand());
+                intent.putExtra("intro",user.getIntro());
+                setResult(1,intent);
                 finish();
             }
         });

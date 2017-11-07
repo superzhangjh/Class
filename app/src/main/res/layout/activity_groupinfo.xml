@@ -8,37 +8,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        //toolbar显示头像、圈名、圈ID
+        <!--//toolbar显示头像、圈名、圈ID-->
         <android.support.v7.widget.Toolbar
+            android:background="@color/colorMintGreen"
             android:id="@+id/groupinfo_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="wrap_content">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/groupinfo_toolbar_iv_head"
                 android:src="@drawable/default_head_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
             <LinearLayout
+                android:gravity="center_vertical"
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <!--班圈名称-->
                 <TextView
                     android:id="@+id/groupinfo_toolbar_tv_name"
-                    android:text="15软件技术2班"
                     android:gravity="center_vertical"
-                    android:textSize="20sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
+                    android:textSize="18sp"
                     android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <!--班圈id-->
                 <TextView
                     android:id="@+id/groupinfo_toolbar_tv_id"
-                    android:text="班ID：15131572"
                     android:gravity="center_vertical"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
+                    android:textSize="12sp"
                     android:textColor="#666"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp" />
@@ -73,7 +72,7 @@
                 android:id="@+id/groupinfo_iv_qrcode"
                 android:layout_marginRight="20dp"
                 android:layout_gravity="center"
-                android:src="@drawable/qr_droid"
+                android:src="@drawable/qr_code"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
         </LinearLayout>
@@ -203,6 +202,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
             <TextView
+                android:id="@+id/groupinfo_tv_signature"
                 android:text="考勤表"
                 android:textColor="#000"
                 android:gravity="center_vertical"
@@ -252,13 +252,12 @@
             android:layout_height="3dp"
             android:background="#fff"/>
         <Button
-            android:layout_marginRight="50dp"
-            android:layout_marginLeft="50dp"
             android:id="@+id/groupinfo_btn_setMainGroup"
             android:layout_marginTop="30dp"
+            android:textColor="#fff"
             android:text="设置为主班圈"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorLightBlue"/>
+            android:background="@color/colorCarmineRed"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.example.a731.aclass.R;
@@ -19,6 +20,7 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
+import org.litepal.LitePal;
 import org.litepal.LitePalApplication;
 import org.litepal.crud.DataSupport;
 
@@ -43,7 +45,7 @@ public class ClassApplication extends LitePalApplication {
         initEaseMob();
         initBmob();
         initEaseMobListener();
-
+        LitePal.getDatabase();
     }
 
     private void initEaseMobListener() {

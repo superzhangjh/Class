@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.azhon.suspensionfab.FabAttributes;
@@ -33,6 +34,7 @@ import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.customView.NoScrollViewPager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,7 +52,7 @@ import java.util.Locale;
 public class CircleFragment extends BaseFragment{
 
     private TabLayout tablayout;
-    private ViewPager viewpager;
+    private NoScrollViewPager viewpager;
     private CircleFragmentPagerAdapter adapter;
     private List<Fragment> list_fragment;
     private List<String> list_title;
@@ -59,7 +61,6 @@ public class CircleFragment extends BaseFragment{
     private TextView tvSelectPhoto;
     private CardView ibFn;
     private TextView tvFnText;
-
 
     private int ibFnType = 0;
     private static final int REQUEST_CAMERA = 1001;
@@ -189,6 +190,31 @@ public class CircleFragment extends BaseFragment{
         });
     }
 
+    private void initTabViewpager() {
+        tablayout = (TabLayout) mRootView.findViewById(R.id.circle_tablayout);
+        viewpager = (NoScrollViewPager) mRootView.findViewById(R.id.circle_viewpager);
+        //设置tablayout显示模式
+        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        adapter = new CircleFragmentPagerAdapter(getContext(),getActivity().getSupportFragmentManager(),list_fragment,list_title);
+        viewpager.setAdapter(adapter);
+        tablayout.setupWithViewPager(viewpager);
+        tablayout.setSmoothScrollingEnabled(false);
+
+        //设置第一个tablayout样式
+        View firstView = adapter.getTabView(0);
+        TextView textView = (TextView) firstView.findViewById(R.id.tv_tab_title);
+        textView.setTextColor(0xFFffffff);
+        tablayout.getTabAt(0).setCustomView(firstView);
+
+        for (int i = 1; i < tablayout.getTabCount(); i++) {
+            View tabView = adapter.getTabView(i);
+            CardView mageView = (CardView) tabView.findViewById(R.id.iv_tab_red);
+            TextView tvRedCount = (TextView) tabView.findViewById(R.id.iv_tab_red_count);
+            tablayout.getTabAt(i).setCustomView(tabView);
+        }
+
+    }
+
     @Override
     public void initListener() {
 
@@ -196,7 +222,12 @@ public class CircleFragment extends BaseFragment{
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
+                int position = tab.getPosition();
+                View customView = tab.getCustomView();
+                customView.findViewById(R.id.iv_tab_red).setVisibility(View.GONE);
+                TextView textView = (TextView) customView.findViewById(R.id.tv_tab_title);
+                textView.setTextColor(0xFFffffff);
+                switch (position){
                     case 0:
                         ibFnType=0;
                         tvFnText.setText("通知");
@@ -215,7 +246,9 @@ public class CircleFragment extends BaseFragment{
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                View customView = tab.getCustomView();
+                TextView textView = (TextView) customView.findViewById(R.id.tv_tab_title);
+                textView.setTextColor(0xFFCCCCCC);
             }
 
             @Override
@@ -280,16 +313,6 @@ public class CircleFragment extends BaseFragment{
 
     }
 
-    private void initTabViewpager() {
-        tablayout = (TabLayout) mRootView.findViewById(R.id.circle_tablayout);
-        viewpager = (ViewPager) mRootView.findViewById(R.id.circle_viewpager);
-        //设置tablayout显示模式
-        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        adapter = new CircleFragmentPagerAdapter(getActivity().getSupportFragmentManager(),list_fragment,list_title);
-        viewpager.setAdapter(adapter);
-        tablayout.setupWithViewPager(viewpager);
-        tablayout.setSmoothScrollingEnabled(false);
-    }
 
     //拍照并保存
     @Override

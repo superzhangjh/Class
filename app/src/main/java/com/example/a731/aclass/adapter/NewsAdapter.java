@@ -15,10 +15,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.UserInfoActivity;
+import com.example.a731.aclass.data.Commend;
 import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Users;
-
-import org.w3c.dom.Text;
+import com.example.a731.aclass.util.DateUtil;
+import com.example.a731.aclass.util.CommendPopWindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         holder.intro.setText(news.getContent());
 
 
-        final String username = users.getUsername();
+        String username = users.getUsername();
         if (news.getLike().contains(username)){
             holder.likeIcon.setBackgroundResource(R.drawable.icon_like);
         }else {
@@ -82,14 +83,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (news.getLike().contains(username)){
+                String currentUser = BmobUser.getCurrentUser(Users.class).getUsername();
+                if (news.getLike().contains(currentUser)){
                     Toast.makeText(context,"你已经赞过了",Toast.LENGTH_SHORT).show();
                 }else {
                     if (news.getLike().size()==0){
                         news.setLike(new ArrayList<String>());
                     }
                     List<String> likeList = news.getLike();
-                    likeList.add(BmobUser.getCurrentUser(Users.class).getUsername());
+                    likeList.add(currentUser);
                     holder.likeIcon.setBackgroundResource(R.drawable.icon_like);
                     int addLike = news.getLike().size();
                     holder.likeCount.setText(addLike+"");
@@ -103,6 +105,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 Toast.makeText(context,"暂时无法评论哦亲~",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //评论功能
+        CommendPopWindowUtil.createPopwindow(context,1);
+        holder.commend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommendPopWindowUtil.openPopWindow();
             }
         });
 

@@ -3,15 +3,27 @@
     <group
         android:id="@+id/section2">
         <item
+            android:icon="@drawable/user82"
+            android:id="@+id/main_nav_menu_userinfo"
+            android:title="个人信息"/>
+        <item
+            android:icon="@drawable/home165"
+            android:id="@+id/main_nav_menu_groupinfo"
+            android:title="我的班圈"/>
+        <item
+            android:icon="@drawable/qr_code"
             android:id="@+id/main_nav_menu_QRCode"
             android:title="我的二维码"/>
         <item
-            android:id="@+id/main_nav_menu_setting"
-            android:title="设置"/>
-        <item
+            android:icon="@drawable/edit26"
             android:id="@+id/main_nav_menu_modified"
             android:title="修改资料"/>
         <item
+            android:icon="@drawable/icon_setting"
+            android:id="@+id/main_nav_menu_setting"
+            android:title="设置"/>
+        <item
+            android:icon="@drawable/exit"
             android:id="@+id/main_nav_menu_logOut"
             android:title="退出登录"/>
     </group>

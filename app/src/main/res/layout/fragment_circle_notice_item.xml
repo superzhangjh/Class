@@ -97,7 +97,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:elevation="10dp"
-        app:cardBackgroundColor="#dd0000"
+        app:cardBackgroundColor="@color/colorCarmineRed"
         app:cardCornerRadius="5dp" />
 
 

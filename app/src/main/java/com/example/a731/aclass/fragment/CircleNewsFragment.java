@@ -43,7 +43,6 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
     private String presentGroupId;
     private CircleNewsPresenter presenter = new CircleNewsPresenterImpl(this);
 
-
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_circle_base;
@@ -67,6 +66,9 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+                        if (presentGroupId!=null)
+                            presenter.getGroupNews(presentGroupId);
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -98,9 +100,10 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
 
     @Override
     public void initData() {
-        if (presentGroupId==null)
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-        presenter.getGroupNews(presentGroupId);
+
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        if (presentGroupId!=null)
+            presenter.getGroupNews(presentGroupId);
     }
 
     @Override
@@ -125,8 +128,8 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
     @Override
     public void onResume() {
         super.onResume();
-        if (presentGroupId==null)
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-        presenter.getGroupNews(presentGroupId);
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        if (presentGroupId!=null)
+            presenter.getGroupNews(presentGroupId);
     }
 }

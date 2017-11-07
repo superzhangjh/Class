@@ -107,6 +107,9 @@
         <activity android:name=".activity.NoticeActivity"/>
         <activity android:name=".activity.ReleasingNewsActivity"/>
         <activity android:name=".activity.AddGroupAdminActivity"/>
+        <activity android:name=".activity.SignatureActivity"/>
+        <activity android:name=".activity.SignatureDetailActivity"/>
+        <activity android:name=".activity.SignatureQRCodeActivity"/>
         <!-- ZXing Activity-->
         <activity
             android:name=".zxing.activity.CaptureActivity"

@@ -122,7 +122,7 @@ public class ImagePickerActivity extends Activity implements ListImageDirPopupWi
 		mListImageDirPopupWindow = new ListImageDirPopupWindow(
 				LayoutParams.MATCH_PARENT, (int) (mScreenHeight * 0.7),
 				mImageFloders, LayoutInflater.from(getApplicationContext())
-						.inflate(R.layout.list_dir, null));
+				.inflate(R.layout.list_dir, null));
 
 		mListImageDirPopupWindow.setOnDismissListener(new OnDismissListener()
 		{
@@ -300,6 +300,7 @@ public class ImagePickerActivity extends Activity implements ListImageDirPopupWi
 				Intent intent = new Intent();
 				intent.putStringArrayListExtra("selectImg",mSelectImages);
 				setResult(1,intent);
+				mAdapter.getImages().clear();
 				finish();
 			}
 		});

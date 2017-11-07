@@ -1,283 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
-        android:overScrollMode="ifContentScrolls"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/userinfo_appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
+        android:layout_height="220dp">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:background="@color/colorMintGreen"
+            android:id="@+id/userinfo_collapsing_toolbar"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+            app:contentScrim="@color/colorMintGreen"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!--背景图-->
             <ImageView
-                android:id="@+id/userinfo_headbackground"
-                android:background="@drawable/userinfo_head_background"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"/>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginTop="50dp"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/userinfo_iv_head"
-                android:src="@drawable/default_head_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
-            <LinearLayout
-                android:layout_marginTop="200dp"
-                android:orientation="vertical"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent" />
+            <!--toolbar-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/userinfo_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-                <TextView
-                    android:background="#aaa"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-                <TextView
-                    android:background="#ddd"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-
-
-                //姓名性别
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <ImageView
-                        android:id="@+id/userinfo_iv_sex"
-                        android:background="@drawable/male"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp" />
-                    <TextView
-                        android:id="@+id/userinfo_tv_name"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="center_vertical|left"
-                        android:textSize="18sp"
-                        android:textColor="#000"
-                        android:text="姓名"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="50dp" />
-                    <ImageView
-                        android:id="@+id/userinfo_iv_qr_droid"
-                        android:background="@drawable/qr_droid"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="20dp"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp" />
-                </LinearLayout>
-
-                <TextView
-                    android:background="#aaa"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-                <TextView
-                    android:background="#ddd"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-
-
-                //用户名
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center_vertical|left"
-                        android:textSize="18sp"
-                        android:textColor="#333"
-                        android:text="学号"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="50dp" />
-
-                    <TextView
-                        android:id="@+id/userinfo_tv_username"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|right"
-                        android:text="15622222222"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                //手机号
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|left"
-                        android:text="手机号"
-                        android:textColor="#333"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/userinfo_tv_phonenumber"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|right"
-                        android:text="15622222222"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-
-                <TextView
-                    android:background="#aaa"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-                <TextView
-                    android:background="#ddd"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                //专业
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center_vertical|left"
-                        android:textSize="18sp"
-                        android:textColor="#333"
-                        android:text="专业"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="50dp" />
-
-                    <TextView
-                        android:id="@+id/userinfo_tv_project"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|right"
-                        android:text="软件技术"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:background="#aaa"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp" />
-                <TextView
-                    android:background="#ddd"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-
-                //来源地
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center_vertical|left"
-                        android:textSize="18sp"
-                        android:textColor="#333"
-                        android:text="来自"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="50dp" />
-
-                    <TextView
-                        android:id="@+id/userinfo_tv_homeland"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|right"
-                        android:text="广州"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                //简介
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center_vertical|left"
-                        android:textSize="18sp"
-                        android:textColor="#333"
-                        android:text="简介"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp" />
-                    <TextView
-                        android:id="@+id/userinfo_tv_intro"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:hint="暂无介绍"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:background="#aaa"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp" />
-                <TextView
-                    android:background="#eee"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-    </ScrollView>
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/userinfo_toolbar"
+    <!--内容区-->
+    <android.support.v4.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-    </android.support.v7.widget.Toolbar>
-</RelativeLayout>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--导航栏-->
+            <RadioGroup
+                android:id="@+id/uesrinfo_radio_group"
+                android:checkedButton="@id/userinfo_btn_info"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+                <!--详情-->
+                <RadioButton
+                    android:textSize="14sp"
+                    android:id="@+id/userinfo_btn_info"
+                    android:textColor="@color/colorTextDark1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="详情"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <!--动态-->
+                <RadioButton
+                    android:textSize="14sp"
+                    android:id="@+id/userinfo_btn_news"
+                    android:textColor="@color/colorTextGary"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="动态"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+                <!--评论-->
+                <RadioButton
+                    android:textSize="14sp"
+                    android:id="@+id/userinfo_btn_commend"
+                    android:textColor="@color/colorTextGary"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="评论"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+            </RadioGroup>
+            <!--详情内容-->
+            <com.example.a731.aclass.util.customView.NoScrollViewPager
+                android:id="@+id/userinfo_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="470dp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -3,6 +3,7 @@ package com.example.a731.aclass.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,16 +33,18 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.adapter.GroupAdapter;
+import com.example.a731.aclass.data.BasicMessage;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
@@ -59,6 +62,8 @@ import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.util.NetUtils;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -68,12 +73,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.a731.aclass.R.id.main_nav_view;
-import static com.example.a731.aclass.R.id.start;
 import static com.example.a731.aclass.util.EaseMobUtil.MODIFIED_RESULT;
 
 public class MainActivity extends BaseActivity implements MainView{
@@ -103,6 +106,11 @@ public class MainActivity extends BaseActivity implements MainView{
     private MenuItem itemJoinIn;
     private TextView tvTitle;
     private TextView tvCheckPhoneNumber;
+    private LinearLayout tvUserinfo;
+    private LinearLayout tvGroupinfo;
+
+
+
     private RadioButton rbGroup;
     private RadioButton rbMess;
 
@@ -114,8 +122,8 @@ public class MainActivity extends BaseActivity implements MainView{
     private CircleImageView imgToolbarClassHead;
     private CircleImageView imgToolbalUserHead;
     private View navHeaderView;
-    private CircleImageView headImg;
-    private TextView username,name,phoneNum,project,local,intro;
+    private ImageView headImg;
+    private TextView name,phoneNum;
     private Users mUser;
 
     private EMConnectionListener connectionListener;
@@ -128,6 +136,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     @Override
     protected int getLayoutRes() {
+
         return R.layout.activity_main;
     }
 
@@ -233,27 +242,19 @@ public class MainActivity extends BaseActivity implements MainView{
         navRight = (NavigationView) findViewById(R.id.main_nav_right);
 
         navHeaderView = navView.getHeaderView(0);
-        headImg = (CircleImageView) navHeaderView.findViewById(R.id.main_nav_head);
-        username = (TextView) navHeaderView.findViewById(R.id.main_nav_username);
+        headImg = (ImageView) navHeaderView.findViewById(R.id.main_nav_head);
         name = (TextView) navHeaderView.findViewById(R.id.main_nav_name);
         phoneNum = (TextView) navHeaderView.findViewById(R.id.main_nav_phoneNum);
-        project = (TextView) navHeaderView.findViewById(R.id.main_nav_project);
-        local = (TextView) navHeaderView.findViewById(R.id.main_nav_local);
-        intro = (TextView) navHeaderView.findViewById(R.id.main_nav_intro);
-        tvCheckPhoneNumber = (TextView) findViewById(R.id.main_nav_phoneCheck);
+        tvCheckPhoneNumber = (TextView) navHeaderView.findViewById(R.id.main_nav_phoneCheck);
         if (mUser.getHeadImg()!=null)
-            Glide.with(this).load(mUser.getHeadImg()).into(headImg);
-        username.setText(mUser.getUsername());
+            Glide.with(this).load(mUser.getHeadImg()).crossFade().error(R.drawable.cross86).into(headImg);
         phoneNum.setText(mUser.getMobilePhoneNumber()==null?"":mUser.getMobilePhoneNumber());
         name.setText(mUser.getName()==null?"未设置":mUser.getName());
-        project.setText(mUser.getProject()==null?"未设置":mUser.getProject());
-        local.setText(mUser.getHomeLand()==null?"未设置":mUser.getHomeLand());
-        intro.setText(mUser.getIntro()==null?"未设置":mUser.getIntro());
-        /*if (mUser.getMobilePhoneNumber()!=null){
+        if (mUser.getMobilePhoneNumber()!=null){
             tvCheckPhoneNumber.setVisibility(View.GONE);
         }else {
             tvCheckPhoneNumber.setVisibility(View.VISIBLE);
-        }*/
+        }
 
         headImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,7 +266,18 @@ public class MainActivity extends BaseActivity implements MainView{
         navView.setNavigationItemSelectedListener(  new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()){ //跳转到个人主页
+                    case R.id.main_nav_menu_userinfo:
+                        Intent intent = new Intent(MainActivity.this,UserInfoActivity.class);
+                        String username = BmobUser.getCurrentUser(Users.class).getUsername();
+                        intent.putExtra("username",username);
+                        startActivity(intent);
+                        break;
+                    case R.id.main_nav_menu_groupinfo://跳转到班圈主页
+                        Intent groupInfoIntent = new Intent(MainActivity.this,GroupInfoActivity.class);
+                        groupInfoIntent.putExtra("groupId",presentGroupId);
+                        startActivity(groupInfoIntent);
+                        break;
                     case R.id.main_nav_menu_QRCode:
                         Intent QRintent = new Intent(MainActivity.this,QRCodeActivity.class);
                         QRintent.putExtra("qrCode",mUser.getQRCode());
@@ -295,8 +307,8 @@ public class MainActivity extends BaseActivity implements MainView{
                         //TODO:软件设置
                         break;
                     case R.id.main_nav_menu_modified:
-                        Intent intent = new Intent(MainActivity.this,ModifiedUserDataActivity.class);
-                        startActivityForResult(intent,MODIFIED_RESULT);
+                        Intent modifiedIntent = new Intent(MainActivity.this,ModifiedUserDataActivity.class);
+                        startActivityForResult(modifiedIntent,MODIFIED_RESULT);
                         break;
                 }
                 mDrawerLayout.closeDrawers();
@@ -379,7 +391,7 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
         //设置个人头像
-        Glide.with(this).load(BmobUser.getCurrentUser(Users.class).getHeadImg()).into(imgToolbalUserHead);
+        Glide.with(this).load(BmobUser.getCurrentUser(Users.class).getHeadImg()).crossFade().error(R.drawable.cross86).into(imgToolbalUserHead);
         imgToolbalUserHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -400,12 +412,13 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void initListener() {
         //手机号验证
-        /*tvCheckPhoneNumber.setOnClickListener(new View.OnClickListener() {
+        tvCheckPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO:联网设置用户手机号
+                showToast("未实现该功能");
             }
-        });*/
+        });
 
         //点击单选时，ViewPager显示对应的子界面
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -479,7 +492,6 @@ public class MainActivity extends BaseActivity implements MainView{
 
             }
         });
-
 
 
         //监听环信连接状态
@@ -573,7 +585,27 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void onGetFriendsSuccess(List<Users> friendList) {
         this.friendList = friendList;
-        if (friendList!=null)
+        for (Users users:friendList){
+
+            List<BasicMessage> messages = DataSupport.where("userId = ?",users.getUsername()).find(BasicMessage.class);
+            if (messages.size() == 0){
+                BasicMessage message = new BasicMessage();
+                message.setType(BasicMessage.GROUP);
+                message.setUserId(users.getUsername());
+                message.setName(users.getName());
+                message.setHeadImg(users.getHeadImg());
+                message.save();
+            }
+
+            else{
+                ContentValues values = new ContentValues();
+                values.put("type",BasicMessage.GROUP);
+                values.put("name",users.getName());
+                values.put("headImg",users.getHeadImg());
+                DataSupport.updateAll(BasicMessage.class,values,"userId = ?",users.getUsername()+"");
+            }
+        }
+        if (friendAdapter!=null)
             friendAdapter.onDataChanged(friendList);
         int friendCount = friendList.size();
         tvFriendCount.setText("通讯录("+ friendCount +")");
@@ -605,18 +637,38 @@ public class MainActivity extends BaseActivity implements MainView{
         }else if (SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this)!=null){
             presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(mUser.getUsername(),this);
         }
+
+
         for (Group group:groupList){
             if (group.getGroupId().equals(presentGroupId)){
-                Glide.with(this).load(group.getHeadImg()).into(imgToolbarClassHead);
+                Glide.with(this).load(group.getHeadImg()).crossFade().error(R.drawable.cross86).into(imgToolbarClassHead);
                 TITLE_GROUP_NAME = group.getName();
                 tvTitle.setText(group.getName());
             }
+
+            List<BasicMessage> messages = DataSupport.where("userId = ?",group.getGroupId()).find(BasicMessage.class);
+            if (messages.size() == 0){
+                BasicMessage message = new BasicMessage();
+                message.setType(BasicMessage.GROUP);
+                message.setUserId(group.getGroupId());
+                message.setName(group.getName());
+                message.setHeadImg(group.getHeadImg());
+                message.save();
+            }
+            else{
+                ContentValues values = new ContentValues();
+                values.put("type",BasicMessage.GROUP);
+                values.put("name",group.getName());
+                values.put("headImg",group.getHeadImg());
+                DataSupport.updateAll(BasicMessage.class,values,"userId = ?",group.getGroupId()+"");
+            }
+
         }
     }
 
     @Override
     public void onUpdateUserHeadImgSuccess(String imgPath) {
-        Glide.with(this).load(imgPath).into(headImg);
+        Glide.with(this).load(imgPath).crossFade().error(R.drawable.cross86).into(headImg);
         showToast("更新头像数据成功");
     }
 
@@ -628,18 +680,14 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MODIFIED_RESULT){
-            Users users = BmobUser.getCurrentUser(Users.class);
-            name.setText(users.getName()==null?"请完善你的个人信息":users.getName());
-            project.setText(users.getProject()==null?"请完善你的个人信息":users.getProject());
-            local.setText(users.getHomeLand()==null?"请完善你的个人信息":users.getHomeLand());
-            intro.setText(users.getIntro()==null?"请完善你的个人信息":users.getIntro());
-            showToast("更新数据成功");
-        }
         if(data == null){
             return;
         }
+        if (requestCode == MODIFIED_RESULT){
 
+            name.setText(data.getStringExtra("name") == null?mUser.getName():data.getStringExtra("name"));
+            showToast("更新数据成功");
+        }
         if(requestCode == ImageLoderUtil.CAPTURE_PIICTURE_RESULT_CODE){
             Uri uri = data.getData();
             headImg.setImageURI(uri);

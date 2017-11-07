@@ -18,6 +18,11 @@ import java.util.Map;
  */
 
 public class QRCodeUtil {
+
+    public static final int USERCODE = 0;
+    public static final int GROUPCODE = 1;
+    public static final int SIGNCODE = 2;
+
     // 生成QR图
     public static Bitmap createImage(int type,String id,Bitmap logo) {
         try {
@@ -27,6 +32,8 @@ public class QRCodeUtil {
             }else if (type==1){
                 //班级二维码
                 content = "group:" + id;
+            }else if (type == SIGNCODE){
+                content = "signature:" + id;
             }
 
             //指定二维码大小
@@ -48,7 +55,10 @@ public class QRCodeUtil {
             int[] pixels = new int[w * h];
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
-                    if(x >= offsetX && x < offsetX+scaleLogo.getWidth() &&                               y>= offsetY && y < offsetY+scaleLogo.getHeight()){
+                    if(x >= offsetX &&
+                            x < offsetX+scaleLogo.getWidth() &&
+                            y>= offsetY &&
+                            y < offsetY+scaleLogo.getHeight()){
                         int pixel = scaleLogo.getPixel(x-offsetX,y-offsetY);
                         if(pixel == 0){
                             if(bitMatrix.get(x, y)){

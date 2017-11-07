@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.activity.PhotoViewActivity;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final String imageUrl = srcList.get(position);
-        Glide.with(context).load(imageUrl).centerCrop().into(holder.img);
+        Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL)  .centerCrop().into(holder.img);
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

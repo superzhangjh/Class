@@ -36,8 +36,6 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class CircleInteractFragment extends BaseFragment implements CircleInteractView{
-    private static final int START_A_VOTE = 2001;
-    private static final int VOTE_INFO = 2002;
     private RecyclerView mRecyclerView;
     private List<Vote> voteList = new ArrayList<>();
     private InteractAdapter adapter;
@@ -81,9 +79,9 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (presentGroupId == null)
-                            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-                        presenter.getGroupVote(presentGroupId);
+                        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+                        if (presentGroupId != null)
+                            presenter.getGroupVote(presentGroupId);
                         springView.onFinishFreshAndLoad();
                     }
                 }, 2000);
@@ -106,9 +104,10 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
 
     @Override
     public void initData() {
-        if (presentGroupId == null)
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-        presenter.getGroupVote(presentGroupId);
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        if (presentGroupId != null)
+            presenter.getGroupVote(presentGroupId);
+
     }
 
 
@@ -127,8 +126,8 @@ public class CircleInteractFragment extends BaseFragment implements CircleIntera
     @Override
     public void onResume() {
         super.onResume();
-        if (presentGroupId == null)
-            presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
-        presenter.getGroupVote(presentGroupId);
+        presentGroupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),getContext());
+        if (presentGroupId != null)
+            presenter.getGroupVote(presentGroupId);
     }
 }
