@@ -27,9 +27,9 @@ public class QRCodeUtil {
     public static Bitmap createImage(int type,String id,Bitmap logo) {
         try {
             String content = null;
-            if (type==0){//个人二维码
+            if (type==USERCODE){//个人二维码
                 content = "user:" + id;
-            }else if (type==1){
+            }else if (type==GROUPCODE){
                 //班级二维码
                 content = "group:" + id;
             }else if (type == SIGNCODE){
