@@ -73,8 +73,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
             Glide.with(context).load(mUser.getHeadImg()).into(holder.headImg);
         }else{
             List<BasicMessage> toChat = DataSupport.where("userId=?",mess.getCreatorID()).find(BasicMessage.class);
-            if (toChat.size() > 0)
-            Glide.with(context).load(toChat.get(0).getHeadImg()).into(holder.headImg);
+            if (toChat.size()>0)
+                Glide.with(context).load(toChat.get(0).getHeadImg()).into(holder.headImg);
         }
     }
 

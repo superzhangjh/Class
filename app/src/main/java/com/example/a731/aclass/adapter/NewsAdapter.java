@@ -18,6 +18,7 @@ import com.example.a731.aclass.activity.UserInfoActivity;
 import com.example.a731.aclass.data.Commend;
 import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.DateUtil;
 import com.example.a731.aclass.util.CommendPopWindowUtil;
 
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by Administrator on 2017/9/16/016.
@@ -97,22 +100,34 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
                     holder.likeCount.setText(addLike+"");
                     news.setLike(likeList);
                     //TODO:更新news的数据到网上，不要刷新本地列表
+
+                    News n = new News();
+                    n.setLike(likeList);
+                    BmobUtil.updateNews(n, news.getObjectId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e !=null){
+                                Toast.makeText(context, "点赞失败"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
         holder.likeCount.setText(String.valueOf(news.getLike().size()));
-        holder.commend.setOnClickListener(new View.OnClickListener() {
+        /*holder.commend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context,"暂时无法评论哦亲~",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         //评论功能
-        CommendPopWindowUtil.createPopwindow(context,1);
+
         holder.commend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommendPopWindowUtil.createPopwindow(context,CommendPopWindowUtil.NEWS,news.getObjectId());
                 CommendPopWindowUtil.openPopWindow();
             }
         });

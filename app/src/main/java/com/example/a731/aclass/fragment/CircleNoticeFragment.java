@@ -56,18 +56,6 @@ public class CircleNoticeFragment extends BaseFragment implements CircleNoticeVi
     @Override
     public void initView() {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.circle_base_recyclerview);
-        /*btn1 = (LinearLayout) mRootView.findViewById(R.id.notice_head_1);
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if (presenter.queryAdmin()){
-                Intent intent = new Intent(getContext(), ReleasingNoticesActivity.class);
-                startActivityForResult(intent,REQUEST_RELEASING_NOTICE);
-                //}else{
-                //showToast("你不是管理员,没有该权限");
-                //}
-            }
-        });*/
         adapter = new NoticeAdapter(getContext(),noticeList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);

@@ -165,7 +165,12 @@ public class VoteInfoActivity extends BaseActivity implements VoteInfoView{
         int now = Integer.valueOf(format.format(new Date()));
         int last = Integer.valueOf(voteContent.getExpirationDate());
 
-        //tvSelect.setText("");
+        if (last>now){
+            tvExpirationDate.setText("剩余时间"+(last-now)+"天");
+        }else if (last<=now){
+            tvExpirationDate.setText("活动结束");
+            tvSelect.setVisibility(View.GONE);
+        }
 
         //相片
         PhotoAdapter photoAdapter = new PhotoAdapter(this,vote.getPhotoList());

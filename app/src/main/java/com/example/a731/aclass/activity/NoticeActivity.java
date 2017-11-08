@@ -12,7 +12,9 @@ import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.PhotoAdapter;
 import com.example.a731.aclass.data.Notice;
+import com.example.a731.aclass.data.Users;
 
+import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -81,6 +83,10 @@ public class NoticeActivity extends BaseActivity {
         tvContent = (TextView) findViewById(R.id.activity_notice_tv_content);
         recyclePhoto = (RecyclerView) findViewById(R.id.activity_notice_recycle_photo);
         tvSelect = (TextView) findViewById(R.id.activity_notice_tv_select);
+
+        if (notice.getCreator() != BmobUser.getCurrentUser(Users.class)){
+            tvSelect.setVisibility(View.GONE);
+        }
     }
 
     @Override

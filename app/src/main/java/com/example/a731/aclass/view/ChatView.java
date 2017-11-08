@@ -10,4 +10,9 @@ public interface ChatView {
     void onSendMessageFail(String msg);
 
     void onGetRecordSuccess();
+
+    void onMoreMessagesLoaded(int size);
+
+    void onNoMoreData();
+
 }

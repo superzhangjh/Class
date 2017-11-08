@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,16 +15,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.CommendAdapter;
 import com.example.a731.aclass.data.Commend;
+import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Users;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by Administrator on 2017/11/7/007.
@@ -33,17 +39,31 @@ public class CommendPopWindowUtil {
 
     private static PopupWindow popupWindow;
     private static View contentView;
-    private static List<Commend> commendList;
+    private static List<Commend> commendList = new ArrayList<>();
     private static CommendAdapter adapter;
 
-    public static void getCommendDataFromBmob() {
+    public static final int USER = 10;
+    public static final int VOTE = 11;
+    public static final int NEWS = 12;
+    private static int TYPE;
+
+    public static void getCommendDataFromBmob(String objectId) {
         //TODO:从网络获取评论,根据type获取评论的类型(个人、投票、动态)
-        commendList = new ArrayList<>();
+        BmobUtil.queryCommend(TYPE, objectId, new FindListener<Commend>() {
+            @Override
+            public void done(List<Commend> list, BmobException e) {
+                if (e == null){
+                    Log.e("CommendPopWindowUtil",list.size()+"");
+                    commendList = list;
+                    adapter.setOnDataChanged(commendList);
+                }
+            }
+        });
     }
 
     //外部获取评论列表
     public static List<Commend> getCommendList() {
-        getCommendDataFromBmob();//先同步网络数据
+        //getCommendDataFromBmob();//先同步网络数据
         return commendList;
     }
 
@@ -52,9 +72,11 @@ public class CommendPopWindowUtil {
         popupWindow.showAtLocation(contentView, Gravity.BOTTOM, 0, 0);
     }
 
-    public static void createPopwindow(Context context,int type) {
-
-        getCommendDataFromBmob();
+    public static void createPopwindow(final Context context, int type, final String objectId) {
+        commendList.clear();
+        commendList = new ArrayList<>();
+        TYPE = type;
+        getCommendDataFromBmob(objectId);
 
         //TODO:根据评论时间先后排序
 
@@ -121,11 +143,25 @@ public class CommendPopWindowUtil {
                     String date = DateUtil.yyyyMMdd_hhmmss();
                     commend.setDate(date);
                     commend.setContent(content);
+                    News news = new News();
+                    news.setObjectId(objectId);
+                    commend.setNews(news);
                     commendList.add(commend);
                     adapter.setOnDataChanged(commendList);
                     edtContent.getText().clear();
 
                     //TODO:存储评论到网络
+
+                    BmobUtil.saveCommend(commend, new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null){
+
+                            }else{
+                                Toast.makeText(context, "评论失败:"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });

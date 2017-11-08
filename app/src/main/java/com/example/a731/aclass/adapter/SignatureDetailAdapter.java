@@ -40,13 +40,14 @@ public class SignatureDetailAdapter extends RecyclerView.Adapter<SignatureDetail
     public void onBindViewHolder(ViewHolder holder, int position) {
         Users users = groupMembers.get(position);
         if (!signMembers.contains(users.getUsername())){
-            if (users.getHeadImg()!=null)
-                Glide.with(context).load(users.getHeadImg()).into(holder.head);
-            if (users.getName()!=null){
-                holder.name.setText(users.getName());
-            }else{
-                holder.name.setText(users.getUsername());
-            }
+            holder.content.setBackgroundColor(context.getResources().getColor(R.color.colorOrange));
+        }
+        if (users.getHeadImg()!=null)
+            Glide.with(context).load(users.getHeadImg()).into(holder.head);
+        if (users.getName()!=null){
+            holder.name.setText(users.getName());
+        }else{
+            holder.name.setText(users.getUsername());
         }
     }
 

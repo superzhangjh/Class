@@ -67,7 +67,7 @@ public class SystematicNotificationActivity extends BaseActivity implements Syst
 
     @Override
     public void refresh() {
-        showToast("你点击了同意");
+        notifications = DataSupport.findAll(SysNotification.class);
         adapter.notifyDataSetChanged();
     }
 

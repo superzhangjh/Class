@@ -80,7 +80,8 @@ public class CircleNewsFragment extends BaseFragment implements CircleNewsView {
                     public void run() {
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);            }
+                }, 2000);
+            }
         });
     }
 

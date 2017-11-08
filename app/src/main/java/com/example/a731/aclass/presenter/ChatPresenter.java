@@ -13,6 +13,9 @@ public interface ChatPresenter {
 
     void getConversationRecord(String username);
 
+
     List<Mess> getMessage();
+
+    void loadMoreMessages(String chatToId);
 }
 

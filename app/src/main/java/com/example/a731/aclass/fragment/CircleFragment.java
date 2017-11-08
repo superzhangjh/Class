@@ -33,11 +33,16 @@ import com.example.a731.aclass.activity.ScheduleActivity;
 import com.example.a731.aclass.activity.StartVoteActivity;
 import com.example.a731.aclass.activity.UploadPhotoActivity;
 import com.example.a731.aclass.adapter.CircleFragmentPagerAdapter;
+import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.presenter.CirclePresenter;
+import com.example.a731.aclass.presenter.impl.CirclePresenterImpl;
 import com.example.a731.aclass.util.Animation.FabButtonAnimate;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.PopItemUtil;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.util.ToastUtil;
 import com.example.a731.aclass.util.customView.NoScrollViewPager;
+import com.example.a731.aclass.view.CircleView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,11 +53,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import cn.bmob.v3.BmobUser;
+
 /**
  * Created by Administrator on 2017/9/15/015.
  */
 
-public class CircleFragment extends BaseFragment{
+public class CircleFragment extends BaseFragment implements CircleView {
 
     private TabLayout tablayout;
     private NoScrollViewPager viewpager;
@@ -67,6 +74,8 @@ public class CircleFragment extends BaseFragment{
 
     private int ibFnType = 0;
     private static final int REQUEST_CAMERA = 1001;
+
+    private CirclePresenter presenter = new CirclePresenterImpl(this);
 
     @Override
     protected int getLayoutRes() {
@@ -293,25 +302,10 @@ public class CircleFragment extends BaseFragment{
         ibFn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String groupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser(Users.class).getUsername(),getContext());
                 switch (ibFnType){
                     case 0://通知
-                        String[] interactTypes = {"发布通知","资料收取"};
-                        PopItemUtil popItemUtil = new PopItemUtil(getContext(),interactTypes);
-                        popItemUtil.setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                switch (position){
-                                    case 0:
-                                        Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
-                                        startActivity(releasingNotice);
-                                        break;
-                                    case 1:
-                                        Intent gatherDocIntent = new Intent(getContext(), ReleasingDocGatheringActivity.class);
-                                        startActivity(gatherDocIntent);
-                                        break;
-                                }
-                            }
-                        });
+                        presenter.queryAdmin(groupId);
                     break;
                     case 1://互动
                         Intent startVoteIntent = new Intent(getContext(), StartVoteActivity.class);
@@ -375,5 +369,39 @@ public class CircleFragment extends BaseFragment{
         Intent intent = new Intent(getContext(),UploadPhotoActivity.class);
         intent.putStringArrayListExtra("imgsPath",mImgs);
         getContext().startActivity(intent);
+
+
     }
+
+
+    @Override
+    public void onGetLimitSuccess(boolean isAdmin) {
+        if (isAdmin){
+            String[] interactTypes = {"发布通知","资料收取"};
+            PopItemUtil popItemUtil = new PopItemUtil(getContext(),interactTypes);
+            popItemUtil.setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    switch (position){
+                        case 0:
+                            Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
+                            startActivity(releasingNotice);
+                            break;
+                        case 1:
+                            Intent gatherDocIntent = new Intent(getContext(), ReleasingDocGatheringActivity.class);
+                            startActivity(gatherDocIntent);
+                            break;
+                    }
+                }
+            });
+        }else {
+            showToast("你没有管理员权限");
+        }
+    }
+
+    @Override
+    public void onGetAdminFail(String message) {
+        showToast("获取管理员信息失败"+message);
+    }
+
 }

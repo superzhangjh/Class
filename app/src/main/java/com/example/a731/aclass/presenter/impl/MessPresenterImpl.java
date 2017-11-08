@@ -9,6 +9,7 @@ import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.MessPresenter;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.MessView;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -17,6 +18,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,28 +39,46 @@ public class MessPresenterImpl implements MessPresenter {
 
     @Override
     public void getConversations() {
-        List<Conversation> conversations = new ArrayList<>();
-        Map<String,EMConversation> conversationMap = EaseMobUtil.getAllConversations();
-        if (conversationMap==null)return;
-        for (Map.Entry<String,EMConversation> entry:conversationMap.entrySet()){
-            Log.i("MesspresenterImpl","开始获取会话"+conversationMap.size());
-            final EMConversation emConversation = entry.getValue();
-            Conversation conversation = new Conversation();
 
-            List<BasicMessage> messages = DataSupport.where("userId = ?",emConversation.conversationId()).find(BasicMessage.class);
-            if (messages.size() == 0) continue;
-            BasicMessage mess = messages.get(0);
-            EMTextMessageBody messageBody = (EMTextMessageBody) emConversation.getLastMessage().getBody();
-            conversation.setChatType(emConversation.getType());
-            conversation.setLastMess(messageBody.getMessage());
-            conversation.setImgHead(mess.getHeadImg());
-            if (mess.getName() != null){
-                conversation.setName(mess.getName());
-            }else{
-                conversation.setName(mess.getUserId());
+
+        ThreadUtils.runOnBackgroundThread(new Runnable() {
+            @Override
+            public void run() {
+                final List<Conversation> conversations = new ArrayList<>();
+                Map<String, EMConversation> emConversationMap = EaseMobUtil.getAllConversations();
+                List<EMConversation> mEMConversations = new ArrayList<>();
+                mEMConversations.addAll(emConversationMap.values());
+                Collections.sort(mEMConversations, new Comparator<EMConversation>() {
+                    @Override
+                    public int compare(EMConversation o1, EMConversation o2) {
+                        return (int) (o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime());
+                    }
+                });
+
+                for (EMConversation emConversation:mEMConversations){
+                    Conversation conversation = new Conversation();
+                    List<BasicMessage> messages = DataSupport.where("userId = ?",emConversation.conversationId()).find(BasicMessage.class);
+                    if (messages.size() == 0) continue;
+                    BasicMessage mess = messages.get(0);
+                    conversation.setLastMess(((EMTextMessageBody) emConversation.getLastMessage().getBody()).getMessage());
+                    conversation.setChatType(emConversation.getType());
+                    Log.e("MessPresenterImpl",((EMTextMessageBody) emConversation.getLastMessage().getBody()).getMessage());
+                    conversation.setImgHead(mess.getHeadImg());
+                    if (mess.getName() != null){
+                        conversation.setName(mess.getName());
+                    }
+                    conversation.setChatId(emConversation.conversationId());
+                    conversations.add(conversation);
+                }
+
+
+                ThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMessView.onGetConversationSuccess(conversations);
+                    }
+                });
             }
-            conversations.add(conversation);
-        }
-        mMessView.onGetConversationSuccess(conversations);
+        });
     }
 }

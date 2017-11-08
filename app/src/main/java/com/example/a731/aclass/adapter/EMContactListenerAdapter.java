@@ -26,7 +26,7 @@ public class EMContactListenerAdapter implements EMContactListener{
     }
     @Override
     public void onFriendRequestDeclined(String username) {
-        //被拒绝时回调此方法
+        //拒绝时回调此方法
     }
 }
 

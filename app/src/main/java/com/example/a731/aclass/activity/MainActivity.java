@@ -42,6 +42,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.a731.aclass.R;
+import com.example.a731.aclass.adapter.EMContactListenerAdapter;
+import com.example.a731.aclass.adapter.EMGroupChangeListenerAdapter;
 import com.example.a731.aclass.adapter.FriendAdapter;
 import com.example.a731.aclass.adapter.GroupAdapter;
 import com.example.a731.aclass.data.BasicMessage;
@@ -109,7 +111,8 @@ public class MainActivity extends BaseActivity implements MainView{
     private LinearLayout tvUserinfo;
     private LinearLayout tvGroupinfo;
 
-
+    private EMContactListenerAdapter contactListener;
+    private EMGroupChangeListenerAdapter groupChangeListener;
 
     private RadioButton rbGroup;
     private RadioButton rbMess;
@@ -528,6 +531,31 @@ public class MainActivity extends BaseActivity implements MainView{
         };
 
         EMClient.getInstance().addConnectionListener(connectionListener);
+
+        contactListener = new EMContactListenerAdapter(){
+            @Override
+            public void onContactAdded(String username) {
+                //好友请求被同意
+                mainPresenter.getFriendList();
+            }
+            @Override
+            public void onFriendRequestAccepted(String username) {
+                //同意邀请时回调此方法
+                mainPresenter.getFriendList();
+            }
+        };
+
+        EMClient.getInstance().contactManager().setContactListener(contactListener);
+
+        groupChangeListener = new EMGroupChangeListenerAdapter(){
+            @Override
+            public void onRequestToJoinAccepted(String groupId, String groupName, String accepter) {
+                //加群申请被同意
+                mainPresenter.getGroup();
+            }
+        };
+
+        EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
     }
 
     @Override
@@ -742,5 +770,7 @@ public class MainActivity extends BaseActivity implements MainView{
     protected void onDestroy() {
         super.onDestroy();
         EMClient.getInstance().removeConnectionListener(connectionListener);
+        EMClient.getInstance().groupManager().removeGroupChangeListener(groupChangeListener);
+        EMClient.getInstance().contactManager().removeContactListener(contactListener);
     }
 }

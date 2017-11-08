@@ -3,11 +3,13 @@ package com.example.a731.aclass.data;
 import java.io.Serializable;
 import java.util.List;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by Administrator on 2017/10/16/016.
  */
 
-public class Commend implements Serializable {
+public class Commend extends BmobObject implements Serializable {
     private List<String> likeList;//点赞
     private Users users;//评论者
     private String date;//评论时间

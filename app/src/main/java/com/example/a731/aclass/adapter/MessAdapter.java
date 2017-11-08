@@ -46,7 +46,12 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Conversation con = conversations.get(position);
-        holder.name.setText(con.getName());
+        if (con.getName()!=null){
+            holder.name.setText(con.getName());
+        }else{
+            holder.name.setText(con.getChatId());
+        }
+
         holder.message.setText(con.getLastMess());
         if (con.getImgHead()!=null){
             Glide.with(context).load(con.getImgHead()).into(holder.head);
@@ -58,10 +63,10 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
                 Intent intent = new Intent(context,ChatActivity.class);
 
                 if (con.getChatType() == EMConversation.EMConversationType.Chat){
-                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatToId",con.getChatId());
                     intent.putExtra("chatType", EaseMobUtil.CHATTYPE_PERSONAL);
                 }else{
-                    intent.putExtra("chatToId",con.getName());
+                    intent.putExtra("chatToId",con.getChatId());
                     intent.putExtra("chatType", EaseMobUtil.CHATTYPE_GROUP);
                 }
                 context.startActivity(intent);
@@ -96,5 +101,7 @@ public class MessAdapter extends RecyclerView.Adapter<MessAdapter.ViewHolder>{
             head = (CircleImageView) itemView.findViewById(R.id.item_mess_iv_head);
         }
     }
+
+
 
 }

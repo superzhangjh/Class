@@ -1,5 +1,6 @@
 package com.example.a731.aclass.util;
 
+import com.example.a731.aclass.data.Commend;
 import com.example.a731.aclass.data.Group;
 import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Notice;
@@ -215,7 +216,41 @@ public class BmobUtil {
         BmobQuery<Users> query = new BmobQuery<>();
         Signature signature = new Signature();
         signature.setObjectId(objectId);
-        query.addWhereRelatedTo("member", new BmobPointer(signature));
+        query.addWhereRelatedTo("hasSign", new BmobPointer(signature));
         query.findObjects(listener);
+    }
+
+    public static void saveCommend(Commend commend,SaveListener<String> listener) {
+        commend.save(listener);
+    }
+
+    public static void queryCommend(int type,String objectId,FindListener<Commend> listener) {
+        BmobQuery<Commend> query = new BmobQuery<>();
+        switch (type){
+            case CommendPopWindowUtil.USER:
+                Users users = BmobUser.getCurrentUser(Users.class);
+                query.addWhereEqualTo("users",new BmobPointer(users));
+                query.order("createdAt");
+                query.include("users");
+                query.findObjects(listener);
+                break;
+            case CommendPopWindowUtil.VOTE:
+                Vote vote = new Vote();
+                vote.setObjectId(objectId);
+                query.order("createdAt");
+                query.addWhereEqualTo("vote",new BmobPointer(vote));
+                query.include("users");
+                query.findObjects(listener);
+                break;
+            case CommendPopWindowUtil.NEWS:
+                News news = new News();
+                news.setObjectId(objectId);
+                query.order("createdAt");
+                query.addWhereEqualTo("news",new BmobPointer(news));
+                query.include("users");
+                query.findObjects(listener);
+                break;
+        }
+
     }
 }

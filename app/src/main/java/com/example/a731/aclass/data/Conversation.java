@@ -8,6 +8,7 @@ import com.hyphenate.chat.EMConversation;
 
 public class Conversation {
     private String name;
+    private String chatId;
     private String imgHead;
     private String lastMess;
     private EMConversation.EMConversationType chatType;
@@ -18,6 +19,14 @@ public class Conversation {
 
     public void setChatType(EMConversation.EMConversationType chatType) {
         this.chatType = chatType;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
     public String getName() {

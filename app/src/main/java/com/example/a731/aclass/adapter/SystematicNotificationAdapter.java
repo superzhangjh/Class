@@ -32,7 +32,7 @@ public class SystematicNotificationAdapter extends BaseAdapter{
     private static final String TAG = "NotificationAdapter";
 
     private LinearLayout content;
-    private TextView tvMessage;
+    private TextView tvMessage,tvStatue;
     private Button btnAccept,btnRefuse;
 
     public SystematicNotificationAdapter(Context context,SystematicNotificationPresenter presenter,List<SysNotification> notifications){
@@ -72,6 +72,7 @@ public class SystematicNotificationAdapter extends BaseAdapter{
         tvMessage = (TextView) convertView.findViewById(R.id.systematic_notification_item_tv_mess);
         btnAccept = (Button) convertView.findViewById(R.id.systematic_notification_item_btn_accept);
         btnRefuse = (Button) convertView.findViewById(R.id.systematic_notification_item_btn_refuse);
+        tvStatue = (TextView) convertView.findViewById(R.id.systematic_notification_item_btn_statue);
 
         tvMessage.setText(notification.getMessage());
 
@@ -92,7 +93,7 @@ public class SystematicNotificationAdapter extends BaseAdapter{
                     }
                     ContentValues values = new ContentValues();
                     values.put("statue",SysNotification.ACCEPTED);
-                    DataSupport.updateAll(SysNotification.class,values,"id = ?",notification.getId()+"");
+                    DataSupport.updateAll(SysNotification.class,values,"message = ?",notification.getMessage()+"");
                 }
             });
             btnRefuse.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +111,16 @@ public class SystematicNotificationAdapter extends BaseAdapter{
                     }
                     ContentValues values = new ContentValues();
                     values.put("statue",SysNotification.REFUSED);
-                    DataSupport.updateAll(SysNotification.class,values,"id = ?",notification.getId()+"");
+                    DataSupport.updateAll(SysNotification.class,values,"message = ?",notification.getMessage()+"");
                 }
             });
+        }else{
+            tvStatue.setVisibility(View.VISIBLE);
+            if (notification.getStatue() == SysNotification.ACCEPTED){
+                tvStatue.setText("已同意");
+            }else{
+                tvStatue.setText("已拒绝");
+            }
         }
         return convertView;
     }

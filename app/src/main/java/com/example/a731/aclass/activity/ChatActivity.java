@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -23,6 +25,7 @@ import com.example.a731.aclass.data.Mess;
 import com.example.a731.aclass.presenter.ChatPresenter;
 import com.example.a731.aclass.presenter.impl.ChatPresenterImpl;
 import com.example.a731.aclass.util.EaseMobUtil;
+import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.ChatView;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -43,15 +46,16 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private EditText edtInput;
     private ImageButton imgFn;//功能按钮
     private ImageButton imgInfo;//详情按钮
-    private SwipeLayout swipeLayout;
-
+    private GridLayout bottomContent;
     private ChatAdapter adapter;
     private ChatPresenter chatPresenter = new ChatPresenterImpl(this);
     private String chatToId;
     private int chatType;
     private String myId;
+    private boolean isVisible = false;
 
     private EMMessageListenerAdapter msgListener;
+    private LinearLayoutManager manager;
 
     @Override
     protected int getLayoutRes() {
@@ -66,8 +70,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
         initToolbar();
 
-        //测试内容
-        initSwipeLayout();
+
         initRecyclerview();
         initEditText();
     }
@@ -76,6 +79,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
         edtInput = (EditText) findViewById(R.id.chat_edt_fn);
         imgFn = (ImageButton) findViewById(R.id.chat_ib_fn);
         imgInfo = (ImageButton) findViewById(R.id.chat_ib_info);
+        bottomContent = (GridLayout) findViewById(R.id.chat_swipelayout_bottom);
 
         imgFn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +90,13 @@ public class ChatActivity extends BaseActivity implements ChatView {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edtInput.getWindowToken(), 0) ;
                     //弹出滑动框
-                    swipeLayout.open(SwipeLayout.DragEdge.Bottom);
+                    isVisible = !isVisible;
+                    if (isVisible){
+                        bottomContent.setVisibility(View.VISIBLE);
+                    }else {
+                        bottomContent.setVisibility(View.GONE);
+                    }
+
                 }else{
                     sendMessage();
                 }
@@ -125,10 +135,11 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private void initRecyclerview() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycle_view);
         adapter = new ChatAdapter(this,chatPresenter.getMessage());
-        LinearLayoutManager manager=new LinearLayoutManager(this);
+        manager=new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(mOnScrollListener);
     }
 
 
@@ -161,38 +172,42 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
         msgListener = new EMMessageListenerAdapter() {
             @Override
-            public void onMessageReceived(List<EMMessage> messages) {
+            public void onMessageReceived(final List<EMMessage> messages) {
                 //收到消息
-                EMMessage msg = messages.get(0);
-                Mess mess = new Mess();
-                mess.setCreatorID(msg.getFrom());
-                mess.setDate(msg.getMsgTime());
-                switch(msg.getType()){
-                    //文本信息
-                    case TXT:
-                        EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
-                        mess.setMessage(body.getMessage());
-                        showToast("收到信息"+body.getMessage());
-                        adapter.add(mess);
+                ThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EMMessage msg = messages.get(0);
+                        Mess mess = new Mess();
+                        mess.setCreatorID(msg.getFrom());
+                        mess.setDate(msg.getMsgTime());
+                        switch(msg.getType()){
+                            //文本信息
+                            case TXT:
+                                EMTextMessageBody body = (EMTextMessageBody) msg.getBody();
+                                mess.setMessage(body.getMessage());
+                                showToast("收到信息"+body.getMessage());
+                                adapter.add(mess);
+                                break;
+                            //图片信息
+                            case IMAGE:
+                                break;
+                            //视频
+                            case VIDEO:
+                                break;
+                            //位置
+                            case LOCATION:
+                                break;
+                            //声音
+                            case VOICE:
+                                break;
+                            //文件
+                            case FILE:
+                                break;
+                        }
                         smoothScrollToBottom();
-                        break;
-                    //图片信息
-                    case IMAGE:
-                        break;
-                    //视频
-                    case VIDEO:
-                        break;
-                    //位置
-                    case LOCATION:
-                        break;
-                    //声音
-                    case VOICE:
-                        break;
-                    //文件
-                    case FILE:
-                        break;
-                }
-                smoothScrollToBottom();
+                    }
+                });
             }
         };
 
@@ -201,6 +216,8 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     @Override
     public void initData() {
+        showToast("开始获取历史纪录");
+        Log.e("ChatActivity","开始获取历史纪录");
         chatPresenter.getConversationRecord(chatToId);
     }
 
@@ -226,12 +243,6 @@ public class ChatActivity extends BaseActivity implements ChatView {
     }
 
 
-    private void initSwipeLayout() {
-        swipeLayout = (SwipeLayout) findViewById(R.id.chat_swipelayout);
-        swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
-        swipeLayout.addDrag(SwipeLayout.DragEdge.Bottom,this.findViewById(R.id.chat_swipelayout_bottom));
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -255,15 +266,39 @@ public class ChatActivity extends BaseActivity implements ChatView {
 
     }
 
-
     //获取会话记录
     @Override
     public void onGetRecordSuccess() {
-        showToast("获取会话记录成功");
+        Log.e("ChatActivity","成功获取聊天纪录"+chatPresenter.getMessage().size());
         updateList();
+    }
+
+    @Override
+    public void onMoreMessagesLoaded(int size) {
+        showToast("成功获取更多消息");
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(size);
+    }
+
+    @Override
+    public void onNoMoreData() {
+        showToast("没有更多消息记录了");
     }
 
     private void smoothScrollToBottom() {
         recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                if (firstVisibleItemPosition == 0) {
+                    chatPresenter.loadMoreMessages(chatToId);
+                }
+            }
+        }
+    };
 }

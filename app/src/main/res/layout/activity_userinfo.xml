@@ -46,7 +46,7 @@
             <!--导航栏-->
             <RadioGroup
                 android:id="@+id/uesrinfo_radio_group"
-                android:checkedButton="@id/userinfo_btn_info"
+                android:checkedButton="@+id/userinfo_btn_info"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">

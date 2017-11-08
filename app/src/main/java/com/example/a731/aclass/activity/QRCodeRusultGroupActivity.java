@@ -90,7 +90,7 @@ public class QRCodeRusultGroupActivity extends BaseActivity implements QRCodeRes
     //获取网络数据成功时设置内容
     private void setView() {
         Glide.with(getApplicationContext()).load(group.getHeadImg()).into(ivClassHead);//班圈头像
-        //tvSize.setText();成员数量
+        tvSize.setText(group.getMember().getObjects().size());
         tvClassName = (TextView) findViewById(R.id.activity_result_group_tv_class_name);
         tvClassName.setText(group.getName());
         Glide.with(getApplicationContext()).load(users.getHeadImg()).into(tvCreatorHead);

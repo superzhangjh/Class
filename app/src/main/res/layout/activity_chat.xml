@@ -1,43 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/chat_swipelayout" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_swipelayout"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <!--滑动布局尾部-->
-    <GridLayout
-        android:orientation="horizontal"
-        android:id="@+id/chat_swipelayout_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:rowCount="1"
-        android:columnCount="4"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/chat_btn_fn_1"
-            android:layout_width="0dp"
-            android:layout_columnWeight="1"
-            android:layout_height="60dp"
-            android:text="相册" />
-        <Button
-            android:id="@+id/chat_btn_fn_2"
-            android:layout_width="0dp"
-            android:layout_columnWeight="1"
-            android:layout_height="60dp"
-            android:text="拍照" />
-        <Button
-            android:id="@+id/chat_btn_fn_3"
-            android:layout_width="0dp"
-            android:layout_columnWeight="1"
-            android:layout_height="60dp"
-            android:text="文件" />
-        <Button
-            android:id="@+id/chat_btn_fn_4"
-            android:layout_width="0dp"
-            android:layout_columnWeight="1"
-            android:layout_height="60dp"
-            android:text="更多" />
-    </GridLayout>
 
     <!--滑动布局的主界面-->
 
@@ -45,7 +13,8 @@
         android:id="@+id/chat_swipelayout_surcface"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/chat_toolbar"
@@ -110,5 +79,41 @@
                 android:layout_marginRight="10dp" />
         </LinearLayout>
     </LinearLayout>
+    <!--滑动布局尾部-->
+    <GridLayout
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:id="@+id/chat_swipelayout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:rowCount="1"
+        android:columnCount="4"
+        android:padding="10dp">
 
-</com.daimajia.swipe.SwipeLayout>
+        <Button
+            android:id="@+id/chat_btn_fn_1"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="相册" />
+        <Button
+            android:id="@+id/chat_btn_fn_2"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="拍照" />
+        <Button
+            android:id="@+id/chat_btn_fn_3"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="文件" />
+        <Button
+            android:id="@+id/chat_btn_fn_4"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="60dp"
+            android:text="更多" />
+    </GridLayout>
+
+</LinearLayout>
