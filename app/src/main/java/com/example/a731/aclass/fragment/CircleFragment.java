@@ -305,7 +305,27 @@ public class CircleFragment extends BaseFragment implements CircleView {
                 String groupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser(Users.class).getUsername(),getContext());
                 switch (ibFnType){
                     case 0://通知
-                        presenter.queryAdmin(groupId);
+                        //presenter.queryAdmin(groupId);
+
+                        List<String> interactTypes = new ArrayList<>();
+                        interactTypes.add("发布通知");
+                        interactTypes.add("资料回收");
+                        PopItemUtil popItemUtil = new PopItemUtil(getContext(),interactTypes);
+                        popItemUtil.setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                switch (position){
+                                    case 0:
+                                        Intent releasingNotice = new Intent(getContext(), ReleasingNoticesActivity.class);
+                                        startActivity(releasingNotice);
+                                        break;
+                                    case 1:
+                                        Intent gatherDocIntent = new Intent(getContext(), ReleasingDocGatheringActivity.class);
+                                        startActivity(gatherDocIntent);
+                                        break;
+                                }
+                            }
+                        });
                     break;
                     case 1://互动
                         Intent startVoteIntent = new Intent(getContext(), StartVoteActivity.class);
@@ -369,15 +389,15 @@ public class CircleFragment extends BaseFragment implements CircleView {
         Intent intent = new Intent(getContext(),UploadPhotoActivity.class);
         intent.putStringArrayListExtra("imgsPath",mImgs);
         getContext().startActivity(intent);
-
-
     }
 
 
-    @Override
+
     public void onGetLimitSuccess(boolean isAdmin) {
         if (isAdmin){
-            String[] interactTypes = {"发布通知","资料收取"};
+            List<String> interactTypes = new ArrayList<>();
+            interactTypes.add("发布通知");
+            interactTypes.add("资料回收");
             PopItemUtil popItemUtil = new PopItemUtil(getContext(),interactTypes);
             popItemUtil.setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
                 @Override
@@ -403,5 +423,4 @@ public class CircleFragment extends BaseFragment implements CircleView {
     public void onGetAdminFail(String message) {
         showToast("获取管理员信息失败"+message);
     }
-
 }

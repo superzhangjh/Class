@@ -23,6 +23,7 @@ import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.fragment.CircleFragment;
 import com.example.a731.aclass.fragment.CircleNewsFragment;
 import com.example.a731.aclass.fragment.MessFragment;
+import com.example.a731.aclass.fragment.UserCommendFragment;
 import com.example.a731.aclass.fragment.UserInfoFragment;
 import com.example.a731.aclass.presenter.UserInfoPresenter;
 import com.example.a731.aclass.presenter.impl.UserInfoPresenterImpl;
@@ -111,7 +112,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoView {
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new UserInfoFragment(username));
         fragmentList.add(new CircleNewsFragment());
-        fragmentList.add(new Fragment());
+        fragmentList.add(new UserCommendFragment());
 
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()){
             @Override

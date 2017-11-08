@@ -1,6 +1,5 @@
 package com.example.a731.aclass.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,19 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.activity.BaseActivity;
+import com.example.a731.aclass.activity.DocGatherInfoActivity;
 import com.example.a731.aclass.activity.NoticeActivity;
 import com.example.a731.aclass.data.Notice;
-import com.example.a731.aclass.view.OnItemClickView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,9 +91,21 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
             public void onClick(View v) {
                 booleanList.set(position,true);//点击隐藏小红点
                 setIsLookNotice(position);//存查看状态到数据库,将状态存入本地数据
-                Intent intent = new Intent(context, NoticeActivity.class);
-                intent.putExtra("notice", notice);
-                context.startActivity(intent);
+
+                    switch (notice.getType()){
+                        case 0:
+                            Intent intent = new Intent(context, NoticeActivity.class);
+                            intent.putExtra("notice", notice);
+                            context.startActivity(intent);
+                            break;
+                        case 2:
+                            Intent intent1 = new Intent(context, DocGatherInfoActivity.class);
+                            intent1.putExtra("notice", notice);
+                            context.startActivity(intent1);
+                            break;
+                    }
+
+
             }
         });
     }

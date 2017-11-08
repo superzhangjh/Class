@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.PhotoAdapter;
+import com.example.a731.aclass.adapter.PhotoUploadAdapter;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ReleasingNoticesPresenter;
@@ -178,6 +179,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
                                     String content = edtContent.getText().toString();
 
                                     notice = new Notice();
+                                    notice.setType(1);
                                     notice.setPhotoList(mImgs);
                                     notice.setDate(DateUtil.yyyyMMdd_hhmmss());
                                     notice.setTitle(title);
@@ -248,7 +250,7 @@ public class ReleasingNoticesActivity extends BaseActivity implements ReleasingN
     }
 
     private void setPhotoList(List<String> mImgs) {
-        PhotoAdapter adapter = new PhotoAdapter(this,mImgs);
+        PhotoUploadAdapter adapter = new PhotoUploadAdapter(this,mImgs);
         recPhoto.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recPhoto.setAdapter(adapter);
     }

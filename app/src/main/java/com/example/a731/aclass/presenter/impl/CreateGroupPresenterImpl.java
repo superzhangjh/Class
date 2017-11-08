@@ -9,6 +9,7 @@ import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.EaseMobUtil;
 import com.example.a731.aclass.util.QRCodeUtil;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.util.ThreadUtils;
 import com.example.a731.aclass.view.CreateGroupView;
 import com.hyphenate.chat.EMGroup;
@@ -22,6 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -34,7 +36,7 @@ import cn.bmob.v3.listener.UploadFileListener;
  */
 
 public class CreateGroupPresenterImpl implements CreateGroupPresenter {
-
+    private String groupId;
     private CreateGroupView mCreateGroupView;
 
     public CreateGroupPresenterImpl (CreateGroupView createGroupView){
@@ -45,13 +47,16 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
     @Override
     public void checkGroup(final String name, final Users creator, final String headImg, final Bitmap logo) {
 
+
+
         ThreadUtils.runOnBackgroundThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     EMGroup group = EaseMobUtil.createGroup(name);
                     if (group!=null){
-                        final String groupId = group.getGroupId();
+                        groupId = group.getGroupId();
+
                         BmobUtil.getGroupByField("groupName",name, new FindListener<Group>() {
                             @Override
                             public void done(List<Group> list, final BmobException e) {
@@ -126,7 +131,7 @@ public class CreateGroupPresenterImpl implements CreateGroupPresenter {
             @Override
             public void done(BmobException e) {
                 if (e == null){
-                    mCreateGroupView.onCreateSuccess();
+                    mCreateGroupView.onCreateSuccess(groupId);
                 }else{
                     mCreateGroupView.onCreateFail("bmob2:"+e.getMessage()+":"+e.getErrorCode());
                 }

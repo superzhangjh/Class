@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.EditVoteItemAdapter;
 import com.example.a731.aclass.adapter.PhotoAdapter;
+import com.example.a731.aclass.adapter.PhotoUploadAdapter;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.data.Vote;
 import com.example.a731.aclass.data.VoteContent;
@@ -80,7 +81,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
     private Button btnAddPic;
 
     private EditVoteItemAdapter itemAdapter;
-    private PhotoAdapter photoAdapter;
+    private PhotoUploadAdapter photoAdapter;
     private List<VoteContent.Item> itemList = new ArrayList<>();
     private List<String> photoList = new ArrayList<>();
     private HashMap map = new HashMap();
@@ -133,7 +134,7 @@ public class StartVoteActivity extends BaseActivity implements EditVoteItemAdapt
 
         //初始化照片Adapter
         //photoList = vote.getPhotoList();
-        photoAdapter = new PhotoAdapter(getApplicationContext(),photoList);
+        photoAdapter = new PhotoUploadAdapter(getApplicationContext(),photoList);
         mRecyclerViewPhoto.setLayoutManager(new GridLayoutManager(getApplicationContext(),LINE_COUNT));
         mRecyclerViewPhoto.setAdapter(photoAdapter);
     }

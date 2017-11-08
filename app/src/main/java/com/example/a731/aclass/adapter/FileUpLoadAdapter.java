@@ -1,7 +1,6 @@
 package com.example.a731.aclass.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,11 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.activity.PhotoViewActivity;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -21,25 +16,34 @@ import java.util.List;
  * Created by Administrator on 2017/9/16/016.
  */
 
-public class FileInfoAdapter extends RecyclerView.Adapter<FileInfoAdapter.ViewHolder>{
+public class FileUpLoadAdapter extends RecyclerView.Adapter<FileUpLoadAdapter.ViewHolder>{
+    //添加附件时显示的列表
 
     private Context context;
     private List<String> pathList;
 
-    public FileInfoAdapter(Context context, List<String> pathList) {
+    public interface OnItemClickListener {
+        void onItemClick(View view , int position);
+    }
+    private OnItemClickListener mOnItemClickListener = null;
+
+    public FileUpLoadAdapter(Context context, List<String> pathList) {
         this.context = context;
         this.pathList = pathList;
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(context, R.layout.item_file_info, null);
+        View view = View.inflate(context, R.layout.item_file_uplown, null);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         String completePath = pathList.get(position);
         String[] paths = completePath.split("\'");
         String filename = paths[paths.length-1];
@@ -124,8 +128,7 @@ public class FileInfoAdapter extends RecyclerView.Adapter<FileInfoAdapter.ViewHo
         holder.fileTypeCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pathList.remove(position);
-                notifyDataSetChanged();
+                mOnItemClickListener.onItemClick(v,position);
             }
         });
     }

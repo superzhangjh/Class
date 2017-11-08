@@ -38,6 +38,7 @@ import com.example.a731.aclass.presenter.CreateGroupPresenter;
 import com.example.a731.aclass.presenter.impl.CreateGroupPresenterImpl;
 import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
+import com.example.a731.aclass.util.SharedPreferencesUtil;
 import com.example.a731.aclass.view.CreateGroupView;
 
 import java.io.File;
@@ -204,9 +205,12 @@ public class CreateGroupActivity extends BaseActivity implements CreateGroupView
     }
 
     @Override
-    public void onCreateSuccess() {
+    public void onCreateSuccess(String groupId) {
         hideProgress();
         showToast("创建成功");
+        if(SharedPreferencesUtil.lodaDataFromSharedPreferences(BmobUser.getCurrentUser().getUsername(),this) == null){
+            SharedPreferencesUtil.saveDataToSharedPreferences(BmobUser.getCurrentUser().getUsername(),groupId,this);
+        }
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
         finish();

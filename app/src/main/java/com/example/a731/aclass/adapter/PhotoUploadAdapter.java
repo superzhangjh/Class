@@ -19,12 +19,12 @@ import java.util.List;
  * Created by Administrator on 2017/9/16/016.
  */
 
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
+public class PhotoUploadAdapter extends RecyclerView.Adapter<PhotoUploadAdapter.ViewHolder>{
 
     private Context context;
     private List<String> srcList;
 
-    public PhotoAdapter(Context context, List<String> srcList) {
+    public PhotoUploadAdapter(Context context, List<String> srcList) {
         this.context = context;
         this.srcList = srcList;
     }
@@ -32,7 +32,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(context, R.layout.item_photo_adapter, null);
+        View view = View.inflate(context, R.layout.item_photo_adapter_upload, null);
         return new ViewHolder(view);
     }
 
@@ -50,6 +50,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
                 context.startActivity(intent);
             }
         });
+        holder.cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                srcList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -59,10 +66,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder>{
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
+        ImageView cross;
         public ViewHolder(View itemView) {
             super(itemView);
             //信息框
-           img = (ImageView) itemView.findViewById(R.id.gallery_photo_item);
+           img = (ImageView) itemView.findViewById(R.id.item_photo_adpter_item);
+            cross = (ImageView) itemView.findViewById(R.id.item_photo_adpter_cross);
         }
     }
 

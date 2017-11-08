@@ -1,34 +1,29 @@
 package com.example.a731.aclass.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.a731.aclass.R;
-import com.example.a731.aclass.adapter.FileInfoAdapter;
-import com.example.a731.aclass.adapter.PhotoAdapter;
-import com.example.a731.aclass.data.News;
+import com.example.a731.aclass.adapter.FileUpLoadAdapter;
+import com.example.a731.aclass.adapter.PhotoUploadAdapter;
+import com.example.a731.aclass.data.Group;
+import com.example.a731.aclass.data.GroupFile;
 import com.example.a731.aclass.data.Notice;
 import com.example.a731.aclass.data.Users;
+import com.example.a731.aclass.util.BmobUtil;
 import com.example.a731.aclass.util.DateUtil;
 import com.example.a731.aclass.util.ImageLoderUtil;
 import com.example.a731.aclass.util.PopItemUtil;
@@ -46,6 +41,11 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by Administrator on 2017/11/8/008.
@@ -64,13 +64,15 @@ public class ReleasingDocGatheringActivity extends BaseActivity {
     private TextView tvFileCount;
     private RecyclerView recyclerFile;
 
-    private Notice notice = new Notice();
-    private List<String> pathList = new ArrayList<>(); //文件本地图片列表
-    private List<File> fileList;//文件网络链接列表
+    private Notice notice;
+    private List<String> pathList = new ArrayList<>(); //文件本地路径列表
+    private List<GroupFile> groupFileList = new ArrayList<>();
 
-    private PhotoAdapter photoAdapter;
-    private FileInfoAdapter fileAdapter;
-    private List<String> photoList;
+    private PhotoUploadAdapter photoAdapter;
+    private FileUpLoadAdapter fileAdapter;
+    private List<String> photoList = new ArrayList<>();
+
+    final List<String> upLoadList = new ArrayList<>();
     private String presentGroupId;
 
     @Override
@@ -95,13 +97,24 @@ public class ReleasingDocGatheringActivity extends BaseActivity {
     }
 
     private void initFileRecyclerView() {
-        fileAdapter = new FileInfoAdapter(this,pathList);
+        fileAdapter = new FileUpLoadAdapter(this,pathList);
         recyclerFile.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerFile.setAdapter(fileAdapter);
+        fileAdapter.setOnItemClickListener(new FileUpLoadAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                pathList.remove(position);
+                fileAdapter.setOnDataChange(pathList);
+                if (pathList.size()==0){
+                    tvFileCount.setVisibility(View.GONE);
+                }
+                tvFileCount.setText("已选择文件("+pathList.size()+")");
+            }
+        });
     }
 
     private void initPhotoRecyclerView() {
-        photoAdapter = new PhotoAdapter(this,photoList);
+        photoAdapter = new PhotoUploadAdapter(this,photoList);
         recyclerPinture.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerPinture.setAdapter(photoAdapter);
     }
@@ -122,21 +135,64 @@ public class ReleasingDocGatheringActivity extends BaseActivity {
 
     //发布通知
     private void pushNotice() {
-        Users users = BmobUser.getCurrentUser(Users.class);
+        final Users users = BmobUser.getCurrentUser(Users.class);
         notice = new Notice();
+        String groupId = SharedPreferencesUtil.lodaDataFromSharedPreferences(users.getUsername(),this);
+        BmobUtil.getGroupByField("groupId", groupId, new FindListener<Group>() {
+            @Override
+            public void done(List<Group> list, BmobException e) {
+                if (e==null){
+                    notice.setGroup(list.get(0));
+                    setNoticeData(users);
+                }
+            }
+        });
+    }
+
+    private void setNoticeData(final Users users) {
+        notice.setTitle(users.getName()+"的资料回收通知");
+        notice.setType(2);
         notice.setCreator(users);
         String content = edtContent.getText().toString();
         notice.setContent(content);
         notice.setDate(DateUtil.yyyyMMdd_hhmmss());
+        notice.setPhotoList(photoList);
 
         if (content.equals("")){
             showToast("先填写好内容再发布吧~");
             return;
-        }else{
-            showProgress("努力发布中...");
-            //TODO:将fileList上传到网上获得链接，并把反馈得到的链接链接赋给设置给notice，然后上传notice到网络
-            //TODO:notice.setFileList(new ArrayList<String>());
-            //presenter.saveNews(presentGroupId,news,photoList);
+        }else {
+            showProgress("上传文件中...");
+            final GroupFile gFile = new GroupFile();
+            gFile.setUsers(users);
+            for (String filename : pathList) {
+                final BmobFile bmobFile = new BmobFile(new File(filename));
+                bmobFile.uploadblock(new UploadFileListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        String path = bmobFile.getFileUrl();
+                        upLoadList.add(path);
+                        showToast("文件上传成功");
+                        gFile.setUrlList(upLoadList);
+                    }
+                });
+            }
+            groupFileList.add(gFile);
+            notice.setFileList(groupFileList);
+            BmobUtil.addNotice(notice, new SaveListener<String>() {
+
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        hideProgress();
+                        showToast("发布成功!");
+                        finish();
+                    } else {
+                        hideProgress();
+                        showToast("发布失败,请重试");
+                    }
+                }
+            });
         }
     }
 
@@ -183,7 +239,9 @@ public class ReleasingDocGatheringActivity extends BaseActivity {
     }
 
     private void showPhotoDialog() {
-        String[] strings = {"拍照","从图库选择"};
+        List<String> strings = new ArrayList();
+        strings.add("拍照");
+        strings.add("从图库选择");
         new PopItemUtil(ReleasingDocGatheringActivity.this,strings)
                 .setOnPopItemClick(new PopItemUtil.PopItemClickListener() {
             @Override
@@ -254,11 +312,6 @@ public class ReleasingDocGatheringActivity extends BaseActivity {
             case REQUESTCODE_FROM_ACTIVITY:
                 pathList = data.getStringArrayListExtra(Constant.RESULT_INFO);
                 fileAdapter.setOnDataChange(pathList);
-                fileList = new ArrayList<>();
-                for (String filename:pathList){
-                    File file1 = new File(filename);
-                    fileList.add(file1);
-                }
                 if (pathList.size()>0){
                     tvFileCount.setVisibility(View.VISIBLE);
                     tvFileCount.setText("已选择的文件("+pathList.size()+")");

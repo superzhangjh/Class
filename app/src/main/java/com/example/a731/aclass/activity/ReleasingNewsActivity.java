@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.a731.aclass.R;
 import com.example.a731.aclass.adapter.PhotoAdapter;
+import com.example.a731.aclass.adapter.PhotoUploadAdapter;
 import com.example.a731.aclass.data.News;
 import com.example.a731.aclass.data.Users;
 import com.example.a731.aclass.presenter.ReleasingNewsPresenter;
@@ -56,7 +57,7 @@ public class ReleasingNewsActivity extends BaseActivity implements ReleasingNews
     private EditText tvContent;
     private Button btnAddPicture;
     private RecyclerView recyclerPhoto;
-    private PhotoAdapter photoAdapter;
+    private PhotoUploadAdapter photoAdapter;
     private List<String> photoList;
     private String presentGroupId;
     private ReleasingNewsPresenter presenter = new ReleasingNewsPresenterImpl(this);
@@ -78,7 +79,7 @@ public class ReleasingNewsActivity extends BaseActivity implements ReleasingNews
     }
 
     private void initPhotoRecyclerView() {
-        photoAdapter = new PhotoAdapter(this,photoList);
+        photoAdapter = new PhotoUploadAdapter(this,photoList);
         recyclerPhoto.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerPhoto.setAdapter(photoAdapter);
     }

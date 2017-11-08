@@ -44,6 +44,15 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"/>
+            <!--删除按钮-->
+            <TextView
+                android:id="@+id/activity_notice_tv_select"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="12sp" />
             <!--日期-->
             <TextView
                 android:layout_marginRight="10dp"
